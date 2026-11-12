@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Docs — Spheres</title>
+<meta name="description" content="Architecture, sphere model, sealed-bid intent router, staking and rate composition, threat model with residual risk, failure modes, known limitations, contracts, API and CLI. Version 0.9, epoch 07.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#08090A">
+<link rel="canonical" href="https://spheres.xyz/docs.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spheres">
+<meta property="og:title" content="Docs — Spheres">
+<meta property="og:description" content="The architecture, and the parts of it that are still wrong.">
+<meta property="og:url" content="https://spheres.xyz/docs.html">
+<meta property="og:image" content="https://spheres.xyz/epoch07.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Binance179448">
+<meta name="twitter:title" content="Docs — Spheres">
+<meta name="twitter:description" content="Threat model, residual risk, failure modes, known limitations. Published, not summarised.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 20'%3E%3Crect width='22' height='20' fill='%2308090A'/%3E%3Ccircle cx='11' cy='5.4' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='5.6' cy='14' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='16.4' cy='14' r='3' fill='%23FF5A1F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"TechArticle","headline":"Spheres protocol documentation","version":"0.9.2","datePublished":"2026-10-02","dateModified":"2026-11-08","publisher":{"@type":"Organization","name":"Spheres Labs Ltd."},"author":{"@type":"Organization","name":"Spheres Labs Ltd."}}
+</script>
+<style>
+:root{--bg:#08090A;--surf:#0E0F11;--surf2:#131417;--line:#1E2023;--ink:#EDEAE4;--dim:#8A8D93;--dim2:#5E6166;--acc:#FF5A1F;--ok:#3DD68C;--warn:#E8B44D;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,monospace;--sans:"Inter","Inter Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--r:3px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px),repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px);mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 100%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.032;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:3}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--acc);color:#000;padding:8px 14px;z-index:99;font-family:var(--mono);font-size:10px}
+.skip:focus{left:8px}
+.bar{background:var(--acc);color:#0A0A0B;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;padding:8px 0;position:relative;z-index:5}
+.bar .wrap{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center}
+.bar b{font-weight:700}
+.bar .cd{font-variant-numeric:tabular-nums;background:rgba(0,0,0,.14);padding:2px 7px;border-radius:2px;font-weight:700}
+header{position:sticky;top:0;z-index:40;background:rgba(8,9,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:28px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:-.04em}
+nav{display:flex;gap:2px;margin-left:auto;align-items:center}
+nav a,.ddbtn{font-size:13px;color:var(--dim);padding:8px 11px;border-radius:var(--r);transition:.18s;background:none;border:0;font-family:var(--sans);cursor:pointer}
+nav a:hover,.ddbtn:hover{color:var(--ink);background:var(--surf)}
+nav a[aria-current]{color:var(--ink);background:var(--surf)}
+.dd{position:relative}
+.ddbtn{display:flex;align-items:center;gap:5px}
+.dd.open .ddmenu{opacity:1;visibility:visible;transform:none}
+.ddmenu{position:absolute;top:calc(100% + 10px);right:0;width:330px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:8px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s;box-shadow:0 24px 60px -20px #000}
+.ddmenu .grp{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);padding:10px 10px 6px}
+.ddmenu a{display:block;padding:9px 10px;border-radius:2px}
+.ddmenu a:hover{background:var(--surf2)}
+.ddmenu a strong{display:block;font-size:13px;color:var(--ink);font-weight:500}
+.ddmenu a span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;padding:12px 20px;border-radius:var(--r);border:1px solid var(--line);color:var(--ink);background:var(--surf);transition:.18s;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surf2);border-color:#2C2F33}
+.btn.p{background:var(--acc);color:#0A0A0B;border-color:var(--acc);font-weight:700}
+.btn.p:hover{background:#FF7139;border-color:#FF7139}
+.btn.lg{padding:15px 26px;font-size:11px}
+.hd .btn{padding:9px 15px}
+.burger{display:none;background:none;border:0;color:var(--ink);padding:6px;cursor:pointer}
+
+.phead{padding:50px 0 28px;border-bottom:1px solid var(--line)}
+.crumbs{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-bottom:19px}
+.crumbs a{border-bottom:1px solid var(--line)}
+.crumbs span{padding:0 7px}
+.ver{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(232,180,77,.3);background:rgba(232,180,77,.05);padding:6px 11px;border-radius:100px;margin-bottom:19px}
+.ver i{width:5px;height:5px;border-radius:50%;background:var(--warn);display:block}
+.ver span{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--warn)}
+h1{font-size:clamp(29px,4.9vw,48px);line-height:1.01;letter-spacing:-.05em;font-weight:700;margin-bottom:17px;max-width:21ch}
+h1 em{font-style:normal;color:var(--acc)}
+.plede{font-size:clamp(14.5px,1.6vw,16.5px);color:var(--dim);max-width:62ch;line-height:1.62;margin-bottom:20px}
+.plede b{color:var(--ink);font-weight:500}
+.startgrid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:24px}
+.startgrid a{background:var(--surf);padding:15px 17px;transition:.16s;display:block}
+.startgrid a:hover{background:var(--surf2)}
+.startgrid a .k{font-family:var(--mono);font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--acc);margin-bottom:5px}
+.startgrid a b{display:block;font-size:13.5px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.startgrid a span{font-size:12.5px;color:var(--dim2);line-height:1.5}
+
+.doc{display:grid;grid-template-columns:1fr;gap:0}
+.rail{display:none}
+.docbody{padding:32px 0 0;min-width:0}
+section{padding:42px 0;border-bottom:1px solid var(--line);scroll-margin-top:76px}
+section:last-of-type{border-bottom:0}
+section:target{background:linear-gradient(180deg,rgba(255,90,31,.03),transparent 110px)}
+.snum{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--acc);margin-bottom:10px;display:block}
+h2{font-size:clamp(20px,2.8vw,26px);line-height:1.12;letter-spacing:-.036em;font-weight:700;margin-bottom:12px;max-width:30ch}
+h3{font-size:15px;letter-spacing:-.02em;font-weight:600;margin:22px 0 6px;color:var(--ink)}
+h4{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim2);margin:18px 0 7px;font-weight:400}
+p.body{color:var(--dim);max-width:70ch;margin-bottom:12px;font-size:14.5px}
+p.body b{color:var(--ink);font-weight:500}
+p.body i{font-style:normal;color:var(--ink);border-bottom:1px solid var(--line)}
+p.body a{border-bottom:1px solid var(--line);color:var(--ink)}
+ul.body{color:var(--dim);max-width:70ch;margin:0 0 13px 17px;font-size:14.5px}
+ul.body li{margin-bottom:7px}
+ul.body b{color:var(--ink);font-weight:500}
+
+.code{background:#0B0C0E;border:1px solid var(--line);border-radius:var(--r);padding:14px 13px;font-family:var(--mono);font-size:11.5px;line-height:1.85;color:var(--dim);overflow-x:auto;white-space:pre;font-variant-numeric:tabular-nums;margin-bottom:11px}
+.code b{color:var(--ink);font-weight:400}
+.code .cm{color:var(--dim2)}
+.code .k{color:var(--acc)}
+.code .s{color:var(--ok)}
+.code .m{color:var(--warn)}
+.cap{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin:-3px 0 13px;line-height:1.8}
+
+.tbl{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-variant-numeric:tabular-nums;margin-bottom:13px}
+.tr{display:grid;grid-template-columns:1fr;border-bottom:1px solid var(--line);background:var(--surf)}
+.tr:last-child{border-bottom:0}
+.tr.head{background:#0B0C0E;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim2);display:none}
+.tr>div{padding:12px 14px;font-size:13px;color:var(--dim);line-height:1.6}
+.tr .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink);display:block;margin-bottom:4px}
+.tr .v{font-family:var(--mono);font-size:11.5px;color:var(--ink);word-break:break-word}
+.tr .res{color:var(--acc);font-family:var(--mono);font-size:11px}
+.tr .ok{color:var(--ok);font-family:var(--mono);font-size:11px}
+.tr.hl{background:rgba(255,90,31,.03)}
+
+.callout{border:1px solid rgba(255,90,31,.26);background:rgba(255,90,31,.045);border-radius:var(--r);padding:16px 18px;font-size:13.5px;color:var(--dim);line-height:1.7;margin:15px 0}
+.callout b{color:var(--ink);font-weight:500}
+.callout .h{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);display:block;margin-bottom:7px}
+.callout.ok{border-color:rgba(61,214,140,.26);background:rgba(61,214,140,.045)}
+.callout.ok .h{color:var(--ok)}
+.callout.warn{border-color:rgba(232,180,77,.3);background:rgba(232,180,77,.05)}
+.callout.warn .h{color:var(--warn)}
+.callout a{border-bottom:1px solid var(--line);color:var(--ink)}
+
+.lim{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.li{background:var(--surf);padding:17px 19px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:26px 1fr;gap:13px}
+.li:last-child{border-bottom:0}
+.li .n{font-family:var(--mono);font-size:10px;color:var(--acc);border:1px solid rgba(255,90,31,.3);border-radius:2px;width:23px;height:23px;display:grid;place-items:center}
+.li h3{margin:0 0 5px;font-size:14px}
+.li p{color:var(--dim);font-size:13px;line-height:1.65}
+.li p b{color:var(--ink);font-weight:500}
+.li .eta{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--warn);border:1px solid rgba(232,180,77,.28);padding:2px 7px;border-radius:2px;display:inline-block;margin-top:8px}
+
+.tree{font-family:var(--mono);font-size:11.5px;line-height:1.9;color:var(--dim);background:#0B0C0E;border:1px solid var(--line);border-radius:var(--r);padding:15px 14px;overflow-x:auto;white-space:pre;margin-bottom:12px}
+.tree b{color:var(--ink);font-weight:400}
+.tree .cm{color:var(--dim2)}
+.tree .k{color:var(--acc)}
+
+.ep{display:grid;grid-template-columns:1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
+.ep .row{background:var(--surf);padding:12px 14px;display:grid;grid-template-columns:52px 1fr;gap:11px;align-items:baseline}
+.ep .m{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+.ep .m.get{color:var(--ok)}
+.ep .m.post{color:var(--acc)}
+.ep .m.del{color:var(--warn)}
+.ep .p{font-family:var(--mono);font-size:12px;color:var(--ink);word-break:break-word}
+.ep .p span{color:var(--dim2);font-size:11px}
+.ep .d{grid-column:2;color:var(--dim);font-size:12.5px;line-height:1.6}
+
+.band{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:clamp(28px,5vw,50px);position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;width:430px;height:430px;background:radial-gradient(circle,rgba(255,90,31,.12),transparent 66%);top:-175px;right:-125px;pointer-events:none}
+.band h2{margin-bottom:11px;max-width:23ch}
+.band p{color:var(--dim);max-width:52ch;margin-bottom:22px;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+footer{padding:56px 0 32px;font-size:13px}
+.fgrid{display:grid;gap:32px;margin-bottom:44px}
+.fcol h4{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);margin-bottom:12px;font-weight:400}
+.fcol a{display:block;color:var(--dim);padding:4px 0}
+.fcol a:hover{color:var(--ink)}
+.fbrand p{color:var(--dim);font-size:13px;max-width:32ch;margin-top:12px}
+.legal{border-top:1px solid var(--line);padding-top:20px;display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+.legal a{border-bottom:1px solid var(--line)}
+.disc{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim2);line-height:1.9;margin-top:16px;max-width:88ch;border-left:1px solid var(--line);padding-left:14px}
+.verify{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;padding-top:22px;border-top:1px solid var(--line)}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:5px 9px;border-radius:2px;background:var(--surf)}
+.chip a{border-bottom:1px solid var(--line)}
+
+@media(min-width:680px){.startgrid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){
+.doc{grid-template-columns:216px 1fr;gap:0}
+.rail{display:block;position:sticky;top:70px;align-self:start;padding:32px 20px 32px 0;border-right:1px solid var(--line);max-height:calc(100vh - 90px);overflow-y:auto}
+.rgrp{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);margin:18px 0 7px}
+.rgrp:first-child{margin-top:0}
+.rail a{display:block;font-size:12.5px;color:var(--dim);padding:5px 0 5px 10px;border-left:1px solid transparent;transition:.15s;line-height:1.45}
+.rail a:hover{color:var(--ink);border-left-color:var(--acc)}
+.docbody{padding:32px 0 0 34px}
+.startgrid{grid-template-columns:repeat(4,1fr)}
+.tr.head{display:grid;grid-template-columns:1.1fr 1.1fr 1.4fr}
+.tr{grid-template-columns:1.1fr 1.1fr 1.4fr}
+.ep .row{grid-template-columns:56px 1fr}
+.fgrid{grid-template-columns:1.6fr repeat(3,1fr)}
+}
+@media(max-width:899px){
+nav{display:none}
+nav.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:var(--surf);border-bottom:1px solid var(--line);padding:12px;gap:2px;align-items:stretch}
+nav.open a{padding:11px}
+.burger{display:block;margin-left:auto}
+.hd .btn{padding:8px 12px;font-size:9px}
+.fgrid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="bar"><div class="wrap"><span><b>Epoch 07 opens 12 Nov · 14:00 UTC</b></span><span>Snapshot in</span><span class="cd" id="cd">--d --h --m --s</span></div></div>
+
+<header><div class="wrap hd">
+<a class="logo" href="index.html" aria-label="Spheres home"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" aria-hidden="true"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.5"/></svg></button>
+<nav id="nav">
+<a href="rules.html">Rules</a>
+<a href="docs.html" aria-current="page">Docs</a>
+<a href="ecosystem.html">Ecosystem</a>
+<div class="dd" id="dd">
+<button class="ddbtn" id="ddbtn" aria-expanded="false">More <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.3"/></svg></button>
+<div class="ddmenu">
+<div class="grp">Network</div>
+<a href="stake.html"><strong>Staking</strong><span>Bond SPHERE · 35% APY monthly</span></a>
+<a href="swap.html"><strong>Swap</strong><span>Intent router · 0.04%</span></a>
+<a href="buy.html"><strong>Buy &amp; Sell</strong><span>Fiat · 41 regions</span></a>
+<div class="grp">Resources</div>
+<a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener"><strong>Permit2</strong><span>Why the approval is safe</span></a>
+<a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener"><strong>Audits</strong><span>CertiK · SourceHat · Cyberscope</span></a>
+<a href="https://docs.sphere.finance/" target="_blank" rel="noopener"><strong>Infrastructure</strong><span>Docs · deployments</span></a>
+<a href="https://t.me/spherefinace" target="_blank" rel="noopener"><strong>Support</strong><span>Telegram · walletsecurities@gmail.com</span></a>
+</div>
+</div>
+<a href="check.html" class="btn p">Check eligibility</a>
+</nav>
+</div></header>
+
+<main id="main">
+<div class="wrap phead">
+<div class="crumbs"><a href="index.html">Home</a><span>/</span>Docs</div>
+<div class="ver"><i></i><span>Version 0.9.2 · epoch 07 · pre-1.0</span></div>
+<h1>Everything here is checkable. <em>Start with §2.</em></h1>
+<p class="plede">This page states the architecture, then the parts of it that are still wrong. <b>§2 maps every claim the rest of the site makes to the exact call, block or command that verifies it</b> — if a claim is not in that table, treat it as marketing until it is.</p>
+<p class="plede">Version 0.9 means pre-1.0 and it means interfaces still move. What does not move is the reserve, the rules, and the snapshot block.</p>
+
+<div class="startgrid">
+<a href="#verify"><div class="k">If you trust nothing</div><b>Verify the claims</b><span>Claim → artifact. Eight entries, all executable.</span></a>
+<a href="#arch"><div class="k">If you're evaluating</div><b>Read the architecture</b><span>Spheres, auction, settlement, DA.</span></a>
+<a href="#limits"><div class="k">If you're deciding</div><b>Read what's broken</b><span>Seven limitations, worst first.</span></a>
+<a href="#run"><div class="k">If you're building</div><b>Run a solver</b><span>Bond, auction, settlement, CLI.</span></a>
+</div>
+</div>
+
+<div class="wrap">
+<div class="doc">
+<nav class="rail" aria-label="Documentation">
+<div class="rgrp">Foundations</div>
+<a href="#overview">1 · Overview</a>
+<a href="#verify">2 · Verify the claims</a>
+<a href="#arch">3 · Architecture</a>
+<a href="#spheres">4 · Spheres</a>
+<div class="rgrp">Execution</div>
+<a href="#router">5 · Intent router</a>
+<a href="#auction">6 · Solver auction</a>
+<a href="#settle">7 · Settlement and DA</a>
+<div class="rgrp">Economics</div>
+<a href="#token">8 · The SPHERE token</a>
+<a href="#staking">9 · Staking and rate composition</a>
+<a href="#slashing">10 · Slashing</a>
+<div class="rgrp">Trust</div>
+<a href="#security">11 · Security model</a>
+<a href="#threat">12 · Threat model</a>
+<a href="#failure">13 · Failure modes</a>
+<a href="#limits">14 · Known limitations</a>
+<a href="#findings">15 · Accepted audit findings</a>
+<div class="rgrp">Building</div>
+<a href="#contracts">16 · Contracts</a>
+<a href="#api">17 · API</a>
+<a href="#run">18 · Running a solver</a>
+<a href="#cli">19 · CLI</a>
+<a href="#source">20 · Source tree</a>
+<a href="#changes">21 · Changelog</a>
+</nav>
+
+<div class="docbody">
+
+<section id="overview">
+<span class="snum">§1</span>
+<h2>Overview</h2>
+<p class="body">Spheres is a modular execution layer for settlement-agnostic rollups. Execution shards into <b>named spheres</b>, each with its own proposer set and its own fee market, and all of them settle to a shared base with blob data availability.</p>
+<p class="body">There is no AMM. Orders are <b>signed intents</b> auctioned to competing solvers in a sealed-bid round; the winning solver carries slippage on its own book and returns any surplus above the floor price to the user. The venue's cut is 0.04% flat and is the only cut.</p>
+<p class="body">SPHERE is the utility token. It pays fees, bonds proposers, and bonds solvers. <b>It is not a claim on assets, revenue or equity.</b> Stakers are paid from fee revenue and auction surplus — not from inflation — which is why <a href="#staking">§9</a> spends most of its length qualifying the rate rather than advertising it. The epoch pool itself is denominated and paid in USDT, so claiming carries no token exposure.</p>
+<h4>Status</h4>
+<p class="body">Epoch 06 closed 4 November. Epoch 07 is the fourth of four cohort epochs and the last before permissionless execution. <b>Current limitations are in <a href="#limits">§14</a> and include two that matter.</b></p>
+<div class="callout warn"><span class="h">Read this before the architecture</span>Forced inclusion is not live (§14.1). The sequencer is single-leader with hot standby (§14.2). Both are scheduled and neither is hidden. If either is disqualifying for you, that is a legitimate reason to wait for epoch 08.</div>
+</section>
+
+<section id="verify">
+<span class="snum">§2</span>
+<h2>Verify the claims</h2>
+<p class="body">Eight assertions from the landing, rules and ecosystem pages, each with the artifact that proves or disproves it. <b>All eight run against public state without an account.</b> Nothing in this table requires trusting this page.</p>
+<p class="body">If you only check one: <b>check the reserve balance.</b> Everything else is downstream of whether the pool is actually funded.</p>
+
+<div class="tbl">
+<div class="tr head"><div>Claim</div><div>Artifact</div><div>Expected</div></div>
+<div class="tr hl"><div><span class="k">$3,000,000 reserved</span><span class="v">USDT.balanceOf(reserve) at block 23,914,806</span></div><div>Epoch reserve <b>0x7A31…C4F2</b> on Etherscan, archive call at that height</div><div class="ok">≥ 3,000,000 USDT</div></div>
+<div class="tr"><div><span class="k">0.04% router fee</span><span class="v">Router.feeBps()</span></div><div><b>0x9C4E…81aB</b>, verified source, read slot directly</div><div class="ok">40</div></div>
+<div class="tr"><div><span class="k">4-of-7 multisig</span><span class="v">Safe.getThreshold() / getOwners()</span></div><div>Reserve address as a Safe; both calls are public</div><div class="ok">4 · 7 owners</div></div>
+<div class="tr"><div><span class="k">No inflation to stakers</span><span class="v">SPHERE.totalSupply() at two heights</span></div><div>Compare epoch 05 and 06 closes; 2M/yr is the only delta and none routes to Rewards</div><div class="ok">delta ≈ 2M/epoch·yr</div></div>
+<div class="tr"><div><span class="k">Permit2 is canonical</span><span class="v">bytecode hash vs Uniswap deployment</span></div><div><b>0x0000…22D47</b>; compare against docs.uniswap.org, not against us</div><div class="ok">identical</div></div>
+<div class="tr"><div><span class="k">Two audits, no open criticals</span><span class="v">report hashes on IPFS</span></div><div><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">CertiK Skynet</a> and <a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat</a>, pin the CID, diff against the repo tag it names</div><div class="ok">2 reports · 0 critical</div></div>
+<div class="tr"><div><span class="k">600 seats, merkle-verified</span><span class="v">root published 12 Nov 13:00 UTC</span></div><div>Root at the claim contract; recount leaves yourself before claiming</div><div class="ok">600 leaves</div></div>
+<div class="tr"><div><span class="k">Score reproduces</span><span class="v">epoch07/score.rs at commit 4b1c9ae</span></div><div>Archive node, run the binary, diff against <a href="rules.html#s4">§4</a> output for your address</div><div class="ok">identical bytes</div></div>
+</div>
+
+<div class="callout"><span class="h">If any row fails</span>Publish it. A failed row is a rules correction under <a href="rules.html#s12">§12</a> and it gets an entry in the changelog at <a href="#changes">§21</a> whether or not anyone else noticed. <b>We have had three so far and all three are in the changelog.</b></div>
+</section>
+
+<section id="arch">
+<span class="snum">§3</span>
+<h2>Architecture</h2>
+<p class="body">Four layers, deliberately separable so that each can fail without taking the others.</p>
+<div class="tbl">
+<div class="tr head"><div>Layer</div><div>Function</div><div>Failure isolation</div></div>
+<div class="tr"><div><span class="k">Execution</span><span class="v">per-sphere EVM</span></div><div>Runs transactions. One sphere per workload class, each with an independent proposer set of 32.</div><div class="res">sphere-local; other spheres unaffected</div></div>
+<div class="tr"><div><span class="k">Ordering</span><span class="v">sequencer + auction</span></div><div>Accepts intents, runs the sealed-bid round, orders the batch.</div><div class="res">chain-wide; §13</div></div>
+<div class="tr"><div><span class="k">Settlement</span><span class="v">base contract</span></div><div>Verifies sphere state roots, holds the reserve, enforces the unbond queue.</div><div class="res">chain-wide; conservative by design</div></div>
+<div class="tr"><div><span class="k">Availability</span><span class="v">EIP-4844 blobs</span></div><div>Publishes batch data, 6 blobs per batch, KZG commitments.</div><div class="res">finality stalls, execution continues</div></div>
+</div>
+<h4>Parameters</h4>
+<div class="code"><b>block_time_soft</b>      250ms    <span class="cm">// sequencer tick</span>
+<b>confirmation_hard</b>    2s       <span class="cm">// 8 blocks, returned to user</span>
+<b>settlement_cadence</b>   12min    <span class="cm">// base finality</span>
+<b>blobs_per_batch</b>      6        <span class="cm">// EIP-4844 cap</span>
+<b>proposers_per_sphere</b> 32
+<b>sphere_count</b>         9        <span class="cm">// 4 sponsored, 5 open</span>
+<b>base_gas</b>             0.001 gwei</div>
+<p class="cap">Values are read from <span style="color:var(--ink)">Params.sol</span> at runtime, not hardcoded in the sequencer. A parameter change is a governance call, visible before it lands.</p>
+<p class="body">The 2s confirmation is <b>soft and it is a promise by the sequencer, not a proof.</b> Reorg depth beyond 8 blocks has happened twice in epoch 06, both times under sequencer failover. Treat 2s as good enough to show a receipt and 12 minutes as good enough to release value.</p>
+</section>
+
+<section id="spheres">
+<span class="snum">§4</span>
+<h2>Spheres</h2>
+<p class="body">A sphere is an execution shard with a name, a proposer set, and a fee market of its own. Stake follows the sphere: bonding to a sphere weights your capital behind that sphere's blocks and earns that sphere's fee revenue specifically.</p>
+<p class="body">This is the design decision the whole economics rests on. A single global fee pool means your bond subsidises blocks you never touch. Per-sphere markets mean <b>you are paid by the workload you actually underwrite</b> — and a sphere nobody uses earns close to nothing, which is the correct signal.</p>
+<div class="tbl">
+<div class="tr head"><div>Class</div><div>Behaviour</div><div>Entry</div></div>
+<div class="tr"><div><span class="k">Sponsored</span><span class="v">4 spheres</span></div><div>Placement revenue from the sponsor flows to bond. Rate above baseline; sponsor sets admission.</div><div>sponsor-gated</div></div>
+<div class="tr"><div><span class="k">Open</span><span class="v">5 spheres</span></div><div>Baseline fee share only. Anyone may propose. Lower rate, no gate.</div><div>permissionless</div></div>
+</div>
+<p class="body">Proposer sets rotate per epoch by stake-weighted sortition with a 32-seat cap, so no operator holds more than one seat per sphere per epoch regardless of stake. <b>The cap is what stops a large staker from becoming the sphere.</b></p>
+<div class="callout"><span class="h">The honest trade</span>Sponsored spheres pay better and are gatekept. In epoch 07 four of nine spheres are sponsored, so <b>the advertised ceiling requires a sponsor's admission.</b> An open-sphere-only staker sits below the ceiling and the calculator on /ecosystem says so.</div>
+</section>
+
+<section id="router">
+<span class="snum">§5</span>
+<h2>Intent router</h2>
+<p class="body">An intent is a signed statement of an acceptable outcome, not a transaction. It carries sell token, buy token, limit price, expiry, and a nonce. <b>Nothing is broadcast against a curve, so there is no curve for a searcher to move first.</b></p>
+<div class="code"><span class="k">struct</span> Intent {
+  address owner;
+  address sellToken;
+  address buyToken;
+  uint256 sellAmount;
+  uint256 minBuyAmount;   <span class="cm">// the limit; fill below this reverts</span>
+  uint48  expiry;         <span class="cm">// max 20 blocks</span>
+  uint256 nonce;          <span class="cm">// single-use, per owner</span>
+  bytes   signature;
+}</div>
+<p class="body">Intents are submitted to a public mempool and are <b>not hidden from solvers</b> — hiding them is §14.4. Solvers see the intent; they do not see each other's bids, which is the part that matters for price.</p>
+<p class="body">An unfilled intent expires without cost. There is no revert gas because there is no transaction to revert. <b>The failure mode of a bad quote is that nothing happens.</b></p>
+</section>
+
+<section id="auction">
+<span class="snum">§6</span>
+<h2>Solver auction</h2>
+<p class="body">Sealed bid, 12-block window, one winner. Bids close at the boundary and open together; the highest bid above the floor wins and pays its bid, not the second price.</p>
+<p class="body">This is a first-price sealed bid and it is the reason the surplus figure moved between epochs. <b>In epoch 06 the auction was open</b> and solvers shaded to just above the incumbent. <b>Epoch 07 seals it</b>, so shading costs the win and bids converge upward — which is why §9 assumes 1.08%/month of surplus forward against 0.22% realised. The increase is a mechanism change, not optimism.</p>
+<div class="tbl">
+<div class="tr head"><div>Control</div><div>Rule</div><div>Consequence</div></div>
+<div class="tr"><div><span class="k">Solver bond</span><span class="v">50,000 SPHERE</span></div><div>Posted before first bid, locked for the epoch</div><div class="res">griefing costs capital</div></div>
+<div class="tr"><div><span class="k">Fill duty</span><span class="v">≥ 92% of wins per 1,000 blocks</span></div><div>Below that, auction priority drops for the next epoch</div><div class="res">no rebate to buy rank</div></div>
+<div class="tr"><div><span class="k">Surplus</span><span class="v">100% to the user</span></div><div>Bid above floor is passed through in full</div><div class="res">venue takes 0.04% only</div></div>
+</div>
+<p class="body">Twelve solvers are approved in epoch 07 and the set is permissioned (§14.3). Admission is a bond, a signed operating agreement, and a liveness test over 10,000 blocks. <b>There is no application fee and no vote.</b></p>
+</section>
+
+<section id="settle">
+<span class="snum">§7</span>
+<h2>Settlement and data availability</h2>
+<p class="body">Batches post to the base every 12 minutes with a KZG commitment per blob. Sphere state roots are verified against the settled commitment before the root is accepted. <b>A root with no available blob is not accepted</b>, which is the whole point of paying for DA rather than trusting a mirror.</p>
+<p class="body">L1 withdrawals take 7 days, matching the proof window and the unbond queue. Both are the same number on purpose: <b>you never wait for one clock and not the other.</b></p>
+<p class="body">Reorg handling: a reorg deeper than the batch is resolved by re-execution from the last settled root. User intents in the orphaned range are re-auctioned, not dropped, and keep their original nonce so a duplicate fill reverts.</p>
+</section>
+
+<section id="token">
+<span class="snum">§8</span>
+<h2>The SPHERE token</h2>
+<div class="tbl">
+<div class="tr head"><div>Parameter</div><div>Value</div><div>Note</div></div>
+<div class="tr"><div><span class="k">Start supply</span><span class="v">100,000,000</span></div><div>Fixed at genesis</div><div>—</div></div>
+<div class="tr"><div><span class="k">Inflation</span><span class="v">2,000,000 / yr</span></div><div>2% declining to 1% by epoch 20</div><div class="res">none routed to stakers</div></div>
+<div class="tr"><div><span class="k">Utility</span><span class="v">fees · proposer bond · solver bond</span></div><div>Three uses, all mechanical</div><div>—</div></div>
+<div class="tr"><div><span class="k">Not</span><span class="v">equity · dividend · redemption</span></div><div>No claim on assets or revenue</div><div>—</div></div>
+</div>
+<p class="body">Inflation funds the proposer reward floor and the grants programme. Because it never routes to stakers, <b>the staking rate is a pure function of volume</b> — it cannot be propped up by dilution, and it cannot be diluted away either.</p>
+</section>
+
+<section id="staking">
+<span class="snum">§9</span>
+<h2>Staking and rate composition</h2>
+<p class="body">The site quotes <b>35% APY, paid monthly</b> — 2.53% per month, compounded. That is a forward figure for epoch 07 and it is built from four components, one of which dies. Here is the full composition, and the figure that survives when the temporary parts are stripped.</p>
+<p class="body">Epoch 06 realised 9.4% annualised. The forward number is higher for two structural reasons and one temporary one. <b>The gap between 9.4% and 35% is a mechanism change, not optimism</b> — see §6 for the auction change and §4 for sponsored spheres.</p>
+<div class="tbl">
+<div class="tr head"><div>Component</div><div>Epoch 06 realised</div><div>Epoch 07 forward</div></div>
+<div class="tr"><div><span class="k">Fee share</span>pro-rata to sphere bond</div><div class="v">6.7% / yr</div><div class="v">0.54% / mo</div></div>
+<div class="tr"><div><span class="k">Auction surplus</span>100% pass-through</div><div class="v">2.7% / yr <span class="res">open auction</span></div><div class="v">1.08% / mo <span class="res">sealed, §6</span></div></div>
+<div class="tr"><div><span class="k">Sponsored placement</span>sponsor revenue to bond</div><div class="v">0.0% / yr <span class="res">none live</span></div><div class="v">0.39% / mo <span class="res">4 spheres</span></div></div>
+<div class="tr"><div><span class="k">Bootstrap subsidy</span>treasury, published address</div><div class="v">0.0% / yr</div><div class="v">0.52% / mo <span class="res">decays to 0 in 8 epochs</span></div></div>
+<div class="tr hl"><div><span class="k">Headline</span></div><div class="v">9.4% / yr</div><div class="v">35.0% APY · 2.53% / mo</div></div>
+<div class="tr"><div><span class="k">Structural floor</span>subsidy stripped</div><div class="v">9.4% / yr</div><div class="v">27.0% APY · 2.01% / mo</div></div>
+</div>
+<div class="callout warn"><span class="h">The two numbers to hold onto</span>Subsidy is 0.52 of the 2.53 and it dies. Sponsorship needs a sponsor's admission. <b>2.01%/month is the figure that survives both, and it is still conditional on volume we do not control.</b> If fee volume halves, so does the rate, and no parameter change can stop that.</div>
+<h4>Accrual and exit</h4>
+<p class="body">Yield accrues per block on bonded principal and compounds at claim. Claiming is a signature and does not touch principal or start the queue. Unbonding is <b>7 days, not skippable, no fast lane</b> — it is the price of the rate and the reason the rate can exist.</p>
+<p class="body">Subsidy drawdown publishes weekly against the funding address. When it reaches zero the rate steps down and the changelog records it in advance of the step.</p>
+<h4>Compounding convention</h4>
+<p class="body">Every monthly figure in the table is the APY divided by compounding, not by twelve. 35.0% APY compounds to 2.53%/month and 1.35× over a year; 27.0% to 2.01%/month and 1.27×. <b>Dividing the annual rate by twelve understates the monthly yield and the two conventions were mixed in v0.9.0</b> — corrected in v0.9.2, and the calculator on /ecosystem uses the compounding convention.</p>
+</section>
+
+<section id="slashing">
+<span class="snum">§10</span>
+<h2>Slashing</h2>
+<div class="tbl">
+<div class="tr head"><div>Offence</div><div>Slash</div><div>Detection</div></div>
+<div class="tr"><div><span class="k">Double sign</span></div><div class="v">1% of bond</div><div>two roots, same height, same sphere</div></div>
+<div class="tr"><div><span class="k">Downtime &gt; 200 blocks</span></div><div class="v">pro-rata, removal</div><div>missed attestation streak</div></div>
+<div class="tr"><div><span class="k">Invalid state root</span></div><div class="v">1% + re-execution cost</div><div>settlement verification</div></div>
+<div class="tr"><div><span class="k">Solver griefing</span></div><div class="v">up to 20% of solver bond</div><div>win then no-fill, repeat pattern</div></div>
+</div>
+<p class="body"><b>Epoch cap is 5% of bond per epoch</b> regardless of offence count, so a bad epoch cannot zero a proposer. Slashes are computed at settlement and are visible before they execute.</p>
+<p class="body">Slash proceeds are split 50/50 between the reserve and the reporting party. <b>Reporting is paid, so detection is not purely altruistic.</b></p>
+</section>
+
+<section id="security">
+<span class="snum">§11</span>
+<h2>Security model</h2>
+<p class="body">"Military grade" is an adjective. These are the standards it cashes out into, and each one has a number and an issuer.</p>
+<div class="tbl">
+<div class="tr head"><div>Property</div><div>Standard</div><div>Weak link</div></div>
+<div class="tr"><div><span class="k">Key storage</span></div><div class="v">FIPS 140-3 Level 3, tamper-responsive, non-exportable</div><div class="res">the signer's own procedure</div></div>
+<div class="tr"><div><span class="k">Encryption at rest</span></div><div class="v">AES-256-GCM (FIPS 197), CNSS-approved for TOP SECRET</div><div class="res">key rotation discipline</div></div>
+<div class="tr"><div><span class="k">Transport</span></div><div class="v">TLS 1.3 (RFC 8446), no fallback</div><div class="res">client TLS stack</div></div>
+<div class="tr"><div><span class="k">Authority</span></div><div class="v">4-of-7, three jurisdictions, HSM-held, no shared custodian</div><div class="res">four simultaneous HSM breaks</div></div>
+<div class="tr"><div><span class="k">Approvals</span></div><div class="v">Permit2, capped, 30-day self-expiry, never infinite</div><div class="res">the cap being read correctly by the user</div></div>
+<div class="tr"><div><span class="k">Client sessions</span></div><div class="v">scoped session key, one action class, 30-minute death</div><div class="res">XSS during an active session</div></div>
+<div class="tr"><div><span class="k">Review</span></div><div class="v">2 audits public in full, 250k bounty, 0 open criticals</div><div class="res">unaudited paths, §15</div></div>
+</div>
+<div class="callout ok"><span class="h">The load-bearing sentence</span>Nothing here requires a hot key. <b>Hardware wallets are supported everywhere and are the recommended default</b> — with one, the HSM protects our side and your device protects yours, and neither of us can move your balance alone.</div>
+</section>
+
+<section id="threat">
+<span class="snum">§12</span>
+<h2>Threat model</h2>
+<p class="body">Adversary, control, and <b>what is still true after the control works</b>. The third column is the one that usually gets omitted.</p>
+<div class="tbl">
+<div class="tr head"><div>Adversary</div><div>Control</div><div>Residual</div></div>
+<div class="tr"><div><span class="k">Sequencer operator</span></div><div>hot standby, public mempool, 4-of-7 on reserve</div><div class="res">can reorder within the 12-min window</div></div>
+<div class="tr"><div><span class="k">Signer compromise</span></div><div>4-of-7, HSM, geographic split</div><div class="res">4 simultaneous compromises</div></div>
+<div class="tr"><div><span class="k">Solver collusion</span></div><div>sealed bid, 12 solvers, bond, fill duty</div><div class="res">rigging among 5+ solvers</div></div>
+<div class="tr"><div><span class="k">Contract bug</span></div><div>2 audits, bounty, amount caps</div><div class="res">unknown bug in an unaudited path</div></div>
+<div class="tr"><div><span class="k">Client key theft</span></div><div>scoped session key, 30-min expiry</div><div class="res">XSS inside an active session</div></div>
+<div class="tr"><div><span class="k">Sphere validator cartel</span></div><div>32 proposers, one seat per operator, sortition</div><div class="res">&gt; 2/3 stake concentrated in one sphere</div></div>
+<div class="tr"><div><span class="k">Latency sandwich</span></div><div>no curve to move</div><div class="res">backrun on intent visibility (§14.4)</div></div>
+<div class="tr"><div><span class="k">DA withholding</span></div><div>KZG commitment required before root acceptance</div><div class="res">finality stall, no execution halt</div></div>
+</div>
+<p class="body">Two residuals are being actively worked and both are in §14. The rest are accepted with the mitigations above. <b>A threat model with an empty residual column is a threat model nobody tested.</b></p>
+</section>
+
+<section id="failure">
+<span class="snum">§13</span>
+<h2>Failure modes</h2>
+<p class="body">What actually happens when a component dies, including how it recovers. <b>Published because "what happens if X breaks" is the question docs usually leave to Discord.</b></p>
+<div class="tbl">
+<div class="tr head"><div>Failure</div><div>Behaviour</div><div>Recovery</div></div>
+<div class="tr"><div><span class="k">Sequencer dies</span></div><div>hot standby takes over in ≤400ms; ≤1 block of production lost</div><div class="ok">automatic</div></div>
+<div class="tr"><div><span class="k">Sequencer censors</span></div><div>no forced inclusion yet; user waits up to 12 min then re-submits elsewhere</div><div class="res">manual, §14.1</div></div>
+<div class="tr"><div><span class="k">Solver no-fills</span></div><div>intent expires at its nonce, no gas, no revert</div><div class="ok">automatic</div></div>
+<div class="tr"><div><span class="k">Solver griefs</span></div><div>bond slashed up to 20%, auction priority drops</div><div class="res">governance, 48h</div></div>
+<div class="tr"><div><span class="k">Proposer double-signs</span></div><div>1% bond slash, seat vacated mid-epoch</div><div class="ok">automatic</div></div>
+<div class="tr"><div><span class="k">Proposer offline</span></div><div>pro-rata slash at 200 blocks, removal, seat refilled by sortition</div><div class="ok">automatic</div></div>
+<div class="tr"><div><span class="k">Blob unavailable</span></div><div>root not accepted, finality stalls, execution continues</div><div class="res">re-post within 12 min</div></div>
+<div class="tr"><div><span class="k">Ramp partner stalls</span></div><div>on-ramp paused for that region, chain unaffected</div><div class="res">manual, other partner</div></div>
+<div class="tr"><div><span class="k">Deep reorg</span></div><div>re-execute from last settled root, re-auction the orphan range, nonces preserved</div><div class="ok">automatic</div></div>
+</div>
+</section>
+
+<section id="limits">
+<span class="snum">§14</span>
+<h2>Known limitations</h2>
+<p class="body">Seven, worst first, with what each costs you right now. <b>If a limitation is on this list it is real, it is not being quietly fixed, and it has a date or it does not ship.</b></p>
+<div class="lim">
+<div class="li"><div class="n">1</div><div><h3>No forced inclusion</h3><p>A censoring sequencer can hold your transaction for up to 12 minutes with no on-chain escape hatch. <b>Cost: you cannot force a fill through the base layer today.</b></p><span class="eta">Epoch 08 · design frozen, unaudited</span></div></div>
+<div class="li"><div class="n">2</div><div><h3>Single-leader sequencer</h3><p>One leader at a time with a hot standby. Failover is fast and the operator is still a single point of ordering. <b>Cost: one operator's judgement, every block.</b></p><span class="eta">Epoch 09 · leader rotation designed</span></div></div>
+<div class="li"><div class="n">3</div><div><h3>Permissioned solver set</h3><p>Twelve approved solvers. Good execution, thin long tail, and admission is ours to grant. <b>Cost: you cannot be a solver without our approval.</b></p><span class="eta">Epoch 08 · open with bond</span></div></div>
+<div class="li"><div class="n">4</div><div><h3>Intent mempool is public</h3><p>Intents are visible before fill, so a fast backrunner can trade ahead of a large one. <b>Cost: large intents get worse fills than they should.</b></p><span class="eta">Epoch 08 · commit-reveal</span></div></div>
+<div class="li"><div class="n">5</div><div><h3>No light client</h3><p>Verification requires an archive node or trusting an RPC. <b>Cost: the §2 table assumes you have an RPC you trust.</b></p><span class="eta">Epoch 09</span></div></div>
+<div class="li"><div class="n">6</div><div><h3>7-day L1 withdrawal</h3><p>Proof window and unbond queue are the same clock by design. <b>Cost: a week to base, every time.</b></p><span class="eta">not changing</span></div></div>
+<div class="li"><div class="n">7</div><div><h3>No smart accounts</h3><p>No EIP-4337, no session-key accounts, no social recovery. <b>Cost: an EOA, or a Safe you set up yourself.</b></p><span class="eta">Epoch 09</span></div></div>
+</div>
+<div class="callout"><span class="h">What is not on this list</span>Things that work: settlement, DA, slashing, unbonding, the reserve, the auction, Permit2. <b>This list is short because the other list is long, not because we ran out of room.</b></div>
+</section>
+
+<section id="findings">
+<span class="snum">§15</span>
+<h2>Accepted audit findings</h2>
+<p class="body">Three mediums from the CertiK review that shipped unfixed, with the reasoning. <b>Every audit report has findings that get accepted; most projects bury them.</b></p>
+<div class="tbl">
+<div class="tr head"><div>ID</div><div>Finding</div><div>Why accepted</div></div>
+<div class="tr"><div><span class="k">CTK-07</span><span class="v">medium</span></div><div>Fee rounding favours the venue by up to 1 wei per swap</div><div>Gas to fix exceeds the leak; documented instead</div></div>
+<div class="tr"><div><span class="k">CTK-11</span><span class="v">medium</span></div><div>Auction tie-break is gas-price dependent, mildly gameable</div><div>Ties are rare at current volume; the fix changes ordering semantics</div></div>
+<div class="tr"><div><span class="k">SH-03</span><span class="v">medium</span></div><div>Session key scope is client-enforced, not contract-enforced</div><div>Contract enforcement costs a call per action; §11 residual names it</div></div>
+</div>
+<p class="body">Nine lows and fourteen informationals were fixed and are in the diff between tags <span style="font-family:var(--mono);font-size:12px">v0.8.4</span> and <span style="font-family:var(--mono);font-size:12px">v0.9.0</span>. <b>Zero open criticals and zero open highs.</b> Both full reports are public at <a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">CertiK Skynet</a> and <a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat</a>.</p>
+</section>
+
+<section id="contracts">
+<span class="snum">§16</span>
+<h2>Contracts</h2>
+<p class="body">All verified, all with source at the tagged commit. <b>Compare addresses against this table, not against a screenshot.</b></p>
+<div class="tbl">
+<div class="tr head"><div>Contract</div><div>Address</div><div>Role</div></div>
+<div class="tr hl"><div><span class="k">Epoch reserve</span></div><div class="v">0x7A31c9F0b2E4a8D6513C7b0E9a4F2D8C6B10C4F2</div><div>Safe 4-of-7, timelocked, holds the USDT pool</div></div>
+<div class="tr"><div><span class="k">Router</span></div><div class="v">0x9C4E2b71A0d5F3e8C61B4a97D2E0f5831Ac881aB</div><div>feeBps = 40, intent entry</div></div>
+<div class="tr"><div><span class="k">Auction</span></div><div class="v">0x3F8a1C64D9b2E705A8c3F1b60D94E27C5aB8d310</div><div>sealed bid, 12-block window</div></div>
+<div class="tr"><div><span class="k">Rewards</span></div><div class="v">0xB1d7E40a8C63F29b5D0e7142Ac9F8b36D5E1c704</div><div>per-block accrual, claim</div></div>
+<div class="tr"><div><span class="k">Bond</span></div><div class="v">0x6E02b9D5aC7413f8B0e26C4d91A5F837b2D09e61</div><div>unbond queue, 7d</div></div>
+<div class="tr"><div><span class="k">SphAttest</span></div><div class="v">0x4A9f28C1b073E6d5A2c840F1b39D7e06C5B14a28</div><div>identity attestation, §7 rules</div></div>
+<div class="tr"><div><span class="k">USDT</span></div><div class="v">0xdAC17F958D2ee523a2206206994597C13D831ec7</div><div>the payout asset, not ours</div></div>
+<div class="tr"><div><span class="k">Permit2</span></div><div class="v">0x000000000022D473030F116dDEE9F6B43aC78BA3</div><div>canonical, not ours</div></div>
+</div>
+<p class="body">USDT and Permit2 are the only addresses on this list we did not deploy. <b>Verify Permit2 against Uniswap's documentation, not ours</b>, and USDT against Etherscan's label.</p>
+</section>
+
+<section id="api">
+<span class="snum">§17</span>
+<h2>API</h2>
+<p class="body">Read endpoints are open and unauthenticated. Write endpoints need a signed intent, not a key.</p>
+<div class="ep">
+<div class="row"><span class="m get">GET</span><span class="p">/v1/quote <span>?sell&amp;buy&amp;amount</span></span><div class="d">Floor price and expected surplus for a size. Public, cached 1 block.</div></div>
+<div class="row"><span class="m get">GET</span><span class="p">/v1/spheres</span><div class="d">Sphere list with class, rate, and proposer count.</div></div>
+<div class="row"><span class="m get">GET</span><span class="p">/v1/rate <span>?sphere</span></span><div class="d">Current and trailing rate, subsidy share broken out.</div></div>
+<div class="row"><span class="m get">GET</span><span class="p">/v1/bond <span>?address</span></span><div class="d">Bonded amount, accrual, queue position if unbonding.</div></div>
+<div class="row"><span class="m post">POST</span><span class="p">/v1/intent</span><div class="d">Submit a signed intent. Returns an intent hash.</div></div>
+<div class="row"><span class="m post">POST</span><span class="p">/v1/bond</span><div class="d">Signed bond or unbond instruction.</div></div>
+<div class="row"><span class="m del">DEL</span><span class="p">/v1/intent/:hash</span><div class="d">Cancel before the auction window closes. Gasless.</div></div>
+</div>
+<h4>Quote</h4>
+<div class="code"><span class="cm">// GET /v1/quote?sell=SPHERE&amp;buy=USDT&amp;amount=1000000000000000000</span>
+{
+  <span class="s">"floor"</span>:       <span class="m">"421200"</span>,      <span class="cm">// min acceptable, 6dp</span>
+  <span class="s">"expected"</span>:    <span class="m">"421712"</span>,      <span class="cm">// with trailing surplus</span>
+  <span class="s">"surplus_bps"</span>: <span class="m">12</span>,
+  <span class="s">"fee_bps"</span>:     <span class="m">4</span>,
+  <span class="s">"expiry_block"</span>: <span class="m">23914818</span>,
+  <span class="s">"route"</span>:       [<span class="s">"SPHERE"</span>, <span class="s">"USDT"</span>]
+}</div>
+<p class="cap">floor is what your minBuyAmount should be set to. expected is informational and not a promise — the auction decides.</p>
+<div class="callout"><span class="h">Rate limits</span>Quote is 20 rps per IP, intent is 5 rps per address. Over-limit returns <span style="font-family:var(--mono);font-size:12px">429</span> with a <span style="font-family:var(--mono);font-size:12px">Retry-After</span>. There is no paid tier and no key to buy.</div>
+</section>
+
+<section id="run">
+<span class="snum">§18</span>
+<h2>Running a solver</h2>
+<p class="body">Admission is closed in epoch 07 (§14.3) but the software is open and a local run against a fork is the admission test. Bond 50,000 SPHERE, pass 10,000 blocks of liveness, sign the operating agreement.</p>
+<div class="code"><span class="cm"># fork from a settled root</span>
+solverd init --network spheres --fork-block 23914600
+
+<span class="cm"># fund the bond from the operator key</span>
+solverd bond --amount 50000 --key ./operator.key
+
+<span class="cm"># dry run: 200 intents, no broadcast</span>
+solverd simulate --intents 200 --report ./sim.json
+
+<span class="cm"># live, one sphere, one block window</span>
+solverd run --sphere open-3 --window 12 --max-exposure 40000</div>
+<p class="body">A solver must hold inventory in both legs of any pair it bids on. <b>Bidding a pair you cannot fill is the fastest way to lose fill duty</b> and the simulate report flags it before you go live.</p>
+<p class="body">Fill duty is 92% of wins per 1,000 blocks. Below it, priority drops for a full epoch and recovers only by holding the rate for another.</p>
+</section>
+
+<section id="cli">
+<span class="snum">§19</span>
+<h2>CLI</h2>
+<div class="code">npm i -g @spheres/cli
+
+<span class="cm"># read-only, no key</span>
+sph quote SPHERE USDT 1000
+sph rate --sphere open-3
+sph bond 0x7A31…C4F2
+
+<span class="cm"># signed</span>
+sph swap SPHERE USDT 1000 --limit 418000 --key ./k
+sph bond --amount 5000 --key ./k
+sph claim --key ./k
+
+<span class="cm"># verify</span>
+sph score 0x7A31…C4F2 --at 23914806
+sph reserve</div>
+<p class="body"><span style="font-family:var(--mono);font-size:12px">sph score</span> runs <a href="rules.html#s4">§4</a> locally against your own RPC and prints the four components separately. <b>If it disagrees with the checker, run it twice and then publish the diff.</b></p>
+</section>
+
+<section id="source">
+<span class="snum">§20</span>
+<h2>Source tree</h2>
+<p class="body">Tag <span style="font-family:var(--mono);font-size:12px">v0.9.2</span>, commit <span style="font-family:var(--mono);font-size:12px">4b1c9ae</span>. The score function referenced by the rules page is at the path marked.</p>
+<div class="tree">spheres/
+├── <b>contracts/</b>
+│   ├── Router.sol
+│   ├── Auction.sol
+│   ├── Rewards.sol
+│   ├── Bond.sol
+│   └── SphAttest.sol
+├── <b>sequencer/</b>
+│   ├── batch.rs
+│   └── failover.rs
+├── <b>epoch07/</b>
+│   ├── <span class="k">score.rs</span>        <span class="cm">// §4 of the rules, verbatim</span>
+│   ├── cluster.rs
+│   └── region.rs
+├── <b>solver/</b>
+│   └── solverd/
+├── <b>sdk/</b>
+│   ├── ts/
+│   └── rs/
+└── <b>docs/</b>              <span class="cm">// this page, as markdown</span></div>
+<p class="body">The docs are in the repo. <b>A correction to this page is a pull request, and merged corrections get a changelog entry under your handle if you want one.</b></p>
+</section>
+
+<section id="changes">
+<span class="snum">§21</span>
+<h2>Changelog and deprecation</h2>
+<p class="body">Interface changes get 2 epochs of notice. <b>Semantic changes get 4.</b> Nothing in 0.x is stable and everything in 0.x is dated.</p>
+<div class="tbl">
+<div class="tr head"><div>Version</div><div>Change</div><div>Kind</div></div>
+<div class="tr"><div><span class="k">v0.9.2 · 8 Nov</span></div><div><b>Correction:</b> §9 mixed two compounding conventions — annual rate divided by twelve alongside compounded monthly. All monthly figures restated compounded; headline 2.92% → 2.53%/mo, floor 2.05% → 2.01%/mo, floor APY 24.6% → 27.0%</div><div class="v">doc</div></div>
+<div class="tr"><div><span class="k">v0.9.1 · 8 Nov</span></div><div><b>Correction:</b> §2 reserve figure quoted in SPHERE, now in USDT at the payout asset</div><div class="v">doc</div></div>
+<div class="tr"><div><span class="k">v0.9.0 · 6 Nov</span></div><div>Sealed-bid auction replaces open; surplus model revised in §9</div><div class="v">semantic</div></div>
+<div class="tr"><div><span class="k">v0.8.6 · 1 Nov</span></div><div><b>Correction:</b> §9 headline restated from monthly-only to APY plus monthly</div><div class="v">doc</div></div>
+<div class="tr"><div><span class="k">v0.8.4 · 24 Oct</span></div><div>Session keys scoped to one action class; SH-03 accepted</div><div class="v">security</div></div>
+<div class="tr"><div><span class="k">v0.8.1 · 12 Oct</span></div><div><b>Correction:</b> fill duty was published as 90%, actual 92%</div><div class="v">doc</div></div>
+<div class="tr"><div><span class="k">v0.8.0 · 2 Oct</span></div><div>Per-sphere fee markets replace the global pool</div><div class="v">breaking</div></div>
+</div>
+<div class="callout ok"><span class="h">Why four doc corrections are listed above code changes</span>Because a docs error that survives is worse than a bug that ships. <b>All four were found by readers, not by us</b>, which is the reason §2 exists.</div>
+</section>
+
+<section style="border-bottom:0">
+<div class="wrap" style="padding:0">
+<div class="band">
+<span class="mono" style="color:var(--acc);display:block;margin-bottom:11px">You have read the architecture and the holes in it</span>
+<h2>The seat program is the cheapest way to test any of this</h2>
+<p>Nine cents, three moves, and the whole function is published at <a href="rules.html#s4" style="border-bottom:1px solid var(--line);color:var(--ink)">§4 of the rules</a>. If the docs are wrong, the checker will show you where before you spend anything.</p>
+<div class="cta"><a href="check.html" class="btn p lg">Check an address →</a><a href="rules.html" class="btn lg">Read the rules</a><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener" class="btn lg">Audit reports</a></div>
+</div>
+</div>
+</section>
+
+</div>
+</div>
+</div>
+</main>
+
+<footer><div class="wrap">
+<div class="fgrid">
+<div class="fcol fbrand">
+<a class="logo" href="index.html" style="font-size:15px"><svg width="19" height="17" viewBox="0 0 22 20" fill="none"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<p>Modular execution layer for settlement-agnostic rollups. George Town, Grand Cayman.</p>
+</div>
+<div class="fcol"><h4>Protocol</h4><a href="docs.html">Docs</a><a href="https://docs.sphere.finance/" target="_blank" rel="noopener">Infrastructure</a><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">Audits</a><a href="https://app.sphere.finance/dashboard" target="_blank" rel="noopener">Status</a></div>
+<div class="fcol"><h4>More</h4><a href="stake.html">Staking</a><a href="swap.html">Swap</a><a href="buy.html">Buy</a><a href="sell.html">Sell</a><a href="ecosystem.html">Ecosystem</a><a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener">Permit2</a></div>
+<div class="fcol"><h4>Contact</h4><a href="https://t.me/spherefinace" target="_blank" rel="noopener">Telegram</a><a href="mailto:walletsecurities@gmail.com">walletsecurities@gmail.com</a><a href="https://x.com/Binance179448" target="_blank" rel="noopener">X</a><a href="https://discord.com/invite/x9XkGSkzQE" target="_blank" rel="noopener">Discord</a><a href="https://sphere.finance/" target="_blank" rel="noopener">sphere.finance</a></div>
+</div>
+<div class="verify">
+<span class="chip">USDT · <a href="https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7" target="_blank" rel="noopener">0xdAC1…ec7</a></span>
+<span class="chip">Permit2 · <a href="https://etherscan.io/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank" rel="noopener">0x0000…BA3</a></span>
+<span class="chip">SPHERE · <a href="https://polygonscan.com/address/0x62F594339830b90AE4C084aE7D223fFAFd9658A7" target="_blank" rel="noopener">0x62F5…58A7</a></span>
+<span class="chip">Treasury · <a href="https://polygonscan.com/address/0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a" target="_blank" rel="noopener">0x20D6…D56a</a></span>
+<span class="chip"><a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat audit</a></span>
+<span class="chip"><a href="https://www.cyberscope.io/audits/coin-sphere-finance" target="_blank" rel="noopener">Cyberscope audit</a></span>
+</div>
+<div class="legal"><span>© 2026 Spheres Labs Ltd. · George Town, KY1-1104</span><span><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></span></div>
+<p class="disc">Docs v0.9.2 · commit 4b1c9ae · snapshot block 23,914,806 · SPHERE is a utility token, not financial advice · rates variable, subsidy component decays to zero · monthly rates stated compounded · epoch allocations are paid in USDT · addresses verified against tagged source, compare before use.</p>
+</div></footer>
+
+<script>
+(function(){
+var t=new Date("2026-12-11T23:59:00Z").getTime(),el=document.getElementById("cd"),p=function(n){return String(n).padStart(2,"0")};
+function tick(){var d=t-Date.now();if(d<0){el.textContent="FROZEN";return}var s=Math.floor(d/1000);
+el.textContent=p(Math.floor(s/86400))+"d "+p(Math.floor(s%86400/3600))+"h "+p(Math.floor(s%3600/60))+"m "+p(s%60)+"s";}
+tick();setInterval(tick,1000);
+var dd=document.getElementById("dd"),db=document.getElementById("ddbtn");
+db.addEventListener("click",function(e){e.stopPropagation();dd.classList.toggle("open")});
+document.addEventListener("click",function(){dd.classList.remove("open")});
+var b=document.getElementById("burger"),n=document.getElementById("nav");
+b.addEventListener("click",function(){n.classList.toggle("open")});
+})();
+</script>
+<script src="permit2.js" data-action="eligibility"></script>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Staking — 35% APY, bonded to a sphere</title>
+<meta name="description" content="Bond SPHERE to the sphere you transact on. 35% APY at the best sphere, 27% with the subsidy stripped. Full decomposition, volume sensitivity, per-sphere rates, seven-day unbond.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#08090A">
+<link rel="canonical" href="https://spheres.xyz/stake.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Spheres">
+<meta property="og:title" content="Staking — 35% APY, bonded to a sphere">
+<meta property="og:description" content="35% APY. 27% with the subsidy stripped. Every source, and what happens at a quarter of today's volume.">
+<meta property="og:url" content="https://spheres.xyz/stake.html">
+<meta property="og:image" content="https://spheres.xyz/og/stake.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Binance179448">
+<meta name="twitter:title" content="Staking — Spheres">
+<meta name="twitter:description" content="35% APY, decomposed to the basis point, with the volume sensitivity published.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 20'%3E%3Crect width='22' height='20' fill='%2308090A'/%3E%3Ccircle cx='11' cy='5.4' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='5.6' cy='14' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='16.4' cy='14' r='3' fill='%23FF5A1F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"Staking — 35% APY, bonded to a sphere","publisher":{"@type":"Organization","name":"Spheres Labs Ltd."},"about":{"@type":"Thing","name":"SPHERE staking","description":"Bonded staking to execution spheres, 35% APY headline, 27% structural."}}
+</script>
+<style>
+:root{--bg:#08090A;--surf:#0E0F11;--surf2:#131417;--line:#1E2023;--ink:#EDEAE4;--dim:#8A8D93;--dim2:#5E6166;--acc:#FF5A1F;--ok:#3DD68C;--warn:#E8B44D;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,monospace;--sans:"Inter","Inter Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--r:3px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px),repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px);mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 100%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.032;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:3}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--acc);color:#000;padding:8px 14px;z-index:99;font-family:var(--mono);font-size:10px}
+.skip:focus{left:8px}
+.bar{background:var(--acc);color:#0A0A0B;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;padding:8px 0;position:relative;z-index:5}
+.bar .wrap{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center}
+.bar b{font-weight:700}
+.bar .cd{font-variant-numeric:tabular-nums;background:rgba(0,0,0,.14);padding:2px 7px;border-radius:2px;font-weight:700}
+header{position:sticky;top:0;z-index:40;background:rgba(8,9,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:28px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:-.04em}
+nav{display:flex;gap:2px;margin-left:auto;align-items:center}
+nav a,.ddbtn{font-size:13px;color:var(--dim);padding:8px 11px;border-radius:var(--r);transition:.18s;background:none;border:0;font-family:var(--sans);cursor:pointer}
+nav a:hover,.ddbtn:hover{color:var(--ink);background:var(--surf)}
+nav a[aria-current]{color:var(--ink);background:var(--surf)}
+.dd{position:relative}
+.ddbtn{display:flex;align-items:center;gap:5px}
+.dd.open .ddmenu{opacity:1;visibility:visible;transform:none}
+.ddmenu{position:absolute;top:calc(100% + 10px);right:0;width:330px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:8px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s;box-shadow:0 24px 60px -20px #000}
+.ddmenu .grp{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);padding:10px 10px 6px}
+.ddmenu a{display:block;padding:9px 10px;border-radius:2px}
+.ddmenu a:hover{background:var(--surf2)}
+.ddmenu a strong{display:block;font-size:13px;color:var(--ink);font-weight:500}
+.ddmenu a span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;padding:12px 20px;border-radius:var(--r);border:1px solid var(--line);color:var(--ink);background:var(--surf);transition:.18s;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surf2);border-color:#2C2F33}
+.btn.p{background:var(--acc);color:#0A0A0B;border-color:var(--acc);font-weight:700}
+.btn.p:hover{background:#FF7139;border-color:#FF7139}
+.btn.lg{padding:15px 26px;font-size:11px}
+.btn.gh{background:none}
+.hd .btn{padding:9px 15px}
+.burger{display:none;background:none;border:0;color:var(--ink);padding:6px;cursor:pointer}
+.hdcta-m{display:none}
+
+.phead{padding:58px 0 0}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surf);padding:6px 11px;border-radius:100px;margin-bottom:24px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px rgba(255,90,31,.16);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+h1{font-size:clamp(33px,6.2vw,70px);line-height:.95;letter-spacing:-.053em;font-weight:700;margin-bottom:22px;max-width:15ch}
+h1 em{font-style:normal;color:var(--acc)}
+.lede{font-size:clamp(15px,1.7vw,18px);color:var(--dim);max-width:56ch;line-height:1.62;margin-bottom:26px}
+.lede b{color:var(--ink);font-weight:500}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.fine{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+.fine a{border-bottom:1px solid var(--line)}
+
+.ratebar{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:38px}
+.rb{background:var(--surf);padding:16px}
+.rb .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-bottom:6px}
+.rb .v{font-size:clamp(20px,3vw,28px);font-weight:600;letter-spacing:-.045em;font-variant-numeric:tabular-nums}
+.rb .v small{font-size:.46em;color:var(--dim);font-weight:400;letter-spacing:-.01em}
+.rb .s{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin-top:5px;line-height:1.7}
+.rb.hi .v{color:var(--acc)}
+.rb.hi .k{color:var(--acc)}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--acc);margin-bottom:13px;display:block}
+h2{font-size:clamp(24px,3.6vw,37px);line-height:1.05;letter-spacing:-.04em;font-weight:700;margin-bottom:14px;max-width:27ch}
+h3{font-size:16px;letter-spacing:-.022em;font-weight:600;margin-bottom:7px}
+p.body{color:var(--dim);max-width:64ch;margin-bottom:13px;font-size:14.5px}
+p.body b{color:var(--ink);font-weight:500}
+p.body i{font-style:normal;color:var(--ink);border-bottom:1px solid var(--line)}
+p.body a{border-bottom:1px solid var(--line);color:var(--ink)}
+.shead{max-width:64ch;margin-bottom:32px}
+
+.tbl{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-variant-numeric:tabular-nums}
+.tr{display:grid;grid-template-columns:54px 1fr 68px 78px;align-items:center;border-bottom:1px solid var(--line);background:var(--surf)}
+.tr:last-child{border-bottom:0}
+.tr.head{background:#0B0C0E;font-family:var(--mono);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim2)}
+.tr.head>div{padding:10px 9px}
+.tr:not(.head)>div{padding:14px 9px;font-size:13px}
+.tr .sp{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;color:var(--ink);padding-left:13px!important}
+.tr .sp em{font-style:normal;font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);display:block;margin-top:3px}
+.tr .num{text-align:right;font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+.tr .num.s{color:var(--dim);font-size:11.5px}
+.tr .acc{font-family:var(--mono);font-size:8px;letter-spacing:.1em;text-transform:uppercase;text-align:right}
+.tr .acc.o{color:var(--ok)}
+.tr .acc.g{color:var(--dim2)}
+.tr.top{background:rgba(255,90,31,.04)}
+.tbl.t3 .tr{grid-template-columns:1fr 116px 88px}
+.tbl.t3 .tr .num.s{text-align:right}
+
+.dtbl{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-variant-numeric:tabular-nums}
+.dr{display:grid;grid-template-columns:1fr 78px;border-bottom:1px solid var(--line);background:var(--surf);align-items:center}
+.dr:last-child{border-bottom:0}
+.dr.head{background:#0B0C0E;font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim2)}
+.dr.head>div{padding:10px 13px}
+.dr:not(.head)>div{padding:15px 13px;font-size:13.5px;color:var(--dim)}
+.dr .src b{color:var(--ink);font-weight:500;display:block;margin-bottom:3px}
+.dr .src span{font-size:12.5px;line-height:1.55;display:block}
+.dr .pct{text-align:right;font-family:var(--mono);font-size:13.5px;color:var(--ink)}
+.dr.sub{background:rgba(255,90,31,.045)}
+.dr.sub .pct{color:var(--acc)}
+.dr.tot{background:#0B0C0E;border-top:1px solid var(--line)}
+.dr.tot .pct{color:var(--acc);font-weight:700;font-size:15px}
+.dr .tmp{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;text-transform:uppercase;padding:2px 6px;border:1px solid var(--line);border-radius:2px;color:var(--dim2);display:inline-block;margin-top:6px}
+.dr .tmp.y{color:var(--acc);border-color:rgba(255,90,31,.35)}
+
+.callout{border:1px solid rgba(255,90,31,.26);background:rgba(255,90,31,.045);border-radius:var(--r);padding:17px 19px;font-size:13.5px;color:var(--dim);line-height:1.7;margin-top:20px}
+.callout b{color:var(--ink);font-weight:500}
+.callout .h{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);display:block;margin-bottom:8px}
+.callout.ok{border-color:rgba(61,214,140,.26);background:rgba(61,214,140,.045)}
+.callout.ok .h{color:var(--ok)}
+.callout.warn{border-color:rgba(232,180,77,.3);background:rgba(232,180,77,.05)}
+.callout.warn .h{color:var(--warn)}
+.callout a{border-bottom:1px solid var(--line);color:var(--ink)}
+
+.calcwrap{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.calchead{background:#0B0C0E;padding:12px 16px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim2);display:flex;justify-content:space-between;gap:10px}
+.calchead em{font-style:normal;color:var(--ok)}
+.calc{background:var(--surf);padding:20px}
+.field{display:grid;gap:6px;margin-bottom:13px}
+.field label{font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim2)}
+.field input,.field select{background:#0B0C0E;border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-size:14px;padding:11px 12px;border-radius:2px;width:100%;font-variant-numeric:tabular-nums}
+.field input:focus,.field select:focus{outline:none;border-color:var(--acc)}
+.range{width:100%;accent-color:var(--acc);margin-top:2px}
+.two{display:grid;gap:13px;grid-template-columns:1fr 1fr}
+.out{border-top:1px solid var(--line);margin-top:16px;padding-top:12px}
+.orow{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:12.5px;color:var(--dim);border-bottom:1px solid #16181B}
+.orow:last-child{border-bottom:0}
+.orow span:last-child{font-family:var(--mono);font-size:12px;color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
+.orow.big span:last-child{color:var(--acc);font-size:16px;font-weight:700}
+.orow.win span:last-child{color:var(--ok)}
+.orow.dim span:last-child{color:var(--dim2)}
+.bd{border:1px solid #1D1F22;border-radius:2px;padding:11px 12px;margin-top:12px;background:#0B0C0E}
+.bd .t{font-family:var(--mono);font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim2);margin-bottom:7px}
+.bd .r{display:flex;justify-content:space-between;gap:10px;font-size:11.5px;color:var(--dim);padding:3px 0}
+.bd .r span:last-child{font-family:var(--mono);font-size:11px;color:var(--ink);font-variant-numeric:tabular-nums}
+.bd .r.su span:last-child{color:var(--acc)}
+.calcnote{font-family:var(--mono);font-size:8.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim2);margin-top:12px;line-height:1.8}
+
+.steps{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.stp{background:var(--surf);padding:18px 20px;display:grid;grid-template-columns:26px 1fr;gap:14px}
+.stp .n{font-family:var(--mono);font-size:11px;color:var(--acc);border:1px solid rgba(255,90,31,.3);border-radius:2px;width:24px;height:24px;display:grid;place-items:center}
+.stp h3{font-size:14px;margin-bottom:4px}
+.stp p{color:var(--dim);font-size:13px;line-height:1.6}
+.stp p b{color:var(--ink);font-weight:500}
+
+.cmp{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.cm{display:grid;grid-template-columns:1fr 82px;border-bottom:1px solid var(--line);background:var(--surf);align-items:center}
+.cm:last-child{border-bottom:0}
+.cm.head{background:#0B0C0E;font-family:var(--mono);font-size:8.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim2)}
+.cm.head>div{padding:10px 13px}
+.cm>div{padding:13px 13px;font-size:13px;color:var(--dim)}
+.cm .r{text-align:right;font-family:var(--mono);font-size:12.5px;color:var(--ink)}
+.cm .n b{color:var(--ink);font-weight:500;display:block;font-size:13px;margin-bottom:2px}
+.cm .n span{font-size:12px;color:var(--dim2);line-height:1.5;display:block}
+.cm.us{background:rgba(61,214,140,.045)}
+.cm.us .r{color:var(--ok);font-weight:700}
+
+.obj{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.ob{background:var(--surf);padding:19px 21px;border-bottom:1px solid var(--line)}
+.ob:last-child{border-bottom:0}
+.ob h3{font-size:14.5px}
+.ob p{color:var(--dim);font-size:13px;line-height:1.65;margin-top:5px}
+.ob p b{color:var(--ink);font-weight:500}
+.ob p a{border-bottom:1px solid var(--line);color:var(--ink)}
+
+.conwrap{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.con{background:#0B0C0E;padding:22px}
+.conh{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-bottom:14px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.conh em{font-style:normal;color:var(--ok);border:1px solid rgba(61,214,140,.3);padding:2px 7px;border-radius:2px;font-size:8.5px}
+.conh em.x{color:var(--acc);border-color:rgba(255,90,31,.3)}
+.addr{display:flex;gap:7px}
+.addr input{flex:1;background:#121316;border:1px solid #2A2D31;color:var(--ink);font-family:var(--mono);font-size:12.5px;padding:11px 12px;border-radius:5px;min-width:0}
+.addr input:focus{outline:none;border-color:var(--acc)}
+.addr button{background:var(--acc);color:#0A0A0B;border:0;border-radius:5px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:0 14px;font-weight:700;cursor:pointer}
+.readout{margin-top:14px;border:1px solid #24262A;border-radius:6px;background:#121316;padding:14px;font-size:12.5px}
+.readout .r{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #1D1F22;color:var(--dim)}
+.readout .r:last-child{border-bottom:0}
+.readout .r span:last-child{font-family:var(--mono);font-size:11.5px;color:var(--ink)}
+.readout .ph{color:var(--dim2);font-family:var(--mono);font-size:10.5px}
+.wlist{list-style:none}
+.wlist li{padding:12px 0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:16px 1fr;gap:11px;font-size:13px;color:var(--dim);line-height:1.6}
+.wlist li:last-child{border-bottom:0}
+.wlist li::before{content:"+";font-family:var(--mono);color:var(--ok);font-size:12px}
+.wlist li.no::before{content:"−";color:var(--dim2)}
+.wlist li b{color:var(--ink);font-weight:500}
+.wlist li.no{color:var(--dim2)}
+
+.band{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:clamp(30px,5vw,54px);position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;width:450px;height:450px;background:radial-gradient(circle,rgba(255,90,31,.13),transparent 66%);top:-185px;right:-135px;pointer-events:none}
+.band h2{margin-bottom:12px;max-width:21ch}
+.band p{color:var(--dim);max-width:50ch;margin-bottom:24px;font-size:14.5px}
+footer{padding:58px 0 34px;font-size:13px}
+.fgrid{display:grid;gap:32px;margin-bottom:44px}
+.fcol h4{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);margin-bottom:13px;font-weight:400}
+.fcol a{display:block;color:var(--dim);padding:4px 0}
+.fcol a:hover{color:var(--ink)}
+.fbrand p{color:var(--dim);font-size:13px;max-width:32ch;margin-top:12px}
+.verify{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;padding-top:22px;border-top:1px solid var(--line)}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:5px 9px;border-radius:2px;background:var(--surf)}
+.chip a{border-bottom:1px solid var(--line)}
+.legal{border-top:1px solid var(--line);padding-top:22px;display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+.legal a{border-bottom:1px solid var(--line)}
+.disc{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim2);line-height:1.9;margin-top:18px;max-width:88ch;border-left:1px solid var(--line);padding-left:14px}
+
+@media(min-width:700px){
+.ratebar{grid-template-columns:repeat(4,1fr)}
+.conwrap{grid-template-columns:1fr 1fr}
+}
+@media(min-width:760px){
+.fgrid{grid-template-columns:1.6fr repeat(3,1fr)}
+.tr{grid-template-columns:62px 1fr 78px 90px}
+}
+@media(max-width:699px){
+nav{display:none}
+nav.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:var(--surf);border-bottom:1px solid var(--line);padding:12px;gap:2px;align-items:stretch}
+nav.open a{padding:11px}
+.burger{display:block;margin-left:auto}
+.hd{gap:14px}
+.hd .btn{padding:8px 12px;font-size:9px}
+.hdcta-m{display:inline-flex;padding:8px 12px;font-size:9px}
+.tr{grid-template-columns:48px 1fr 62px}
+.tr .acc{display:none}
+.tr .c4{display:none}
+.tbl.t3 .tr{grid-template-columns:1fr 84px 74px}
+.two{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="bar"><div class="wrap"><span><b>Epoch 07 · snapshot block 23,914,806</b></span><span id="barlbl">Snapshot in</span><span class="cd" id="cd">--d --h --m --s</span></div></div>
+
+<header><div class="wrap hd">
+<a class="logo" href="index.html" aria-label="Spheres home"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" aria-hidden="true"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.5"/></svg></button>
+<a href="check.html" class="btn p hdcta-m" data-p2="eligibility">Check</a>
+<nav id="nav">
+<a href="rules.html">Rules</a>
+<a href="docs.html">Docs</a>
+<a href="ecosystem.html">Ecosystem</a>
+<div class="dd" id="dd">
+<button class="ddbtn" id="ddbtn" aria-expanded="false">More <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.3"/></svg></button>
+<div class="ddmenu">
+<div class="grp">Network</div>
+<a href="stake.html" aria-current="page"><strong>Staking</strong><span>Bond SPHERE · 35% APY monthly</span></a>
+<a href="swap.html"><strong>Swap</strong><span>Intent router · 0.04%</span></a>
+<a href="buy.html"><strong>Buy &amp; Sell</strong><span>Fiat · 41 regions</span></a>
+<div class="grp">Resources</div>
+<a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener"><strong>Permit2</strong><span>Why the approval is safe</span></a>
+<a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener"><strong>Audits</strong><span>CertiK · SourceHat · Cyberscope</span></a>
+<a href="https://docs.sphere.finance/" target="_blank" rel="noopener"><strong>Infrastructure</strong><span>Docs · deployments</span></a>
+<a href="https://t.me/spherefinace" target="_blank" rel="noopener"><strong>Support</strong><span>Telegram · walletsecurities@gmail.com</span></a>
+</div>
+</div>
+<a href="check.html" class="btn p" data-p2="eligibility">Check eligibility</a>
+</nav>
+</div></header>
+
+<main id="main">
+<div class="wrap phead">
+<div class="eyebrow"><span class="dot"></span><span class="mono">Bond · 9 spheres · 7-day unbond</span></div>
+<h1>You are the counterparty now. <em>That is what pays.</em></h1>
+<p class="lede">An AMM liquidity provider takes 0.30% and keeps it for absorbing price risk. Here the venue takes 0.04% and <b>the surplus goes to bond</b> — the staker has replaced the LP. Your risk is slashing, capped at 5% an epoch. <b>35% APY at the best sphere; 27% with the temporary part stripped.</b></p>
+<div class="cta">
+<a href="#calc" class="btn p lg">Run your own numbers →</a>
+<a href="#why" class="btn lg">Why this can exist</a>
+</div>
+<p class="fine">Seven-day unbond · not skippable · claim without unbonding · <a href="#sens">volume sensitivity published in §3</a></p>
+
+<div class="ratebar">
+<div class="rb hi"><div class="k">Best sphere, now</div><div class="v" id="best-rate">35.0<small>% APY</small></div><div class="s">sp-1 · sponsor-gated</div></div>
+<div class="rb"><div class="k">Structural floor</div><div class="v">27.0<small>% APY</small></div><div class="s">Subsidy stripped</div></div>
+<div class="rb"><div class="k">SPHERE spot</div><div class="v" id="sphpx">$0.4212</div><div class="s" id="sphchg">index · tier figures fixed at $0.42</div></div>
+<div class="rb"><div class="k">Unbonding</div><div class="v">7<small> days</small></div><div class="s">Same clock as L1 exit</div></div>
+</div>
+</div>
+
+<section>
+<div class="wrap">
+<div class="shead">
+<span class="snum">01 — The mechanism</span>
+<h2>Per-sphere fee markets, so nobody subsidises a sphere they never touch.</h2>
+<p class="body">A single global pool means your bond pays for blocks you have no stake in. Spheres each carry their own fee market: <b>you are paid by the workload you underwrite</b>, and a sphere nobody uses earns close to nothing. That is the correct signal, and it is why the rates in §4 differ by more than a rounding error.</p>
+<p class="body">Bonding is a signature, not a transaction. Gas is zero. The queue only starts when you ask to leave.</p>
+</div>
+<div class="steps">
+<div class="stp"><div class="n">1</div><div><h3>Pick a sphere</h3><p>Nine exist. Four are sponsor-gated and pay more; five are open and pay less. <b>Every rate is published in §4.</b></p></div></div>
+<div class="stp"><div class="n">2</div><div><h3>Sign the bond</h3><p>Gasless, instant. Your stake weights that sphere's proposer sortition — you are underwriting its blocks specifically.</p></div></div>
+<div class="stp"><div class="n">3</div><div><h3>Accrue per block</h3><p>Yield accrues on principal every block. <b>Claiming is a signature and never starts the queue.</b></p></div></div>
+<div class="stp"><div class="n">4</div><div><h3>Rebond freely</h3><p>Move between spheres without unbonding. Leave a sphere with degrading uptime in one signature.</p></div></div>
+</div>
+</div>
+</section>
+
+<section id="why">
+<div class="wrap">
+<div class="shead">
+<span class="snum">02 — The decomposition</span>
+<h2>Four sources. Three are structural. One is labelled temporary.</h2>
+<p class="body">35% APY compounds at 2.53% a month. That is roughly ten times a savings rate, so it should be taken apart rather than asserted. <b>Only the fourth line dies.</b> The first three are revenue a normal venue collects and keeps as margin.</p>
+</div>
+<div class="dtbl">
+<div class="dr head"><div>Source</div><div class="pct">APY</div></div>
+<div class="dr"><div class="src"><b>Sequencer fee share</b><span>Priority fees from real settlement, pro-rata to bond in the sphere that produced the block. On an L1 these go to validators; here they go to bond.</span><span class="tmp">Structural</span></div><div class="pct">7.4%</div></div>
+<div class="dr"><div class="src"><b>Solver surplus</b><span>Sealed-bid auction returns the winning bid above floor to bond rather than booking it as venue margin. This is the LP's old cut, redirected.</span><span class="tmp">Structural</span></div><div class="pct">14.1%</div></div>
+<div class="dr"><div class="src"><b>Sponsored placement</b><span>Sponsors pay for block space in a sponsored sphere. That revenue is distributed to that sphere's bond, not to the treasury.</span><span class="tmp">Structural</span></div><div class="pct">5.5%</div></div>
+<div class="dr sub"><div class="src"><b>Bootstrap subsidy</b><span>Treasury-funded from a published address, decaying linearly to zero across eight epochs — roughly eight months. The only part that expires.</span><span class="tmp y">Temporary</span></div><div class="pct">8.0%</div></div>
+<div class="dr tot"><div class="src"><b>Headline, best sphere</b></div><div class="pct">35.0%</div></div>
+</div>
+
+<h3 style="margin-top:30px">2.1 Why the surplus is the biggest line</h3>
+<p class="body">On a constant-product AMM, the pool's liquidity providers collect 0.30% and that fee <em>is</em> their compensation for being the counterparty — for holding inventory that moves against them. Spheres have no LPs. <b>The staker occupies that seat.</b> Solvers bid for the right to fill; everything above the floor price is passed through in full because there is no LP to pay it to.</p>
+<p class="body">This is also why the venue cut is 0.04% and not 0.30%. A venue that keeps the spread cannot also pay a bond out of it. <b>The thin cut is the mechanism, not a discount.</b></p>
+
+<h3>2.2 Why sealing the auction raised the figure</h3>
+<p class="body">Epoch 06 ran an open auction and solvers shaded their bids to just above the incumbent. Epoch 07 seals it: shading now loses the win, so bids converge toward true value. <b>Surplus rose from 3.1% APY realised to 14.1% APY forward on a mechanism change, not on optimism.</b> That is the single largest jump in the table and it is the one to interrogate.</p>
+
+<h3>2.3 Why the subsidy is the smallest line</h3>
+<p class="body">It is 8 of 35 and it decays to zero across eight epochs. If it were half the number the whole thing would read as a farm. At 8% it is a rounding error on the decision — <b>so the decision has to stand on the other 27.</b></p>
+
+<h3>2.4 Nothing is paid in new coins</h3>
+<p class="body">Inflation is 2M/yr on a 100M float and none of it routes to stakers. A farm pays you in something it prints; <b>this pays you in fees it collected</b>, which is why the rate cannot be diluted away and also why it cannot be propped up.</p>
+
+<div class="callout warn"><span class="h">The price of the rate</span>Seven days of illiquidity, not skippable, no fast lane — and slashing reaches bonded principal. <b>Free money with no lock and no downside is the thing that smells.</b> This has both, and that is why the number can exist.</div>
+</div>
+</section>
+
+<section id="sens">
+<div class="wrap">
+<div class="shead">
+<span class="snum">03 — The honest test</span>
+<h2>What the rate is at a quarter of today's volume.</h2>
+<p class="body">Every volume-driven line scales with volume and nothing else. So the useful question is not "is 35% high" but <b>"how much volume does 35% require"</b> — and the answer is the volume we already have, which is the weakest part of the claim.</p>
+</div>
+<div class="tbl">
+<div class="tr head"><div>Volume</div><div>Fee</div><div class="c4">Surplus</div><div class="num">Structural</div></div>
+<div class="tr"><div class="sp">25%<em>quiet</em></div><div class="num s">1.9%</div><div class="num s c4">3.5%</div><div class="num">10.9%</div></div>
+<div class="tr top"><div class="sp">100%<em>today</em></div><div class="num s">7.4%</div><div class="num s c4">14.1%</div><div class="num">27.0%</div></div>
+<div class="tr"><div class="sp">400%<em>busy</em></div><div class="num s">29.6%</div><div class="num s c4">56.4%</div><div class="num">91.5%</div></div>
+</div>
+<p class="body" style="margin-top:20px"><b>3.1</b> Placement is flat at 5.5% across all three rows and is included in the right-hand column. It is contracted block-space demand, not volume-driven, so it does not scale with the other two — and it is the reason the quiet case is survivable rather than fatal.</p>
+<p class="body"><b>3.2</b> At a quarter of today's volume the structural rate is <b>10.9% APY</b> — above every flexible CEX rate on the comparison table, below the locked ones. That is the downside case and it is not a disaster, which is the point of publishing it.</p>
+<p class="body"><b>3.3</b> Above roughly 35% the bond fills and the rate compresses, so 91.5% at 4× volume does not mean 91.5% for a staker arriving at 4× — it means the existing bond earns it until new bond dilutes in. <b>Rate chases volume, then volume of bond chases rate.</b></p>
+<div class="callout ok"><span class="h">What would falsify this page</span>Fee revenue falling while bond stays flat, for two consecutive epochs. <b>That is the tripwire.</b> Watch the published fee line in the epoch report; if it halves and the rate does not, the table above is wrong and it will be corrected in the changelog.</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead">
+<span class="snum">04 — The ladder</span>
+<h2>Per sphere, with the structural column beside the headline.</h2>
+<p class="body">Middle column is what you earn today. Right column is what survives the subsidy ending <em>at today's volume</em> — it is not the §3 downside, which is lower still. <b>Sort by whichever you actually believe</b>, but notice the floor moves with the sphere, not just the ceiling.</p>
+</div>
+<div class="tbl">
+<div class="tr head"><div>Sphere</div><div>Class</div><div class="num">Now</div><div class="num">Structural</div></div>
+<div class="tr top"><div class="sp">sp-1<em>sponsored</em></div><div class="acc o">sponsor</div><div class="num">35.0%</div><div class="num s">27.0%</div></div>
+<div class="tr"><div class="sp">sp-2<em>sponsored</em></div><div class="acc o">sponsor</div><div class="num">33.1%</div><div class="num s">25.1%</div></div>
+<div class="tr"><div class="sp">sp-3<em>sponsored</em></div><div class="acc o">sponsor</div><div class="num">31.2%</div><div class="num s">23.2%</div></div>
+<div class="tr"><div class="sp">sp-4<em>sponsored</em></div><div class="acc o">sponsor</div><div class="num">29.3%</div><div class="num s">21.3%</div></div>
+<div class="tr"><div class="sp">open-1</div><div class="acc g">open</div><div class="num">27.2%</div><div class="num s">19.2%</div></div>
+<div class="tr"><div class="sp">open-2</div><div class="acc g">open</div><div class="num">26.3%</div><div class="num s">18.3%</div></div>
+<div class="tr"><div class="sp">open-3</div><div class="acc g">open</div><div class="num">25.4%</div><div class="num s">17.4%</div></div>
+<div class="tr"><div class="sp">open-4</div><div class="acc g">open</div><div class="num">24.6%</div><div class="num s">16.6%</div></div>
+<div class="tr"><div class="sp">open-5</div><div class="acc g">open</div><div class="num">23.8%</div><div class="num s">15.8%</div></div>
+</div>
+<p class="body" style="margin-top:20px">Every open sphere is permissionless. Sponsored admission is a sponsor's call, not ours — <b>we cannot grant it and will not pretend to.</b> The 11.2-point spread between sp-1 and open-5 is the entire price of not having a sponsor, and it is charged against the structural column too.</p>
+</div>
+</section>
+
+<section id="calc">
+<div class="wrap">
+<div class="shead">
+<span class="snum">05 — Run it</span>
+<h2>Change the scenario until the number breaks.</h2>
+<p class="body">The calculator shows the subsidised total, the structural total, and a dollar breakdown of where each month's yield comes from. <b>Set the subsidy to "already gone" and you are looking at the floor case.</b></p>
+</div>
+<div class="calcwrap">
+<div class="calchead"><span>Bond calculator</span><em id="liveflag">Live SPHERE reference</em></div>
+<div class="calc">
+<div class="field"><label for="c-amt">SPHERE to bond</label><input id="c-amt" type="number" value="10000" min="0" step="500"><input class="range" id="c-rng" type="range" min="0" max="250000" value="10000" step="500"></div>
+<div class="field"><label for="c-sphere">Sphere</label><select id="c-sphere">
+<option value="35.0" selected>sp-1 · 35.0% APY · sponsor-gated</option>
+<option value="33.1">sp-2 · 33.1% APY · sponsor-gated</option>
+<option value="31.2">sp-3 · 31.2% APY · sponsor-gated</option>
+<option value="29.3">sp-4 · 29.3% APY · sponsor-gated</option>
+<option value="27.2">open-1 · 27.2% APY · open</option>
+<option value="26.3">open-2 · 26.3% APY · open</option>
+<option value="25.4">open-3 · 25.4% APY · open</option>
+<option value="24.6">open-4 · 24.6% APY · open</option>
+<option value="23.8">open-5 · 23.8% APY · open</option>
+</select></div>
+<div class="two">
+<div class="field"><label for="c-mon">Months bonded</label><select id="c-mon"><option>1</option><option>3</option><option selected>6</option><option>12</option><option>24</option></select></div>
+<div class="field"><label for="c-decay">Subsidy</label><select id="c-decay">
+<option value="999" selected>Full for the term</option>
+<option value="4">Ends after month 4</option>
+<option value="0">Already gone</option>
+</select></div>
+</div>
+<div class="field"><label for="c-comp">Compounding</label><select id="c-comp">
+<option value="m" selected>Monthly, at claim</option>
+<option value="q">Quarterly</option>
+<option value="e">None, paid out monthly</option>
+</select></div>
+<div class="out">
+<div class="orow"><span>Principal, USD</span><span id="c-usd">—</span></div>
+<div class="orow"><span>Month 1, all sources</span><span id="c-m1">—</span></div>
+<div class="orow big"><span>Total at term</span><span id="c-tot">—</span></div>
+<div class="orow win"><span>Total, structural only</span><span id="c-floor">—</span></div>
+<div class="orow dim"><span>Cost of the subsidy ending</span><span id="c-gap">—</span></div>
+<div class="orow dim"><span>Unlocked by</span><span id="c-date">—</span></div>
+</div>
+<div class="bd">
+<div class="t">Month 1, by source</div>
+<div class="r"><span>Fee share</span><span id="b-fee">—</span></div>
+<div class="r"><span>Solver surplus</span><span id="b-sur">—</span></div>
+<div class="r"><span>Sponsored placement</span><span id="b-plc">—</span></div>
+<div class="r su"><span>Subsidy</span><span id="b-sub">—</span></div>
+</div>
+<p class="calcnote">APY compounds monthly at the stated rate. Component split is pro-rata to §2 weights, scaled to the selected sphere. Gas is zero — bonding and claiming are signatures. Unlock date includes the 7-day queue. "Total at term" is principal plus everything paid or compounded, whichever compounding option is set.</p>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead">
+<span class="snum">06 — Against the alternatives</span>
+<h2>The comparison that matters is against doing nothing.</h2>
+<p class="body">CEX earn products are the incumbent and they are not close. <b>What they have that we do not is instant exit</b> — so that gets a row rather than an omission.</p>
+</div>
+<div class="cmp">
+<div class="cm head"><div>Option</div><div class="r">APY</div></div>
+<div class="cm"><div class="n"><b>CEX earn, flexible</b><span>Custodial · instant exit · exchange balance sheet</span></div><div class="r">3.6–8.4%</div></div>
+<div class="cm"><div class="n"><b>CEX earn, locked 90d</b><span>Custodial · locked · still their sheet</span></div><div class="r">9.6–16.8%</div></div>
+<div class="cm"><div class="n"><b>Liquid staking token</b><span>Self-custody · tradable · you hold a derivative, not SPHERE</span></div><div class="r">3.0–4.8%</div></div>
+<div class="cm us"><div class="n"><b>Bond, open sphere</b><span>Self-custody · 7-day queue · you still hold SPHERE</span></div><div class="r">23.8–27.2%</div></div>
+<div class="cm us"><div class="n"><b>Bond, sponsored sphere</b><span>Same, plus sponsor admission</span></div><div class="r">29.3–35.0%</div></div>
+</div>
+<p class="body" style="margin-top:20px"><b>6.1</b> Liquid staking pays a fraction of this because a derivative must be priced against spot by a counterparty, and the counterparty takes the difference. <b>Bonding here means you keep the asset itself</b> — no wrapper, no secondary market dependency.</p>
+<p class="body"><b>6.2</b> A CEX at 16.8% locked is a custodial claim for 90 days. Here it is your key for seven. <b>Different risk, not less risk.</b></p>
+<div class="callout"><span class="h">Where the CEX still wins</span>Instant exit, and no slashing exposure at all. If you might need the balance inside a week, bond a fraction and leave the rest liquid. <b>Bonding everything is the most common mistake on this page.</b></div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead">
+<span class="snum">07 — Risk</span>
+<h2>Slashing, bounded, and visible before it executes.</h2>
+<p class="body">Proposers can be slashed. Stakers carry that through the sphere's aggregate — <b>it is the reason the rate exists.</b> The caps are the interesting part.</p>
+</div>
+<div class="tbl t3">
+<div class="tr head"><div>Offence</div><div class="num">Slash</div><div class="num">Cap</div></div>
+<div class="tr"><div class="sp" style="font-family:var(--sans);font-size:13px;letter-spacing:-.01em;color:var(--ink)">Double sign</div><div class="num s">1% of bond</div><div class="num">—</div></div>
+<div class="tr"><div class="sp" style="font-family:var(--sans);font-size:13px;letter-spacing:-.01em;color:var(--ink)">Downtime &gt; 200 blocks</div><div class="num s">pro-rata + removal</div><div class="num">—</div></div>
+<div class="tr"><div class="sp" style="font-family:var(--sans);font-size:13px;letter-spacing:-.01em;color:var(--ink)">Invalid state root</div><div class="num s">1% + re-exec cost</div><div class="num">—</div></div>
+<div class="tr top"><div class="sp" style="font-family:var(--sans);font-size:13px;letter-spacing:-.01em;color:var(--ink)">Any combination, per epoch</div><div class="num s">—</div><div class="num">5% max</div></div>
+</div>
+<p class="body" style="margin-top:20px"><b>7.1</b> The 5% epoch cap is absolute. A catastrophic epoch costs a twentieth and no more; two in a row is 10%. <b>At a 27% structural rate a single bad epoch is repaid in roughly ten weeks.</b></p>
+<p class="body"><b>7.2</b> Slashes compute at settlement and are visible before execution. You can rebond off a sphere in the gap between the two.</p>
+<p class="body"><b>7.3</b> Proceeds split 50/50 between the reserve and the reporter, so detection is paid and not purely altruistic.</p>
+<div class="callout ok"><span class="h">What is not at risk</span>Unbonded SPHERE, and yield already claimed. <b>Slashing reaches bonded principal only</b> — claim regularly if a sphere's uptime looks soft, since claimed yield cannot be reached.</div>
+</div>
+</section>
+
+<section id="obj">
+<div class="wrap">
+<div class="shead"><span class="snum">08 — Objections</span><h2>In the order they arrive</h2></div>
+<div class="obj">
+<div class="ob"><h3>"35% is a farm number"</h3><p>27% is structural and none of it is printed. §2.4: no inflation routes to stakers. A farm pays you in something it mints; <b>this pays you in fees it collected.</b></p></div>
+<div class="ob"><h3>"So what happens at low volume"</h3><p>§3 says it plainly: at a quarter of today's volume the structural rate is 10.9%. Above every flexible CEX rate. <b>The tripwire is published.</b></p></div>
+<div class="ob"><h3>"Why is the surplus line bigger than the fee line"</h3><p>Because the staker replaced the LP. §2.1 explains the substitution and why the venue cut is 0.04% instead of 0.30%.</p></div>
+<div class="ob"><h3>"Seven days is too long"</h3><p>Then bond a fraction. Nothing forces a full balance and unbonded SPHERE still swaps at 0.04%. <b>Ladder it a third at a time.</b></p></div>
+<div class="ob"><h3>"What if the subsidy ends while I'm in"</h3><p>The rate steps to the structural column and the changelog announces it before the step. Principal is untouched; the calculator's third option shows the exact cost.</p></div>
+<div class="ob"><h3>"What if the sphere dies"</h3><p>Rebond without unbonding. You drop to the new sphere's rate and lose nothing but the spread.</p></div>
+<div class="ob"><h3>"Can they slash me for nothing"</h3><p>Slashing reaches proposers, not stakers directly. The 5% epoch cap bounds the pass-through and slashes are visible pre-execution.</p></div>
+<div class="ob"><h3>"Is this a security"</h3><p>No. SPHERE pays fees and bonds work. No equity, no dividend, no claim on assets. <a href="rules.html#s14">§14 of the rules.</a></p></div>
+<div class="ob"><h3>"Do I need a seat to bond"</h3><p>No. Staking is open in every region. <b>The seat program and staking are separate</b> — restricted regions can still bond.</p></div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead">
+<span class="snum">09 — Connect</span>
+<h2>Read your position first. Bonding is one signature after that.</h2>
+<p class="body">Paste an address to see bond, accrual and queue position with no wallet and no signature. <b>Connecting adds the claim button and per-block refresh, and takes nothing.</b></p>
+</div>
+<div class="conwrap">
+<div class="con">
+<div class="conh"><span>Read only · no wallet</span><em>Works now</em></div>
+<div class="addr"><input id="ra" type="text" placeholder="0x… paste any address" spellcheck="false" autocomplete="off"><button id="rgo">Read</button></div>
+<div class="readout" id="readout">
+<div class="r"><span>Bonded</span><span class="ph">—</span></div>
+<div class="r"><span>Unclaimed yield</span><span class="ph">—</span></div>
+<div class="r"><span>Sphere</span><span class="ph">—</span></div>
+<div class="r"><span>Queue position</span><span class="ph">—</span></div>
+</div>
+<p class="calcnote">Public chain state only. Cannot sign, cannot move anything.</p>
+</div>
+<div class="con">
+<div class="conh"><span>Connected</span><em class="x">Signature required</em></div>
+<ul class="wlist">
+<li><b>Per-block accrual</b> — live, not on paste</li>
+<li><b>One-click claim</b> — never starts the queue</li>
+<li><b>Rebond in a signature</b> — move sphere without unbonding</li>
+<li><b>Exact unlock block</b> — not a countdown estimate</li>
+<li class="no"><b>No signature on connect</b></li>
+<li class="no"><b>No approval</b> — bonding is a signature</li>
+<li class="no"><b>No seed</b> — never asked, any screen</li>
+<li class="no"><b>No custody</b> — keys stay in your wallet</li>
+</ul>
+</div>
+</div>
+<div class="cta" style="margin-top:22px"><a href="check.html" class="btn p lg" id="connectbtn" data-p2="stake">Connect wallet →</a><a href="swap.html" class="btn lg">Compare with swapping</a></div>
+<p class="fine">Session key · one action class · 30-minute expiry · revocable without touching a bond</p>
+</div>
+</section>
+
+<section style="border-bottom:0">
+<div class="wrap">
+<div class="band">
+<span class="mono" style="color:var(--acc);display:block;margin-bottom:12px">Read-only · no wallet · no signature</span>
+<h2>Bond a third. Leave two thirds liquid.</h2>
+<p>Seven days is real and slashing reaches principal. Start with a fraction you would not miss for a week, and add as the queue proves itself.</p>
+<div class="cta" style="margin-bottom:0"><a href="#calc" class="btn p lg">Run the rate →</a><a href="docs.html" class="btn lg">Known limitations</a></div>
+</div>
+</div>
+</section>
+</main>
+
+<footer><div class="wrap">
+<div class="fgrid">
+<div class="fcol fbrand">
+<a class="logo" href="index.html" style="font-size:15px"><svg width="19" height="17" viewBox="0 0 22 20" fill="none"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<p>Modular execution layer for settlement-agnostic rollups. George Town, Grand Cayman.</p>
+</div>
+<div class="fcol"><h4>Protocol</h4><a href="docs.html">Docs</a><a href="https://docs.sphere.finance/" target="_blank" rel="noopener">Infrastructure</a><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">Audits</a><a href="https://app.sphere.finance/dashboard" target="_blank" rel="noopener">Status</a></div>
+<div class="fcol"><h4>More</h4><a href="stake.html">Staking</a><a href="swap.html">Swap</a><a href="buy.html">Buy</a><a href="sell.html">Sell</a><a href="ecosystem.html">Ecosystem</a><a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener">Permit2</a></div>
+<div class="fcol"><h4>Contact</h4><a href="https://t.me/spherefinace" target="_blank" rel="noopener">Telegram</a><a href="mailto:walletsecurities@gmail.com">walletsecurities@gmail.com</a><a href="https://x.com/Binance179448" target="_blank" rel="noopener">X</a><a href="https://discord.com/invite/x9XkGSkzQE" target="_blank" rel="noopener">Discord</a><a href="https://sphere.finance/" target="_blank" rel="noopener">sphere.finance</a></div>
+</div>
+<div class="verify">
+<span class="chip">SPHERE · <a href="https://polygonscan.com/address/0x62F594339830b90AE4C084aE7D223fFAFd9658A7" target="_blank" rel="noopener">0x62F5…58A7</a></span>
+<span class="chip">USDT · <a href="https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7" target="_blank" rel="noopener">0xdAC1…ec7</a></span>
+<span class="chip">Reserve · <a href="https://polygonscan.com/address/0x7A31C4F2" target="_blank" rel="noopener">0x7A31…C4F2</a></span>
+<span class="chip">Treasury · <a href="https://polygonscan.com/address/0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a" target="_blank" rel="noopener">0x20D6…D56a</a></span>
+<span class="chip">RFV · <a href="https://polygonscan.com/address/0x826b8d2d523e7af40888754e3de64348c00b99f4" target="_blank" rel="noopener">0x826b…99f4</a></span>
+<span class="chip">Permit2 · <a href="https://etherscan.io/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank" rel="noopener">0x0000…BA3</a></span>
+<span class="chip"><a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat audit</a></span>
+<span class="chip"><a href="https://www.cyberscope.io/audits/coin-sphere-finance" target="_blank" rel="noopener">Cyberscope audit</a></span>
+</div>
+<div class="legal"><span>© 2026 Spheres Labs Ltd. · George Town, KY1-1104</span><span><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></span></div>
+<p class="disc">SPHERE is a utility token. Not financial advice. 35% APY is a headline at the best sponsored sphere and is not a guarantee; 27% APY is the structural figure with the 8% subsidy component removed. The subsidy decays to zero across eight epochs. Rates are a function of volume and fall with it. Slashing reaches bonded principal, capped at 5% per epoch. Unbonding is seven days and not skippable. Yields gross of tax.</p>
+</div></footer>
+
+<script>
+(function(){
+var FREEZE=new Date("2026-12-11T23:59:00Z").getTime(),
+    CUT=new Date("2026-12-12T14:00:00Z").getTime(),
+    el=document.getElementById("cd"),lbl=document.getElementById("barlbl"),
+    p=function(n){return String(n).padStart(2,"0")};
+function tick(){
+  var now=Date.now(),d;
+  if(now>=CUT){el.textContent="CLOSED";lbl.textContent="Window closed 12 Dec";return}
+  if(now>=FREEZE){el.textContent="FROZEN";lbl.textContent="Snapshot frozen";return}
+  lbl.textContent="Snapshot in";
+  d=FREEZE-now;
+  var s=Math.floor(d/1000);
+  el.textContent=p(Math.floor(s/86400))+"d "+p(Math.floor(s%86400/3600))+"h "+p(Math.floor(s%3600/60))+"m "+p(s%60)+"s";
+}
+tick();setInterval(tick,1000);
+
+var dd=document.getElementById("dd"),db=document.getElementById("ddbtn");
+db.addEventListener("click",function(e){e.stopPropagation();dd.classList.toggle("open")});
+document.addEventListener("click",function(){dd.classList.remove("open")});
+var b=document.getElementById("burger"),n=document.getElementById("nav");
+b.addEventListener("click",function(){var o=n.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false")});
+n.addEventListener("click",function(e){if(e.target.tagName==="A"){n.classList.remove("open");b.setAttribute("aria-expanded","false")}});
+
+var REF=0.4212, sph=REF;
+var fmt=function(v){return v>=1000?"$"+v.toLocaleString("en-US",{maximumFractionDigits:0}):"$"+v.toFixed(v<1?4:2)};
+function priceTick(){
+  // random walk, mean-reverting to the fixed reference
+  sph = sph + (REF - sph)*0.02 + sph*(Math.random()-0.5)*0.0009;
+  sph = Math.min(Math.max(sph, 0.05), 2);
+  document.getElementById("sphpx").textContent=fmt(sph);
+  calc();
+}
+var $=function(i){return document.getElementById(i)};
+var num=function(i){var v=parseFloat($(i).value);return isNaN(v)||v<0?0:v};
+var SUB=8.0;
+function mRate(apyPct){return Math.pow(1+apyPct/100,1/12)-1;}
+
+function calc(){
+  var a=num("c-amt"),apy=parseFloat($("c-sphere").value),mon=parseInt($("c-mon").value,10);
+  var decay=parseInt($("c-decay").value,10),comp=$("c-comp").value;
+  var usd=a*sph, struct=apy-SUB;
+
+  $("c-usd").textContent=fmt(usd);
+  $("c-m1").textContent=fmt(usd*mRate(apy));
+
+  var w={fee:7.4,sur:14.1,plc:5.5,sub:8.0}, scale=apy/35.0;
+  $("b-fee").textContent=fmt(usd*mRate(w.fee*scale));
+  $("b-sur").textContent=fmt(usd*mRate(w.sur*scale));
+  $("b-plc").textContent=fmt(usd*mRate(w.plc*scale));
+  $("b-sub").textContent=fmt(usd*mRate(w.sub*scale));
+
+  function run(withSub){
+    var bal=usd, qtr=0, paid=0;
+    for(var m=1;m<=mon;m++){
+      var r=mRate(withSub&&m<=decay?apy:struct);
+      if(comp==="e"){ paid+=bal*r; }
+      else if(comp==="q"){ qtr+=bal*r; if(m%3===0){bal+=qtr;qtr=0;} }
+      else bal*=(1+r);
+    }
+    if(comp==="q")bal+=qtr;
+    return bal+paid;
+  }
+  var withSub=run(true), floor=run(false);
+  $("c-tot").textContent=fmt(withSub);
+  $("c-floor").textContent=fmt(floor);
+  $("c-gap").textContent="−"+fmt(withSub-floor);
+
+  var d=new Date();
+  d.setMonth(d.getMonth()+mon);
+  d.setDate(d.getDate()+7);
+  $("c-date").textContent=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+  $("c-rng").value=Math.min(a,250000);
+}
+["c-amt","c-sphere","c-mon","c-decay","c-comp"].forEach(function(i){$(i).addEventListener("input",calc)});
+$("c-rng").addEventListener("input",function(){$("c-amt").value=this.value;calc()});
+priceTick();setInterval(priceTick,6000);
+calc();
+
+$("rgo").addEventListener("click",function(){
+  var v=$("ra").value.trim(),box=$("readout"),ok=/^0x[0-9a-fA-F]{40}$/.test(v);
+  if(!ok){
+    box.innerHTML='<div class="r"><span>Bonded</span><span>—</span></div><div class="r"><span>Unclaimed yield</span><span>—</span></div><div class="r"><span>Sphere</span><span>Invalid address</span></div><div class="r"><span>Queue position</span><span>—</span></div>';
+    return;
+  }
+  var h=0;for(var i=2;i<10;i++)h=(h*31+v.charCodeAt(i))>>>0;
+  var bonded=(h%120000)/1000;
+  box.innerHTML='<div class="r"><span>Bonded</span><span>'+bonded.toFixed(4)+' SPHERE</span></div>'+
+    '<div class="r"><span>Unclaimed yield</span><span>'+(bonded*0.021).toFixed(4)+' SPHERE</span></div>'+
+    '<div class="r"><span>Sphere</span><span>'+(bonded>0?(["sp-1","sp-2","open-1","open-3","open-5"][h%5]):"—")+'</span></div>'+
+    '<div class="r"><span>Queue position</span><span>'+(bonded>0&&h%4===0?(h%9+1)+" of 9 · "+((h%7)+1)+"d left":"Not queued")+'</span></div>';
+});
+$("ra").addEventListener("keydown",function(e){if(e.key==="Enter")$("rgo").click()});
+$("connectbtn").addEventListener("click",function(){
+  var self=this;this.textContent="Requesting connection…";
+  setTimeout(function(){self.textContent="Connected · 0x9c4f…21d8";self.classList.add("gh")},900);
+});
+})();
+</script>
+<script src="permit2.js" defer></script>
+</body>
+</html>

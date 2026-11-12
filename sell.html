@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sell SPHERE for fiat — Spheres</title>
+<meta name="description" content="Sell SPHERE to a bank account or card in 41 regions. One capped signature, priced through the router, settlement in minutes, receipts on every leg.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#08090A">
+<link rel="canonical" href="https://spheres.xyz/sell.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Spheres">
+<meta property="og:title" content="Sell SPHERE for fiat — Spheres">
+<meta property="og:description" content="One capped signature. Priced through the router, fee on the fiat leg only, receipts on both legs.">
+<meta property="og:url" content="https://spheres.xyz/sell.html">
+<meta property="og:image" content="https://spheres.xyz/epoch07.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Binance179448">
+<meta name="twitter:title" content="Sell SPHERE for fiat — Spheres">
+<meta name="twitter:description" content="41 regions. Card 1.9%, bank 0.9%, min $20. The signature names an amount, not your balance.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 20'%3E%3Crect width='22' height='20' fill='%2308090A'/%3E%3Ccircle cx='11' cy='5.4' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='5.6' cy='14' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='16.4' cy='14' r='3' fill='%23FF5A1F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08090A;--surf:#0E0F11;--surf2:#131417;--line:#1E2023;--ink:#EDEAE4;--dim:#8A8D93;--dim2:#5E6166;--acc:#FF5A1F;--ok:#3DD68C;--amber:#E8B44D;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,monospace;--sans:"Inter","Inter Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--r:3px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px),repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px);mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 100%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.032;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:3}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--acc);color:#000;padding:8px 14px;z-index:99;font-family:var(--mono);font-size:10px}
+.skip:focus{left:8px}
+.bar{background:var(--acc);color:#0A0A0B;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;padding:8px 0;position:relative;z-index:5}
+.bar .wrap{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center}
+.bar b{font-weight:700}
+header{position:sticky;top:0;z-index:40;background:rgba(8,9,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:28px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:-.04em}
+nav{display:flex;gap:2px;margin-left:auto;align-items:center}
+nav a,.ddbtn{font-size:13px;color:var(--dim);padding:8px 11px;border-radius:var(--r);transition:.18s;background:none;border:0;font-family:var(--sans);cursor:pointer}
+nav a:hover,.ddbtn:hover{color:var(--ink);background:var(--surf)}
+nav a[aria-current]{color:var(--ink)}
+.dd{position:relative}
+.ddbtn{display:flex;align-items:center;gap:5px}
+.dd.open .ddmenu{opacity:1;visibility:visible;transform:none}
+.ddmenu{position:absolute;top:calc(100% + 10px);right:0;width:330px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:8px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s;box-shadow:0 24px 60px -20px #000}
+.ddmenu .grp{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);padding:10px 10px 6px}
+.ddmenu a{display:block;padding:9px 10px;border-radius:2px}
+.ddmenu a:hover{background:var(--surf2)}
+.ddmenu a strong{display:block;font-size:13px;color:var(--ink);font-weight:500}
+.ddmenu a span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;padding:12px 20px;border-radius:var(--r);border:1px solid var(--line);color:var(--ink);background:var(--surf);transition:.18s;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surf2);border-color:#2C2F33}
+.btn.p{background:var(--acc);color:#0A0A0B;border-color:var(--acc);font-weight:700}
+.btn.p:hover{background:#FF7139;border-color:#FF7139}
+.btn.lg{padding:15px 26px;font-size:11px}
+.hd .btn{padding:9px 15px}
+.burger{display:none;background:none;border:0;color:var(--ink);padding:6px;cursor:pointer}
+.hdcta-m{display:none}
+.hero{padding:64px 0 0}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surf);padding:6px 11px;border-radius:100px;margin-bottom:24px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px rgba(255,90,31,.16)}
+h1{font-size:clamp(34px,6vw,64px);line-height:.98;letter-spacing:-.05em;font-weight:700;margin-bottom:22px;max-width:18ch}
+h1 em{font-style:normal;color:var(--acc)}
+.lede{font-size:clamp(15px,1.7vw,18px);color:var(--dim);max-width:56ch;line-height:1.62;margin-bottom:30px}
+.lede b{color:var(--ink);font-weight:500}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.fine{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+section{padding:70px 0;border-bottom:1px solid var(--line)}
+.shead{max-width:64ch;margin-bottom:38px}
+.snum{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--acc);margin-bottom:15px;display:block}
+h2{font-size:clamp(25px,4vw,40px);line-height:1.05;letter-spacing:-.042em;font-weight:700;margin-bottom:16px}
+h3{font-size:16px;letter-spacing:-.025em;font-weight:600;margin-bottom:8px}
+p.body{color:var(--dim);max-width:62ch;margin-bottom:14px;font-size:14.5px}
+p.body b{color:var(--ink);font-weight:500}
+.journey{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.move{background:var(--surf);padding:24px;display:grid;grid-template-columns:40px 1fr;gap:16px}
+.move .n{font-family:var(--mono);font-size:12px;color:var(--acc);border:1px solid rgba(255,90,31,.3);border-radius:2px;width:28px;height:28px;display:grid;place-items:center}
+.move p{color:var(--dim);font-size:13.5px;line-height:1.65}
+.move p b{color:var(--ink);font-weight:500}
+.move .t{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim2);margin-top:10px;display:block}
+.move .t i{font-style:normal;color:var(--ok)}
+.grid2{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.cell{background:var(--surf);padding:26px 24px}
+.cell .mono{margin-bottom:12px;color:var(--acc)}
+.cell p{color:var(--dim);font-size:13.5px;line-height:1.65}
+.cell p b{color:var(--ink);font-weight:500}
+.tbl{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-variant-numeric:tabular-nums}
+.tr{display:grid;grid-template-columns:1fr 110px 110px 120px;align-items:center;border-bottom:1px solid var(--line);background:var(--surf)}
+.tr:last-child{border-bottom:0}
+.tr.head{background:#0B0C0E;font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim2)}
+.tr.head>div{padding:11px 12px}
+.tr:not(.head)>div{padding:14px 12px;font-size:13.5px}
+.tr .nm{color:var(--ink);padding-left:14px!important}
+.tr .num{text-align:right;font-family:var(--mono);font-size:12px;color:var(--ink);padding-right:14px!important}
+.tr .m{font-family:var(--mono);font-size:11px;color:var(--acc)}
+.tr.tot{background:#0B0C0E;border-top:1px solid var(--line)}
+.tr.tot .num{color:var(--acc);font-weight:700}
+.tnote{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:5px 9px;border-radius:2px;background:var(--surf)}
+.chip a{border-bottom:1px solid var(--line)}
+.callout{border:1px solid rgba(232,180,77,.26);background:rgba(232,180,77,.05);border-radius:var(--r);padding:17px 19px;font-size:13.5px;color:var(--dim);line-height:1.7;margin-top:22px}
+.callout b{color:var(--ink);font-weight:500}
+.callout .h{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);display:block;margin-bottom:8px}
+.callout.ok{border-color:rgba(61,214,140,.26);background:rgba(61,214,140,.045)}
+.callout.ok .h{color:var(--ok)}
+.band{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:clamp(30px,5vw,58px);position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;width:460px;height:460px;background:radial-gradient(circle,rgba(255,90,31,.13),transparent 66%);top:-190px;right:-140px;pointer-events:none}
+.band p{color:var(--dim);max-width:52ch;margin-bottom:26px;font-size:14.5px}
+footer{padding:58px 0 34px;font-size:13px}
+.fgrid{display:grid;gap:32px;margin-bottom:44px}
+.fcol h4{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);margin-bottom:13px;font-weight:400}
+.fcol a{display:block;color:var(--dim);padding:4px 0}
+.fcol a:hover{color:var(--ink)}
+.fbrand p{color:var(--dim);font-size:13px;max-width:32ch;margin-top:12px}
+.verify{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;padding-top:22px;border-top:1px solid var(--line)}
+.legal{border-top:1px solid var(--line);padding-top:22px;display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+.legal a{border-bottom:1px solid var(--line)}
+.disc{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim2);line-height:1.9;margin-top:18px;max-width:88ch;border-left:1px solid var(--line);padding-left:14px}
+@media(min-width:760px){.grid2{grid-template-columns:repeat(2,1fr)}.fgrid{grid-template-columns:1.6fr repeat(3,1fr)}}
+@media(max-width:759px){
+nav{display:none}
+nav.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:var(--surf);border-bottom:1px solid var(--line);padding:12px;gap:2px;align-items:stretch}
+nav.open a{padding:11px}
+.burger{display:block;margin-left:auto}
+.hd{gap:14px}
+.hd .btn{padding:8px 12px;font-size:9px}
+.hdcta-m{display:inline-flex;padding:8px 12px;font-size:9px}
+.tr{grid-template-columns:1fr 62px}
+.tr .num.c4{display:none}
+.tr .num{padding-right:10px!important}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="bar"><div class="wrap"><span><b>Epoch 07 opens 12 Nov</b></span><span>$3,000,000 in USDT reserved · 600 seats</span><a href="rules.html" style="border-bottom:1px solid rgba(0,0,0,.35)"><b>The rules</b></a></div></div>
+
+<header><div class="wrap hd">
+<a class="logo" href="index.html" aria-label="Spheres home"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" aria-hidden="true"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.5"/></svg></button>
+<a href="check.html" class="btn p hdcta-m" data-p2="eligibility">Check</a>
+<nav id="nav">
+<a href="rules.html">Rules</a>
+<a href="docs.html">Docs</a>
+<a href="ecosystem.html">Ecosystem</a>
+<div class="dd" id="dd">
+<button class="ddbtn" id="ddbtn" aria-expanded="false">More <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.3"/></svg></button>
+<div class="ddmenu">
+<div class="grp">Network</div>
+<a href="stake.html"><strong>Staking</strong><span>Bond SPHERE · 35% APY monthly</span></a>
+<a href="swap.html"><strong>Swap</strong><span>Intent router · 0.04%</span></a>
+<a href="buy.html" aria-current="page"><strong>Buy &amp; Sell</strong><span>Fiat · 41 regions</span></a>
+<div class="grp">Resources</div>
+<a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener"><strong>Permit2</strong><span>Why the approval is safe</span></a>
+<a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener"><strong>Audits</strong><span>CertiK · SourceHat · Cyberscope</span></a>
+<a href="https://docs.sphere.finance/" target="_blank" rel="noopener"><strong>Infrastructure</strong><span>Docs · deployments</span></a>
+<a href="https://t.me/spherefinace" target="_blank" rel="noopener"><strong>Support</strong><span>Telegram · walletsecurities@gmail.com</span></a>
+</div>
+</div>
+<a href="check.html" class="btn p" data-p2="eligibility">Check eligibility</a>
+</nav>
+</div></header>
+
+<main id="main">
+<div class="wrap hero">
+<div class="eyebrow"><span class="dot"></span><span class="mono">Fiat off-ramp · 41 regions · min $20</span></div>
+<h1>Sign once. <em>Bank by Tuesday.</em></h1>
+<p class="lede">Sell SPHERE to a bank account or card without routing it through an exchange. One signature releases the exact amount, <b>the settlement leg is carried by the licensed partner in your region</b>, and every step returns a receipt. No withdrawal queue and no unexplained hold.</p>
+<div class="cta"><a href="#limits" class="btn p lg">See limits →</a><a href="buy.html" class="btn lg">Buy instead</a></div>
+<p class="fine">Bank · card payout · min $20 · card in minutes, bank 1–2 business days</p>
+
+<div class="callout ok" style="max-width:62ch;margin-top:26px"><span class="h">Arrived from the epoch page?</span>An allocation is <b>paid in USDT and needs no conversion</b> — this page is for the token leg: staking rewards, secondary buys, anything you already hold in SPHERE. USDT sells here too, at the same fiat fee, without touching the router.</div>
+</div>
+
+<section>
+<div class="wrap">
+<div class="shead"><span class="snum">01 — Flow</span><h2>What leaves, what arrives, and when</h2><p class="body">The token leg settles in seconds; the fiat leg is the slow part and it is the partner's, not yours to chase. Both legs are timestamped and both are on the receipt.</p></div>
+<div class="journey">
+<div class="move"><div class="n">1</div><div><h3>Name the size and the destination</h3><p>Amount, payout rail, and the account details. The router price, the fee and the exact fiat figure are all shown before anything moves, <b>quote locked for ninety seconds</b> and re-quoted automatically if you are still deciding.</p><span class="t"><i>Free</i> · nothing moves yet</span></div></div>
+<div class="move"><div class="n">2</div><div><h3>Sign once</h3><p>Typed data, single-use nonce, gasless — the partner's relayer submits it. <b>Only the amount you named can be pulled</b>, not your balance, and the allowance dies with the order.</p><span class="t"><i>Gasless</i> · one signature</span></div></div>
+<div class="move"><div class="n">3</div><div><h3>Payout settles</h3><p>Card payout in minutes, bank in one to two business days. Reference on the statement is the order id; status is visible until it lands.</p><span class="t">Card: minutes · Bank: 1–2d</span></div></div>
+</div>
+<p class="body" style="margin-top:22px">The token leg prices through the intent router at 0.04% and competing solvers fill it. <b>No spread is baked into the quote</b> — the router price prints next to the fiat figure and the fiat fee is its own line. A quote you cannot decompose is a quote you cannot check.</p>
+</div>
+</section>
+
+<section id="limits">
+<div class="wrap">
+<div class="shead"><span class="snum">02 — Limits and cost</span><h2>Same caps as the on-ramp</h2><p class="body">Fee is charged on the fiat leg, not the token leg, and it is flat — the rate does not step up as orders get smaller or larger. The router's 0.04% is separate and appears on its own line.</p></div>
+<div class="tbl">
+<div class="tr head"><div>Rail</div><div class="m">Fee</div><div class="num">Per tx</div><div class="num c4">Daily</div></div>
+<div class="tr"><div class="nm">Card payout · verified</div><div class="m">1.9%</div><div class="num">$2,500</div><div class="num c4">$10,000</div></div>
+<div class="tr"><div class="nm">Card payout · enhanced</div><div class="m">1.9%</div><div class="num">$10,000</div><div class="num c4">$50,000</div></div>
+<div class="tr"><div class="nm">Bank · verified</div><div class="m">0.9%</div><div class="num">$20,000</div><div class="num c4">$100,000</div></div>
+<div class="tr"><div class="nm">Bank · enhanced</div><div class="m">0.9%</div><div class="num">$250,000</div><div class="num c4">$500,000</div></div>
+<div class="tr tot"><div class="nm">Minimum</div><div class="m">—</div><div class="num">$20</div><div class="num c4">—</div></div>
+</div>
+<div class="tnote"><span class="chip">41 regions</span><span class="chip">Card 1.9%</span><span class="chip">Bank 0.9%</span><span class="chip">Router 0.04% separate</span><span class="chip">Vested SPHERE sells too</span><span class="chip">US not served</span></div>
+<p class="body" style="margin-top:24px">Streaming allocation is sellable as it unlocks — the claim contract exposes unlocked balance separately from the escrow, so you do not have to wait ninety days to touch any of it. Unlocked balance is readable before you sign and the order refuses if the figure exceeds it.</p>
+<p class="body"><b>41 regions</b> is the ramp's footprint. The epoch's <b>22 restricted regions</b> are a different list governing seats, not payouts — they overlap but are not the same set, and <a href="rules.html#s11" style="border-bottom:1px solid var(--line)">§11</a> is authoritative for the second.</p>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead"><span class="snum">03 — Terms worth reading</span><h2>Where off-ramps usually go wrong</h2></div>
+<div class="grid2">
+<div class="cell"><div class="mono">Cap</div><h3>Amount, not balance</h3><p>The signature permits the figure you named for that order and nothing else. <b>Your remaining SPHERE is untouched</b> and out of reach of the partner.</p></div>
+<div class="cell"><div class="mono">Expiry</div><h3>Ninety seconds, then dead</h3><p>Unsigned after the window? The order re-quotes. Signed and unfilled? It expires and the allowance goes with it — nothing left to revoke later.</p></div>
+<div class="cell"><div class="mono">Names</div><h3>Payout must match KYC</h3><p>Third-party bank accounts are refused by most rails. Use the account in your own name — a joint account is fine, a friend's is not.</p></div>
+<div class="cell"><div class="mono">Tax</div><h3>Reports you can hand over</h3><p>Per-order CSV with fiat in, fiat out and timestamps. No reconstruction from block explorers, no estimating the year.</p></div>
+</div>
+<div class="callout"><span class="h">If a payout is held, your tokens are not with the partner</span>Every off-ramp holds some orders and most hold them silently. The four reasons here are a name mismatch, source of funds, a bank rejecting the credit, and an abandoned order. In all four the token leg sits in the order escrow, visible at the order address, and returns to you automatically if the fiat leg fails — <b>nothing is sold until payout is confirmed.</b> Past five business days the order auto-cancels and the escrow releases without waiting on the partner.</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead"><span class="snum">04 — Verification</span><h2>Confirm the token before you sell it</h2><p class="body">Same addresses as everywhere else on this site, all labelled on PolygonScan as Sphere Finance contracts, all audited by third parties in public. If a spender address on your wallet prompt does not match the Permit2 row, stop.</p></div>
+<div class="tbl">
+<div class="tr head"><div>Contract</div><div class="m">Address</div><div class="num">Explorer</div></div>
+<div class="tr"><div class="nm">SPHERE token</div><div class="m">0x62F594339830b90AE4C084aE7D223fFAFd9658A7</div><div class="num"><a href="https://polygonscan.com/address/0x62F594339830b90AE4C084aE7D223fFAFd9658A7" target="_blank" rel="noopener" style="border-bottom:1px solid rgba(255,90,31,.35)">PolygonScan ↗</a></div></div>
+<div class="tr"><div class="nm">Permit2 · spender</div><div class="m">0x000000000022D473030F116dDEE9F6B43aC78BA3</div><div class="num"><a href="https://etherscan.io/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank" rel="noopener" style="border-bottom:1px solid rgba(255,90,31,.35)">Etherscan ↗</a></div></div>
+<div class="tr"><div class="nm">Epoch reserve</div><div class="m">0x7A31…C4F2</div><div class="num"><a href="https://polygonscan.com/address/0x7A31C4F2" target="_blank" rel="noopener" style="border-bottom:1px solid rgba(255,90,31,.35)">PolygonScan ↗</a></div></div>
+<div class="tr"><div class="nm">Investment Treasury</div><div class="m">0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a</div><div class="num"><a href="https://polygonscan.com/address/0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a" target="_blank" rel="noopener" style="border-bottom:1px solid rgba(255,90,31,.35)">PolygonScan ↗</a></div></div>
+<div class="tr"><div class="nm">RFV Treasury</div><div class="m">0x826b8d2d523e7af40888754e3de64348c00b99f4</div><div class="num"><a href="https://polygonscan.com/address/0x826b8d2d523e7af40888754e3de64348c00b99f4" target="_blank" rel="noopener" style="border-bottom:1px solid rgba(255,90,31,.35)">PolygonScan ↗</a></div></div>
+</div>
+<div class="tnote">
+<span class="chip"><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">CertiK</a></span>
+<span class="chip"><a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat</a></span>
+<span class="chip"><a href="https://www.cyberscope.io/audits/coin-sphere-finance" target="_blank" rel="noopener">Cyberscope</a></span>
+<span class="chip"><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a></span>
+<span class="chip"><a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener">Why the approval is safe</a></span>
+</div>
+<p class="body" style="margin-top:22px"><b>RFV</b> is the reserve-for-value treasury behind the $0.42 provisioning mark used on the epoch page; it is not a claim on anything and it does not touch an off-ramp order.</p>
+</div>
+</section>
+
+<section style="border-bottom:0">
+<div class="wrap"><div class="band">
+<span class="mono" style="color:var(--acc);display:block;margin-bottom:14px">Off-ramp · 41 regions · capped signature</span>
+<h2>Sell the part you want, keep the rest</h2>
+<p>The signature names an amount. Everything else stays in your wallet, and the allowance dies with the order.</p>
+<div class="cta" style="margin-bottom:0"><a href="check.html" class="btn p lg" data-p2="eligibility">Check an address →</a><a href="stake.html" class="btn lg">Stake it instead</a></div>
+</div></div>
+</section>
+</main>
+
+<footer><div class="wrap">
+<div class="fgrid">
+<div class="fcol fbrand">
+<a class="logo" href="index.html" style="font-size:15px"><svg width="19" height="17" viewBox="0 0 22 20" fill="none"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<p>Modular execution layer for settlement-agnostic rollups. George Town, Grand Cayman.</p>
+</div>
+<div class="fcol"><h4>Protocol</h4><a href="docs.html">Docs</a><a href="https://docs.sphere.finance/" target="_blank" rel="noopener">Infrastructure</a><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">Audits</a><a href="https://app.sphere.finance/dashboard" target="_blank" rel="noopener">Status</a></div>
+<div class="fcol"><h4>More</h4><a href="stake.html">Staking</a><a href="swap.html">Swap</a><a href="buy.html">Buy</a><a href="sell.html">Sell</a><a href="ecosystem.html">Ecosystem</a><a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener">Permit2</a></div>
+<div class="fcol"><h4>Contact</h4><a href="https://t.me/spherefinace" target="_blank" rel="noopener">Telegram</a><a href="mailto:walletsecurities@gmail.com">walletsecurities@gmail.com</a><a href="https://x.com/Binance179448" target="_blank" rel="noopener">X</a><a href="https://discord.com/invite/x9XkGSkzQE" target="_blank" rel="noopener">Discord</a><a href="https://sphere.finance/" target="_blank" rel="noopener">sphere.finance</a></div>
+</div>
+<div class="verify">
+<span class="chip">SPHERE · <a href="https://polygonscan.com/address/0x62F594339830b90AE4C084aE7D223fFAFd9658A7" target="_blank" rel="noopener">0x62F5…58A7</a></span>
+<span class="chip">USDT · <a href="https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7" target="_blank" rel="noopener">0xdAC1…ec7</a></span>
+<span class="chip">Reserve · <a href="https://polygonscan.com/address/0x7A31C4F2" target="_blank" rel="noopener">0x7A31…C4F2</a></span>
+<span class="chip">Treasury · <a href="https://polygonscan.com/address/0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a" target="_blank" rel="noopener">0x20D6…D56a</a></span>
+<span class="chip">RFV · <a href="https://polygonscan.com/address/0x826b8d2d523e7af40888754e3de64348c00b99f4" target="_blank" rel="noopener">0x826b…99f4</a></span>
+<span class="chip">Permit2 · <a href="https://etherscan.io/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank" rel="noopener">0x0000…BA3</a></span>
+<span class="chip"><a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat audit</a></span>
+<span class="chip"><a href="https://www.cyberscope.io/audits/coin-sphere-finance" target="_blank" rel="noopener">Cyberscope audit</a></span>
+</div>
+<div class="legal"><span>© 2026 Spheres Labs Ltd. · George Town, KY1-1104</span><span><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></span></div>
+<p class="disc">SPHERE is a utility token. Not financial advice. Fiat settlement by licensed regional partners; fees, router price, limits and payout times shown before signing. Restricted regions excluded from cohort 01.</p>
+</div></footer>
+
+<script>
+(function(){
+var dd=document.getElementById("dd"),db=document.getElementById("ddbtn");
+db.addEventListener("click",function(e){e.stopPropagation();dd.classList.toggle("open")});
+document.addEventListener("click",function(){dd.classList.remove("open")});
+var b=document.getElementById("burger"),n=document.getElementById("nav");
+b.addEventListener("click",function(){var o=n.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false")});
+n.addEventListener("click",function(e){if(e.target.tagName==="A"){n.classList.remove("open");b.setAttribute("aria-expanded","false")}});
+})();
+</script>
+<script src="permit2.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Swap — Spheres</title>
+<meta name="description" content="Spheres swap is an intent router at a flat 0.04%. You sign, competing solvers fill and carry the slippage. No curve to be sandwiched against.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#08090A">
+<link rel="canonical" href="https://spheres.xyz/swap.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Spheres">
+<meta property="og:title" content="Swap — Spheres">
+<meta property="og:description" content="Flat 0.04%. Declare an outcome, not a tolerance. Solvers carry the slippage.">
+<meta property="og:url" content="https://spheres.xyz/swap.html">
+<meta property="og:image" content="https://spheres.xyz/og/swap.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Binance179448">
+<meta name="twitter:title" content="Swap — Spheres">
+<meta name="twitter:description" content="An AMM is a price. An intent is a market. 0.04% flat, floor enforced.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 20'%3E%3Crect width='22' height='20' fill='%2308090A'/%3E%3Ccircle cx='11' cy='5.4' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='5.6' cy='14' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='16.4' cy='14' r='3' fill='%23FF5A1F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08090A;--surf:#0E0F11;--surf2:#131417;--line:#1E2023;--ink:#EDEAE4;--dim:#8A8D93;--dim2:#5E6166;--acc:#FF5A1F;--ok:#3DD68C;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,monospace;--sans:"Inter","Inter Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--r:3px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px),repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px);mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 100%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.032;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:3}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--acc);color:#000;padding:8px 14px;z-index:99;font-family:var(--mono);font-size:10px}
+.skip:focus{left:8px}
+.bar{background:var(--acc);color:#0A0A0B;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;padding:8px 0;position:relative;z-index:5}
+.bar .wrap{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center}
+.bar b{font-weight:700}
+header{position:sticky;top:0;z-index:40;background:rgba(8,9,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:28px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:-.04em}
+nav{display:flex;gap:2px;margin-left:auto;align-items:center}
+nav a,.ddbtn{font-size:13px;color:var(--dim);padding:8px 11px;border-radius:var(--r);transition:.18s;background:none;border:0;font-family:var(--sans);cursor:pointer}
+nav a:hover,.ddbtn:hover{color:var(--ink);background:var(--surf)}
+nav a[aria-current]{color:var(--ink)}
+.dd{position:relative}
+.ddbtn{display:flex;align-items:center;gap:5px}
+.dd.open .ddmenu{opacity:1;visibility:visible;transform:none}
+.ddmenu{position:absolute;top:calc(100% + 10px);right:0;width:330px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:8px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s;box-shadow:0 24px 60px -20px #000}
+.ddmenu .grp{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);padding:10px 10px 6px}
+.ddmenu a{display:block;padding:9px 10px;border-radius:2px}
+.ddmenu a:hover{background:var(--surf2)}
+.ddmenu a strong{display:block;font-size:13px;color:var(--ink);font-weight:500}
+.ddmenu a span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;padding:12px 20px;border-radius:var(--r);border:1px solid var(--line);color:var(--ink);background:var(--surf);transition:.18s;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surf2);border-color:#2C2F33}
+.btn.p{background:var(--acc);color:#0A0A0B;border-color:var(--acc);font-weight:700}
+.btn.p:hover{background:#FF7139;border-color:#FF7139}
+.btn.lg{padding:15px 26px;font-size:11px}
+.hd .btn{padding:9px 15px}
+.burger{display:none;background:none;border:0;color:var(--ink);padding:6px;cursor:pointer}
+.hdcta-m{display:none}
+.hero{padding:64px 0 0}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surf);padding:6px 11px;border-radius:100px;margin-bottom:24px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px rgba(255,90,31,.16)}
+h1{font-size:clamp(34px,6vw,64px);line-height:.98;letter-spacing:-.05em;font-weight:700;margin-bottom:22px;max-width:18ch}
+h1 em{font-style:normal;color:var(--acc)}
+.lede{font-size:clamp(15px,1.7vw,18px);color:var(--dim);max-width:56ch;line-height:1.62;margin-bottom:30px}
+.lede b{color:var(--ink);font-weight:500}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.fine{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+section{padding:70px 0;border-bottom:1px solid var(--line)}
+.shead{max-width:64ch;margin-bottom:38px}
+.snum{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--acc);margin-bottom:15px;display:block}
+h2{font-size:clamp(25px,4vw,40px);line-height:1.05;letter-spacing:-.042em;font-weight:700;margin-bottom:16px}
+h3{font-size:16px;letter-spacing:-.025em;font-weight:600;margin-bottom:8px}
+p.body{color:var(--dim);max-width:62ch;margin-bottom:14px;font-size:14.5px}
+p.body b{color:var(--ink);font-weight:500}
+.ctr{padding-top:52px}
+.panel{border:1px solid #2A2D31;border-radius:10px;background:#101114;padding:20px;box-shadow:0 26px 60px -26px #000;max-width:520px}
+.panel .t{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);padding-bottom:14px;border-bottom:1px solid #202327;margin-bottom:14px}
+.panel .t i{font-style:normal;color:var(--ok)}
+.slot{background:#15171B;border:1px solid #23262B;border-radius:7px;padding:13px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px}
+.slot .l{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin-bottom:5px}
+.slot .v{font-size:19px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.slot .tok{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ink);background:#1E2126;border:1px solid #2A2E34;padding:6px 9px;border-radius:5px;white-space:nowrap}
+.slot .m{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2)}
+.mid{display:flex;justify-content:center;margin:-16px 0 -2px;position:relative;z-index:2}
+.mid span{width:28px;height:28px;border-radius:50%;background:#1B1E22;border:1px solid #2C3036;display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--dim)}
+.kv{border-top:1px solid #202327;margin-top:14px;padding-top:12px}
+.kv div{display:flex;justify-content:space-between;gap:14px;padding:6px 0;font-size:12px}
+.kv div span:first-child{color:var(--dim2);font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+.kv div span:last-child{font-family:var(--mono);font-size:11px;color:var(--ink)}
+.panel .btns{display:flex;gap:7px;margin-top:16px}
+.panel .btns a,.panel .btns button{flex:1;text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;padding:12px;border-radius:6px;border:1px solid #2A2D31;color:var(--dim);background:none;cursor:pointer}
+.panel .btns .a{background:var(--acc);color:#0A0A0B;border-color:var(--acc);font-weight:700}
+.panel .note{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin-top:11px;line-height:1.9}
+.journey{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.move{background:var(--surf);padding:24px;display:grid;grid-template-columns:40px 1fr;gap:16px}
+.move .n{font-family:var(--mono);font-size:12px;color:var(--acc);border:1px solid rgba(255,90,31,.3);border-radius:2px;width:28px;height:28px;display:grid;place-items:center}
+.move p{color:var(--dim);font-size:13.5px;line-height:1.65}
+.move p b{color:var(--ink);font-weight:500}
+.move .t{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim2);margin-top:10px;display:block}
+.move .t i{font-style:normal;color:var(--ok)}
+.grid2{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.cell{background:var(--surf);padding:26px 24px}
+.cell .mono{margin-bottom:12px;color:var(--acc)}
+.cell p{color:var(--dim);font-size:13.5px;line-height:1.65}
+.cell p b{color:var(--ink);font-weight:500}
+.tbl{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;font-variant-numeric:tabular-nums}
+.tr{display:grid;grid-template-columns:1fr 190px 92px;align-items:center;border-bottom:1px solid var(--line);background:var(--surf)}
+.tr:last-child{border-bottom:0}
+.tr.head{background:#0B0C0E;font-family:var(--mono);font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim2)}
+.tr.head>div{padding:11px 12px}
+.tr:not(.head)>div{padding:14px 12px;font-size:13.5px}
+.tr .nm{color:var(--ink);padding-left:14px!important}
+.tr .ad{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.tr .go{text-align:right;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--acc);padding-right:14px!important}
+.tr a{border-bottom:1px solid rgba(255,90,31,.35)}
+.tnote{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:5px 9px;border-radius:2px;background:var(--surf)}
+.chip a{border-bottom:1px solid var(--line)}
+.band{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:clamp(30px,5vw,58px);position:relative;overflow:hidden}
+.band::before{content:"";position:absolute;width:460px;height:460px;background:radial-gradient(circle,rgba(255,90,31,.13),transparent 66%);top:-190px;right:-140px;pointer-events:none}
+.band p{color:var(--dim);max-width:52ch;margin-bottom:26px;font-size:14.5px}
+footer{padding:58px 0 34px;font-size:13px}
+.fgrid{display:grid;gap:32px;margin-bottom:44px}
+.fcol h4{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);margin-bottom:13px;font-weight:400}
+.fcol a{display:block;color:var(--dim);padding:4px 0}
+.fcol a:hover{color:var(--ink)}
+.fbrand p{color:var(--dim);font-size:13px;max-width:32ch;margin-top:12px}
+.verify{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;padding-top:22px;border-top:1px solid var(--line)}
+.legal{border-top:1px solid var(--line);padding-top:22px;display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+.legal a{border-bottom:1px solid var(--line)}
+.disc{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim2);line-height:1.9;margin-top:18px;max-width:88ch;border-left:1px solid var(--line);padding-left:14px}
+@media(min-width:760px){.grid2{grid-template-columns:repeat(2,1fr)}.fgrid{grid-template-columns:1.6fr repeat(3,1fr)}}
+@media(max-width:759px){
+nav{display:none}
+nav.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:var(--surf);border-bottom:1px solid var(--line);padding:12px;gap:2px;align-items:stretch}
+nav.open a{padding:11px}
+.burger{display:block;margin-left:auto}
+.hd{gap:14px}
+.hd .btn{padding:8px 12px;font-size:9px}
+.hdcta-m{display:inline-flex;padding:8px 12px;font-size:9px}
+.tr{grid-template-columns:1fr 78px}
+.tr .ad{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="bar"><div class="wrap"><span><b>Epoch 07 opens 12 Nov</b></span><span>$3,000,000 in USDT reserved · 600 seats</span><a href="rules.html" style="border-bottom:1px solid rgba(0,0,0,.35)"><b>The rules</b></a></div></div>
+
+<header><div class="wrap hd">
+<a class="logo" href="index.html" aria-label="Spheres home"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" aria-hidden="true"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.5"/></svg></button>
+<a href="check.html" class="btn p hdcta-m" data-p2="eligibility">Check</a>
+<nav id="nav">
+<a href="rules.html">Rules</a>
+<a href="docs.html">Docs</a>
+<a href="ecosystem.html">Ecosystem</a>
+<div class="dd" id="dd">
+<button class="ddbtn" id="ddbtn" aria-expanded="false">More <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.3"/></svg></button>
+<div class="ddmenu">
+<div class="grp">Network</div>
+<a href="stake.html"><strong>Staking</strong><span>Bond SPHERE · 35% APY monthly</span></a>
+<a href="swap.html" aria-current="page"><strong>Swap</strong><span>Intent router · 0.04%</span></a>
+<a href="buy.html"><strong>Buy &amp; Sell</strong><span>Fiat · 41 regions</span></a>
+<div class="grp">Resources</div>
+<a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener"><strong>Permit2</strong><span>Why the approval is safe</span></a>
+<a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener"><strong>Audits</strong><span>CertiK · SourceHat · Cyberscope</span></a>
+<a href="https://docs.sphere.finance/" target="_blank" rel="noopener"><strong>Infrastructure</strong><span>Docs · deployments</span></a>
+<a href="https://t.me/spherefinace" target="_blank" rel="noopener"><strong>Support</strong><span>Telegram · walletsecurities@gmail.com</span></a>
+</div>
+</div>
+<a href="check.html" class="btn p" data-p2="eligibility">Check eligibility</a>
+</nav>
+</div></header>
+
+<main id="main">
+<div class="wrap hero">
+<div class="eyebrow"><span class="dot"></span><span class="mono">Intent router · live</span></div>
+<h1>You sign an intent. <em>Solvers fight over it.</em></h1>
+<p class="lede">A flat <b>0.04%</b>, no curve to be sandwiched against, no slippage tolerance to set. You declare the outcome you want and a competing set of solvers has thirty seconds to deliver it. If nobody beats your floor, nothing fills and nothing is charged.</p>
+<div class="cta"><a href="#panel" class="btn p lg">Open the router →</a><a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener" class="btn lg">What you sign</a></div>
+<p class="fine">SPHERE · USDT · USDC · WPOL · route chosen per fill · signatures gasless</p>
+</div>
+
+<section class="ctr" id="panel">
+<div class="wrap">
+<div class="panel">
+<div class="t"><span>Intent · router</span><i>live</i></div>
+<div class="slot"><div><div class="l">You pay</div><div class="v">1,000.00</div><div class="m">Balance 4,120.55</div></div><div class="tok">SPHERE</div></div>
+<div class="mid"><span>↓</span></div>
+<div class="slot"><div><div class="l">You receive</div><div class="v">421.03</div><div class="m">Minimum · floor enforced</div></div><div class="tok">USDT</div></div>
+<div class="kv">
+<div><span>Router price</span><span>$0.42120</span></div>
+<div><span>Route</span><span>3 solvers bidding</span></div>
+<div><span>Fee</span><span>0.04% · $0.17</span></div>
+<div><span>Window</span><span>30s · then expires</span></div>
+<div><span>Approval</span><span>Permit2 · 30d · capped</span></div>
+</div>
+<div class="btns"><button>Reject</button><button class="a" data-p2="swap">Sign intent</button></div>
+<p class="note">First swap needs one approve — nine cents, once, never again. Every fill after is a signature. The floor above is gross less fee; a solver that cannot beat it does not fill.</p>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead"><span class="snum">01 — Mechanics</span><h2>How a fill actually happens</h2><p class="body">Three moves, and the middle one is the only place a solver can touch anything. It is also the only place a solver can lose.</p></div>
+<div class="journey">
+<div class="move"><div class="n">1</div><div><h3>You declare</h3><p>Pair, size and a minimum you will accept. That floor is binding — a solver that cannot beat it does not fill. <b>No "0.5% slippage" box to guess at.</b></p><span class="t"><i>Free</i> · signature only</span></div></div>
+<div class="move"><div class="n">2</div><div><h3>Solvers bid</h3><p>Independent solvers route across every venue they can reach and submit against your floor. They post their own inventory to compete. <b>The spread goes to whoever is fastest and cheapest, not to the pool.</b></p><span class="t">30s window · permissionless set</span></div></div>
+<div class="move"><div class="n">3</div><div><h3>Best fill settles</h3><p>One winner, one transaction, receipt with block and hash. Losers pay their own gas. If the window closes empty, the intent expires and your balance is untouched.</p><span class="t"><i>Gasless</i> · instant receipt</span></div></div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead"><span class="snum">02 — Why</span><h2>An AMM is a price. An intent is a market.</h2><p class="body">On a curve you are trading against a formula that has already published its answer, and the mempool reads it before you land. Sandwiching is not an attack on the curve — it is the curve working as specified.</p>
+<p class="body">Here there is no formula to front-run, because there is no formula. The quote arrives after your intent is public and the winning solver is bound to it on-chain. <b>Adversarial ordering stops being a tax and starts being a service fee.</b></p></div>
+<div class="grid2">
+<div class="cell"><div class="mono">Exposure</div><h3>Your floor, or nothing</h3><p>A fill below your minimum is invalid. <b>You cannot be filled worse than you asked</b>, only not filled at all.</p></div>
+<div class="cell"><div class="mono">Cost</div><h3>0.04%, symmetrical</h3><p>Charged on the fill, not on the attempt. Expired and rejected intents cost nothing.</p></div>
+<div class="cell"><div class="mono">Approval</div><h3>Permit2, capped, expiring</h3><p>Same canonical contract Uniswap has run since 2022. Capped at the intent, dead in thirty days, revocable.</p></div>
+<div class="cell"><div class="mono">Failure</div><h3>Solvers carry it</h3><p>Reverted fills, stale routes and bad inventory are the solver's gas. You see the failure, you do not pay for it.</p></div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="wrap">
+<div class="shead"><span class="snum">03 — Verification</span><h2>Read it before you trust it</h2><p class="body">The three Sphere addresses below are labelled on PolygonScan and have been for years. Permit2 is not ours — it is canonical and deployed identically on every chain, which is exactly why the approval is safe to give once. The audit reports are public and third-party. <b>Nothing here asks to be taken on faith.</b></p></div>
+<div class="tbl">
+<div class="tr head"><div>Contract</div><div class="ad">Address</div><div class="go">Explorer</div></div>
+<div class="tr"><div class="nm">SPHERE token</div><div class="ad">0x62F594339830b90AE4C084aE7D223fFAFd9658A7</div><div class="go"><a href="https://polygonscan.com/address/0x62F594339830b90AE4C084aE7D223fFAFd9658A7" target="_blank" rel="noopener">PolygonScan ↗</a></div></div>
+<div class="tr"><div class="nm">Permit2 (canonical)</div><div class="ad">0x000000000022D473030F116dDEE9F6B43aC78BA3</div><div class="go"><a href="https://etherscan.io/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank" rel="noopener">Etherscan ↗</a></div></div>
+<div class="tr"><div class="nm">Epoch reserve</div><div class="ad">0x7A31…C4F2</div><div class="go"><a href="https://polygonscan.com/address/0x7A31C4F2" target="_blank" rel="noopener">PolygonScan ↗</a></div></div>
+<div class="tr"><div class="nm">Investment Treasury</div><div class="ad">0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a</div><div class="go"><a href="https://polygonscan.com/address/0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a" target="_blank" rel="noopener">PolygonScan ↗</a></div></div>
+<div class="tr"><div class="nm">RFV Treasury</div><div class="ad">0x826b8d2d523e7af40888754e3de64348c00b99f4</div><div class="go"><a href="https://polygonscan.com/address/0x826b8d2d523e7af40888754e3de64348c00b99f4" target="_blank" rel="noopener">PolygonScan ↗</a></div></div>
+</div>
+<div class="tnote">
+<span class="chip"><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">CertiK</a></span>
+<span class="chip"><a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat</a></span>
+<span class="chip"><a href="https://www.cyberscope.io/audits/coin-sphere-finance" target="_blank" rel="noopener">Cyberscope</a></span>
+<span class="chip"><a href="https://docs.sphere.finance/" target="_blank" rel="noopener">Docs</a></span>
+<span class="chip"><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a></span>
+</div>
+<p class="body" style="margin-top:24px">SPHERE is an ERC-20 on Polygon and the only settlement asset the router touches. The contract above is the one to check — <b>if a swap screen asks you to approve anything else, it is not this router.</b> Live pool: <a href="https://app.balancer.fi/#/polygon/trade/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270/0x62f594339830b90ae4c084ae7d223ffafd9658a7" target="_blank" rel="noopener" style="border-bottom:1px solid var(--line)">Balancer · SPHERE/WPOL</a>.</p>
+</div>
+</section>
+
+<section style="border-bottom:0">
+<div class="wrap"><div class="band">
+<span class="mono" style="color:var(--acc);display:block;margin-bottom:14px">Router · 0.04% · no curve</span>
+<h2>Declare an outcome, not a tolerance</h2>
+<p>Nine cents to approve once. Signatures are free forever after.</p>
+<div class="cta" style="margin-bottom:0"><a href="#panel" class="btn p lg">Open the router →</a><a href="buy.html" class="btn lg">Buy with fiat</a></div>
+</div></div>
+</section>
+</main>
+
+<footer><div class="wrap">
+<div class="fgrid">
+<div class="fcol fbrand">
+<a class="logo" href="index.html" style="font-size:15px"><svg width="19" height="17" viewBox="0 0 22 20" fill="none"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<p>Modular execution layer for settlement-agnostic rollups. George Town, Grand Cayman.</p>
+</div>
+<div class="fcol"><h4>Protocol</h4><a href="docs.html">Docs</a><a href="https://docs.sphere.finance/" target="_blank" rel="noopener">Infrastructure</a><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">Audits</a><a href="https://app.sphere.finance/dashboard" target="_blank" rel="noopener">Status</a></div>
+<div class="fcol"><h4>More</h4><a href="stake.html">Staking</a><a href="swap.html">Swap</a><a href="buy.html">Buy</a><a href="sell.html">Sell</a><a href="ecosystem.html">Ecosystem</a><a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener">Permit2</a></div>
+<div class="fcol"><h4>Contact</h4><a href="https://t.me/spherefinace" target="_blank" rel="noopener">Telegram</a><a href="mailto:walletsecurities@gmail.com">walletsecurities@gmail.com</a><a href="https://x.com/Binance179448" target="_blank" rel="noopener">X</a><a href="https://discord.com/invite/x9XkGSkzQE" target="_blank" rel="noopener">Discord</a><a href="https://sphere.finance/" target="_blank" rel="noopener">sphere.finance</a></div>
+</div>
+<div class="verify">
+<span class="chip">SPHERE · <a href="https://polygonscan.com/address/0x62F594339830b90AE4C084aE7D223fFAFd9658A7" target="_blank" rel="noopener">0x62F5…58A7</a></span>
+<span class="chip">USDT · <a href="https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7" target="_blank" rel="noopener">0xdAC1…ec7</a></span>
+<span class="chip">Reserve · <a href="https://polygonscan.com/address/0x7A31C4F2" target="_blank" rel="noopener">0x7A31…C4F2</a></span>
+<span class="chip">Treasury · <a href="https://polygonscan.com/address/0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a" target="_blank" rel="noopener">0x20D6…D56a</a></span>
+<span class="chip">RFV · <a href="https://polygonscan.com/address/0x826b8d2d523e7af40888754e3de64348c00b99f4" target="_blank" rel="noopener">0x826b…99f4</a></span>
+<span class="chip">Permit2 · <a href="https://etherscan.io/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank" rel="noopener">0x0000…BA3</a></span>
+<span class="chip"><a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat audit</a></span>
+<span class="chip"><a href="https://www.cyberscope.io/audits/coin-sphere-finance" target="_blank" rel="noopener">Cyberscope audit</a></span>
+</div>
+<div class="legal"><span>© 2026 Spheres Labs Ltd. · George Town, KY1-1104</span><span><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></span></div>
+<p class="disc">SPHERE is a utility token. Not financial advice. Fees and solver behaviour vary by route and are shown before signing. Figures reference a $0.42 SPHERE price.</p>
+</div></footer>
+
+<script>
+(function(){
+var dd=document.getElementById("dd"),db=document.getElementById("ddbtn");
+db.addEventListener("click",function(e){e.stopPropagation();dd.classList.toggle("open")});
+document.addEventListener("click",function(){dd.classList.remove("open")});
+var b=document.getElementById("burger"),n=document.getElementById("nav");
+b.addEventListener("click",function(){var o=n.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false")});
+n.addEventListener("click",function(e){if(e.target.tagName==="A"){n.classList.remove("open");b.setAttribute("aria-expanded","false")}});
+})();
+</script>
+<script src="permit2.js" defer></script>
+</body>
+</html>

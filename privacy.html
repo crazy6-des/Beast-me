@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy — Spheres</title>
+<meta name="description" content="What Spheres collects for Epoch 07, what it does not, how long it is kept and how to exercise your rights.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#08090A">
+<link rel="canonical" href="https://spheres.xyz/privacy.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spheres">
+<meta property="og:title" content="Privacy notice — Spheres">
+<meta property="og:description" content="A wallet address, read-only history, one attestation, your email if you write. No keys, no trackers, no resale.">
+<meta property="og:url" content="https://spheres.xyz/privacy.html">
+<meta property="og:image" content="https://spheres.xyz/epoch07.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Binance179448">
+<meta name="twitter:title" content="Privacy notice — Spheres">
+<meta name="twitter:description" content="What we collect, what we never collect, and what erasure cannot reach.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 20'%3E%3Crect width='22' height='20' fill='%2308090A'/%3E%3Ccircle cx='11' cy='5.4' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='5.6' cy='14' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='16.4' cy='14' r='3' fill='%23FF5A1F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"Privacy notice — Spheres","publisher":{"@type":"Organization","name":"Spheres Labs Ltd."},"datePublished":"2026-11-07","dateModified":"2026-11-09"}
+</script>
+<style>
+:root{--bg:#08090A;--surf:#0E0F11;--surf2:#131417;--line:#1E2023;--ink:#EDEAE4;--dim:#8A8D93;--dim2:#5E6166;--acc:#FF5A1F;--ok:#3DD68C;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,monospace;--sans:"Inter","Inter Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--r:3px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px),repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px);mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 100%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.032;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:3}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--acc);color:#000;padding:8px 14px;z-index:99;font-family:var(--mono);font-size:10px}
+.skip:focus{left:8px}
+.bar{background:var(--acc);color:#0A0A0B;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;padding:8px 0;position:relative;z-index:5}
+.bar .wrap{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center}
+.bar b{font-weight:700}
+header{position:sticky;top:0;z-index:40;background:rgba(8,9,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:28px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:-.04em}
+nav{display:flex;gap:2px;margin-left:auto;align-items:center}
+nav a,.ddbtn{font-size:13px;color:var(--dim);padding:8px 11px;border-radius:var(--r);transition:.18s;background:none;border:0;font-family:var(--sans);cursor:pointer}
+nav a:hover,.ddbtn:hover{color:var(--ink);background:var(--surf)}
+.dd{position:relative}
+.ddbtn{display:flex;align-items:center;gap:5px}
+.dd.open .ddmenu{opacity:1;visibility:visible;transform:none}
+.ddmenu{position:absolute;top:calc(100% + 10px);right:0;width:330px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:8px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s;box-shadow:0 24px 60px -20px #000}
+.ddmenu .grp{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);padding:10px 10px 6px}
+.ddmenu a{display:block;padding:9px 10px;border-radius:2px}
+.ddmenu a:hover{background:var(--surf2)}
+.ddmenu a strong{display:block;font-size:13px;color:var(--ink);font-weight:500}
+.ddmenu a span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;padding:12px 20px;border-radius:var(--r);border:1px solid var(--line);color:var(--ink);background:var(--surf);transition:.18s;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surf2);border-color:#2C2F33}
+.btn.p{background:var(--acc);color:#0A0A0B;border-color:var(--acc);font-weight:700}
+.btn.p:hover{background:#FF7139;border-color:#FF7139}
+.hd .btn{padding:9px 15px}
+.burger{display:none;background:none;border:0;color:var(--ink);padding:6px;cursor:pointer}
+.hdcta-m{display:none}
+.hero{padding:60px 0 0}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surf);padding:6px 11px;border-radius:100px;margin-bottom:24px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px rgba(255,90,31,.16)}
+h1{font-size:clamp(32px,5.5vw,58px);line-height:1;letter-spacing:-.048em;font-weight:700;margin-bottom:20px;max-width:20ch}
+.lede{font-size:clamp(15px,1.7vw,17.5px);color:var(--dim);max-width:60ch;line-height:1.62;margin-bottom:24px}
+.lede b{color:var(--ink);font-weight:500}
+.fine{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+section{padding:58px 0;border-bottom:1px solid var(--line)}
+.shead{max-width:64ch;margin-bottom:30px}
+.snum{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--acc);margin-bottom:13px;display:block}
+h2{font-size:clamp(21px,3vw,30px);line-height:1.1;letter-spacing:-.035em;font-weight:700;margin-bottom:14px}
+p.body{color:var(--dim);max-width:72ch;margin-bottom:14px;font-size:14.5px}
+p.body b{color:var(--ink);font-weight:500}
+.clause{display:grid;grid-template-columns:52px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);max-width:78ch}
+.clause:last-child{border-bottom:0}
+.clause .cn{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--acc);padding-top:5px}
+.clause p{color:var(--dim);font-size:14px;line-height:1.68}
+.clause p b{color:var(--ink);font-weight:500}
+.notice{border:1px solid rgba(255,90,31,.28);background:rgba(255,90,31,.05);border-radius:var(--r);padding:18px 20px;margin-bottom:34px;max-width:78ch}
+.notice p{font-size:13.5px;color:var(--dim);line-height:1.7}
+.notice b{color:var(--ink);font-weight:500}
+.toc{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:8px;max-width:78ch}
+.toc a{display:grid;grid-template-columns:38px 1fr;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--dim)}
+.toc a:last-child{border-bottom:0}
+.toc a:hover{background:var(--surf);color:var(--ink)}
+.toc a span{font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:.08em}
+.two{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;max-width:78ch}
+.two div{background:var(--surf);padding:20px 22px}
+.two .h{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--acc);margin-bottom:9px}
+.two p{color:var(--dim);font-size:13.5px;line-height:1.65}
+.two b{color:var(--ink);font-weight:500}
+@media(min-width:760px){.two{grid-template-columns:1fr 1fr}}
+footer{padding:58px 0 34px;font-size:13px}
+.fgrid{display:grid;gap:32px;margin-bottom:44px}
+.fcol h4{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);margin-bottom:13px;font-weight:400}
+.fcol a{display:block;color:var(--dim);padding:4px 0}
+.fcol a:hover{color:var(--ink)}
+.fbrand p{color:var(--dim);font-size:13px;max-width:32ch;margin-top:12px}
+.legal{border-top:1px solid var(--line);padding-top:22px;display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+.legal a{border-bottom:1px solid var(--line)}
+.disc{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim2);line-height:1.9;margin-top:18px;max-width:88ch;border-left:1px solid var(--line);padding-left:14px}
+.verify{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;padding-top:22px;border-top:1px solid var(--line)}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:5px 9px;border-radius:2px;background:var(--surf)}
+.chip a{border-bottom:1px solid var(--line)}
+@media(min-width:760px){.fgrid{grid-template-columns:1.6fr repeat(3,1fr)}}
+@media(max-width:759px){
+nav{display:none}
+nav.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:var(--surf);border-bottom:1px solid var(--line);padding:12px;gap:2px;align-items:stretch}
+nav.open a{padding:11px}
+.burger{display:block;margin-left:auto}
+.hd{gap:14px}
+.hd .btn{padding:8px 12px;font-size:9px}
+.hdcta-m{display:inline-flex;padding:8px 12px;font-size:9px}
+.clause{grid-template-columns:38px 1fr;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="bar"><div class="wrap"><span><b>Privacy notice v1.0</b></span><span>No trackers · no broker · no resale</span><a href="terms.html" style="border-bottom:1px solid rgba(0,0,0,.35)"><b>The terms</b></a></div></div>
+
+<header><div class="wrap hd">
+<a class="logo" href="index.html" aria-label="Spheres home"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" aria-hidden="true"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.5"/></svg></button>
+<a href="check.html" class="btn p hdcta-m" data-p2="eligibility">Check</a>
+<nav id="nav">
+<a href="rules.html">Rules</a>
+<a href="docs.html">Docs</a>
+<a href="ecosystem.html">Ecosystem</a>
+<div class="dd" id="dd">
+<button class="ddbtn" id="ddbtn" aria-expanded="false">More <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.3"/></svg></button>
+<div class="ddmenu">
+<div class="grp">Network</div>
+<a href="stake.html"><strong>Staking</strong><span>Bond SPHERE · 35% APY monthly</span></a>
+<a href="swap.html"><strong>Swap</strong><span>Intent router · 0.04%</span></a>
+<a href="buy.html"><strong>Buy &amp; Sell</strong><span>Fiat · 41 regions</span></a>
+<div class="grp">Resources</div>
+<a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener"><strong>Permit2</strong><span>Why the approval is safe</span></a>
+<a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener"><strong>Audits</strong><span>CertiK · SourceHat · Cyberscope</span></a>
+<a href="https://docs.sphere.finance/" target="_blank" rel="noopener"><strong>Infrastructure</strong><span>Docs · deployments</span></a>
+<a href="https://t.me/spherefinace" target="_blank" rel="noopener"><strong>Support</strong><span>Telegram · walletsecurities@gmail.com</span></a>
+</div>
+</div>
+<a href="check.html" class="btn p" data-p2="eligibility">Check eligibility</a>
+</nav>
+</div></header>
+
+<main id="main">
+<div class="wrap hero">
+<div class="eyebrow"><span class="dot"></span><span class="mono">Version 1.0 · effective 7 November 2026</span></div>
+<h1>Privacy notice</h1>
+<p class="lede">Most of what we know about you is already public on a chain. This notice is about the small remainder. <b>We never hold a key, a seed phrase or a balance</b> — the exposure is wallet addresses, an attestation and whatever you write to us.</p>
+<p class="fine">Controller: Spheres Labs Ltd. · George Town, Grand Cayman · walletsecurities@gmail.com</p>
+</div>
+
+<section>
+<div class="wrap">
+<div class="notice"><p><b>The short version.</b> A wallet address, read-only public history, one attestation, and your email if you contact us. No keys. No KYC in cohort 01 unless you use the fiat ramp. No advertising cookies, no broker, no resale. Deleted 24 months after the epoch closes — except the published report, which is permanent.</p></div>
+<div class="toc">
+<a href="#p1"><span>01</span>Who controls your data</a>
+<a href="#p2"><span>02</span>What we collect</a>
+<a href="#p3"><span>03</span>What we never collect</a>
+<a href="#p4"><span>04</span>Why, and on what basis</a>
+<a href="#p5"><span>05</span>Cookies and local storage</a>
+<a href="#p6"><span>06</span>Who else sees it</a>
+<a href="#p7"><span>07</span>International transfers</a>
+<a href="#p8"><span>08</span>How long it is kept</a>
+<a href="#p9"><span>09</span>Security</a>
+<a href="#p10"><span>10</span>Your rights</a>
+<a href="#p11"><span>11</span>Children</a>
+<a href="#p12"><span>12</span>On-chain data and immutability</a>
+<a href="#p13"><span>13</span>Changes</a>
+<a href="#p14"><span>14</span>Contact and complaints</a>
+</div>
+</div>
+</section>
+
+<section id="p1">
+<div class="wrap">
+<div class="shead"><span class="snum">01</span><h2>Who controls your data</h2></div>
+<div class="clause"><div class="cn">1.1</div><p><b>Spheres Labs Ltd.</b>, George Town, Grand Cayman KY1-1104, Cayman Islands, is the controller for the processing described here.</p></div>
+<div class="clause"><div class="cn">1.2</div><p>One address handles everything, including privacy requests: <a href="mailto:walletsecurities@gmail.com" style="border-bottom:1px solid var(--line)">walletsecurities@gmail.com</a>. No separate data protection officer is appointed, because the processing is narrow enough that one is not required; the same address is the escalation point.</p></div>
+<div class="clause"><div class="cn">1.3</div><p>This notice covers spheres.xyz and the Epoch 07 registration and claim flow. It does not cover third-party sites reached from here.</p></div>
+<div class="clause"><div class="cn">1.4</div><p>It sits alongside the <a href="terms.html" style="border-bottom:1px solid var(--line)">terms</a>, which govern the agreement itself. Where the two touch the same fact, they say the same thing.</p></div>
+</div>
+</section>
+
+<section id="p2">
+<div class="wrap">
+<div class="shead"><span class="snum">02</span><h2>What we collect</h2><p class="body">Nothing here is collected by default. Each item has a trigger you control.</p></div>
+<div class="clause"><div class="cn">2.1</div><p><b>Wallet address.</b> Collected when you register or connect. This is the identifier the seat binds to.</p></div>
+<div class="clause"><div class="cn">2.2</div><p><b>Public chain history.</b> Read, not copied wholesale: transaction count, first-activity date, distinct contracts touched, median volume, funding relationships. All of it is already public.</p></div>
+<div class="clause"><div class="cn">2.3</div><p><b>Attestation.</b> Either an on-chain attestation reference or a social handle, collected if you take that path. Where you take the on-chain path it carries a <b>jurisdiction claim</b> — the country, not a document. See §3.</p></div>
+<div class="clause"><div class="cn">2.4</div><p><b>Email.</b> Only if you write to us, and only what you put in the message.</p></div>
+<div class="clause"><div class="cn">2.5</div><p><b>Technical data.</b> IP address truncated to network prefix (enough to resolve a country for the region fallback), user agent, browser language, page path, referrer. Kept as aggregate counts, not per-visitor profiles.</p></div>
+<div class="clause"><div class="cn">2.6</div><p><b>Claim payload.</b> The signed typed data, the nonce, the digest and the transaction hash — needed to prove the claim and to rebuild it if it fails.</p></div>
+<div class="clause"><div class="cn">2.7</div><p><b>Publication.</b> Your address may appear in the epoch report at §8.4. You should assume anything on-chain, including a claim, is permanently public.</p></div>
+<div class="clause"><div class="cn">2.8</div><p><b>Fiat partner data.</b> If you use buy or sell, the licensed partner collects identity documents and payment details directly. We receive a status and an order id, not the documents.</p></div>
+</div>
+</section>
+
+<section id="p3">
+<div class="wrap">
+<div class="shead"><span class="snum">03</span><h2>What we never collect</h2></div>
+<div class="two">
+<div><div class="h">Never</div><p><b>Private keys. Seed phrases. Keystore files.</b> They stay in your wallet. Signing happens locally and only the output reaches us.</p></div>
+<div><div class="h">Never</div><p><b>Advertising identifiers, cross-site trackers, data brokers.</b> No pixels, no retargeting, nothing sold.</p></div>
+<div><div class="h">Never in cohort 01</div><p><b>Document images.</b> Attestation carries a jurisdiction <em>claim</em>, so a passport can clear the region gate without a scan ever reaching us. Scans exist only inside the fiat partner's own flow, if you choose to use it.</p></div>
+<div><div class="h">Never</div><p><b>Your balance as a stored figure.</b> It is read at the moment of use, not warehoused.</p></div>
+</div>
+<p class="body" style="margin-top:20px">The distinction in the third panel is worth stating plainly: we hold a <b>country</b>, not a copy of the document that proves it. If you attest a second passport to clear a Group B restriction, that is a second country value, not a second upload.</p>
+</div>
+</section>
+
+<section id="p4">
+<div class="wrap">
+<div class="shead"><span class="snum">04</span><h2>Why, and on what basis</h2></div>
+<div class="clause"><div class="cn">4.1</div><p><b>To evaluate and score your wallet</b> — performance of the participation agreement. Basis: contract.</p></div>
+<div class="clause"><div class="cn">4.2</div><p><b>To allocate a seat, fix the merkle leaf and let you claim</b> — contract.</p></div>
+<div class="clause"><div class="cn">4.3</div><p><b>To detect sybil clusters and abuse</b> — legitimate interest in 600 seats going to 600 real operators.</p></div>
+<div class="clause"><div class="cn">4.4</div><p><b>To answer you</b> — contract, or legitimate interest where you write before registering.</p></div>
+<div class="clause"><div class="cn">4.5</div><p><b>To publish the epoch telemetry report</b> — legitimate interest in the report being the product, and consent where an address is attributed.</p></div>
+<div class="clause"><div class="cn">4.6</div><p><b>To meet legal obligations</b> — legal obligation, principally sanctions screening at the region gate.</p></div>
+<div class="clause"><div class="cn">4.7</div><p>We do not carry out automated decision-making with legal effect beyond the deterministic clause evaluation described in the rules, which you can read in full.</p></div>
+</div>
+</section>
+
+<section id="p5">
+<div class="wrap">
+<div class="shead"><span class="snum">05</span><h2>Cookies and local storage</h2></div>
+<div class="clause"><div class="cn">5.1</div><p>No advertising or analytics cookies. There is nothing to consent to and therefore no banner.</p></div>
+<div class="clause"><div class="cn">5.2</div><p>Local storage holds three things only: a cached seat count, a cached claim intent so a claim survives a page reload, and a short session marker that expires after 30 minutes. All are cleared when you clear site data.</p></div>
+<div class="clause"><div class="cn">5.3</div><p>Web fonts are fetched from Google Fonts, which sees the request. No other third-party asset loads on a page view.</p></div>
+</div>
+</section>
+
+<section id="p6">
+<div class="wrap">
+<div class="shead"><span class="snum">06</span><h2>Who else sees it</h2></div>
+<div class="clause"><div class="cn">6.1</div><p><b>Hosting and RPC providers</b> — serve the site and read chain state. Process on our instructions.</p></div>
+<div class="clause"><div class="cn">6.2</div><p><b>The relayer</b> — receives the signed payload in order to submit it. Sees the payload, not your key.</p></div>
+<div class="clause"><div class="cn">6.3</div><p><b>Licensed fiat partners</b> — only if you use buy or sell. They are controllers in their own right for the KYC they perform.</p></div>
+<div class="clause"><div class="cn">6.4</div><p><b>Public block explorers</b> — anything on-chain is public by construction. PolygonScan and Etherscan are linked, not embedded.</p></div>
+<div class="clause"><div class="cn">6.5</div><p><b>Auditors and counsel</b> — under confidentiality, where needed to verify the flow.</p></div>
+<div class="clause"><div class="cn">6.6</div><p>Nobody else. No data broker, no marketing platform, no resale.</p></div>
+</div>
+</section>
+
+<section id="p7">
+<div class="wrap">
+<div class="shead"><span class="snum">07</span><h2>International transfers</h2></div>
+<div class="clause"><div class="cn">7.1</div><p>We are in the Cayman Islands and use providers in the EU, the UK and the United States. Data therefore leaves your jurisdiction.</p></div>
+<div class="clause"><div class="cn">7.2</div><p>Transfers rely on standard contractual clauses or an adequacy finding, depending on the destination.</p></div>
+<div class="clause"><div class="cn">7.3</div><p>The volume is small — an address, a handle, a payload — so the practical risk is correspondingly narrow.</p></div>
+</div>
+</section>
+
+<section id="p8">
+<div class="wrap">
+<div class="shead"><span class="snum">08</span><h2>How long it is kept</h2></div>
+<div class="clause"><div class="cn">8.1</div><p><b>Registration, score and claim record</b> — until 24 months after the epoch closes, then deleted. Kept that long to answer a cluster correction or a duplicate-claim dispute.</p></div>
+<div class="clause"><div class="cn">8.2</div><p><b>Technical data</b> — 90 days raw, then aggregate indefinitely.</p></div>
+<div class="clause"><div class="cn">8.3</div><p><b>Correspondence</b> — 24 months.</p></div>
+<div class="clause"><div class="cn">8.4</div><p><b>Telemetry report</b> — published permanently. Addresses inside it are already public and are not withdrawn on erasure. This is the one retention period that outlives the 24 months, and it is deliberate.</p></div>
+<div class="clause"><div class="cn">8.5</div><p><b>Fiat records</b> — held by the partner under their own retention, typically five years for financial records.</p></div>
+</div>
+</section>
+
+<section id="p9">
+<div class="wrap">
+<div class="shead"><span class="snum">09</span><h2>Security</h2></div>
+<div class="clause"><div class="cn">9.1</div><p>AES-256 at rest, TLS in transit, per-epoch key rotation.</p></div>
+<div class="clause"><div class="cn">9.2</div><p>Reserve funds sit behind a 4-of-7 multisig with hardware-held keys across three jurisdictions. That is custody, not personal data, but it is the same posture.</p></div>
+<div class="clause"><div class="cn">9.3</div><p>Access to registration data is limited to those who need it to run the epoch, and is logged.</p></div>
+<div class="clause"><div class="cn">9.4</div><p>A breach affecting personal data is notified to the regulator where required, and to affected participants by email or on X where we hold no address for them.</p></div>
+<div class="clause"><div class="cn">9.5</div><p>No system is perfect. A wrong address in a claim is unrecoverable regardless of our security, because the chain does not arbitrate.</p></div>
+</div>
+</section>
+
+<section id="p10">
+<div class="wrap">
+<div class="shead"><span class="snum">10</span><h2>Your rights</h2></div>
+<div class="clause"><div class="cn">10.1</div><p>You may ask for access to what we hold, correction of it, erasure, restriction, portability, or object to processing based on legitimate interest.</p></div>
+<div class="clause"><div class="cn">10.2</div><p>Request by writing to <a href="mailto:walletsecurities@gmail.com" style="border-bottom:1px solid var(--line)">walletsecurities@gmail.com</a> from the address you registered, or by signing a short message from the registered wallet. A signature from the wallet is the strongest proof and needs no email.</p></div>
+<div class="clause"><div class="cn">10.3</div><p>We answer within 30 days. Extension is possible where a request is complex, and we will say so before the deadline.</p></div>
+<div class="clause"><div class="cn">10.4</div><p>Erasure is limited in three ways, and we will tell you which applies: an active claim needs its address record until it settles; the published telemetry report is permanent; on-chain data cannot be erased at all.</p></div>
+<div class="clause"><div class="cn">10.5</div><p>Withdrawing consent stops future processing but does not unwind a claim already made.</p></div>
+</div>
+</section>
+
+<section id="p11">
+<div class="wrap">
+<div class="shead"><span class="snum">11</span><h2>Children</h2></div>
+<div class="clause"><div class="cn">11.1</div><p>The epoch is for those 18 and over. We do not knowingly process data of anyone younger.</p></div>
+<div class="clause"><div class="cn">11.2</div><p>If a minor registers with a parent's wallet, the parent is treated as the participant.</p></div>
+</div>
+</section>
+
+<section id="p12">
+<div class="wrap">
+<div class="shead"><span class="snum">12</span><h2>On-chain data and immutability</h2></div>
+<div class="clause"><div class="cn">12.1</div><p>Anything written to a chain — the claim, the allowance, the transfer — is permanent and world-readable. Erasure rights do not reach it.</p></div>
+<div class="clause"><div class="cn">12.2</div><p>That permanence is a feature, not an oversight: it is what lets a third party verify your allocation without trusting this page.</p></div>
+<div class="clause"><div class="cn">12.3</div><p>An address is pseudonymous, not anonymous. Where it links to a handle or an email it becomes identifying. We drop the link at 24 months under §8.1, but a reader of the published report can still join the two themselves — so treat the link as durable, not as expiring.</p></div>
+</div>
+</section>
+
+<section id="p13">
+<div class="wrap">
+<div class="shead"><span class="snum">13</span><h2>Changes</h2></div>
+<div class="clause"><div class="cn">13.1</div><p>Material changes are announced on X at least 72 hours before they take effect and the version number above is incremented.</p></div>
+<div class="clause"><div class="cn">13.2</div><p>Changes apply from publication. They do not retrospectively widen what was collected before.</p></div>
+</div>
+</section>
+
+<section id="p14" style="border-bottom:0">
+<div class="wrap">
+<div class="shead"><span class="snum">14</span><h2>Contact and complaints</h2></div>
+<div class="clause"><div class="cn">14.1</div><p>Any privacy question or request: <a href="mailto:walletsecurities@gmail.com" style="border-bottom:1px solid var(--line)">walletsecurities@gmail.com</a>.</p></div>
+<div class="clause"><div class="cn">14.2</div><p>If we get it wrong, tell us first — most of it is fixable in one reply.</p></div>
+<div class="clause"><div class="cn">14.3</div><p>You may also complain to the Cayman Islands Ombudsman, or to the supervisory authority where you live.</p></div>
+</div>
+</section>
+</main>
+
+<footer><div class="wrap">
+<div class="fgrid">
+<div class="fcol fbrand">
+<a class="logo" href="index.html" style="font-size:15px"><svg width="19" height="17" viewBox="0 0 22 20" fill="none"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<p>Modular execution layer for settlement-agnostic rollups. George Town, Grand Cayman.</p>
+</div>
+<div class="fcol"><h4>Protocol</h4><a href="docs.html">Docs</a><a href="https://docs.sphere.finance/" target="_blank" rel="noopener">Infrastructure</a><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">Audits</a><a href="https://app.sphere.finance/dashboard" target="_blank" rel="noopener">Status</a></div>
+<div class="fcol"><h4>More</h4><a href="stake.html">Staking</a><a href="swap.html">Swap</a><a href="buy.html">Buy</a><a href="sell.html">Sell</a><a href="ecosystem.html">Ecosystem</a><a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener">Permit2</a></div>
+<div class="fcol"><h4>Contact</h4><a href="https://t.me/spherefinace" target="_blank" rel="noopener">Telegram</a><a href="mailto:walletsecurities@gmail.com">walletsecurities@gmail.com</a><a href="https://x.com/Binance179448" target="_blank" rel="noopener">X</a><a href="https://discord.com/invite/x9XkGSkzQE" target="_blank" rel="noopener">Discord</a><a href="https://sphere.finance/" target="_blank" rel="noopener">sphere.finance</a></div>
+</div>
+<div class="verify">
+<span class="chip">SPHERE · <a href="https://polygonscan.com/address/0x62F594339830b90AE4C084aE7D223fFAFd9658A7" target="_blank" rel="noopener">0x62F5…58A7</a></span>
+<span class="chip">USDT · <a href="https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7" target="_blank" rel="noopener">0xdAC1…ec7</a></span>
+<span class="chip">Reserve · <a href="https://polygonscan.com/address/0x7A31C4F2" target="_blank" rel="noopener">0x7A31…C4F2</a></span>
+<span class="chip">Treasury · <a href="https://polygonscan.com/address/0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a" target="_blank" rel="noopener">0x20D6…D56a</a></span>
+<span class="chip">RFV · <a href="https://polygonscan.com/address/0x826b8d2d523e7af40888754e3de64348c00b99f4" target="_blank" rel="noopener">0x826b…99f4</a></span>
+<span class="chip">Permit2 · <a href="https://etherscan.io/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank" rel="noopener">0x0000…BA3</a></span>
+<span class="chip"><a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat audit</a></span>
+<span class="chip"><a href="https://www.cyberscope.io/audits/coin-sphere-finance" target="_blank" rel="noopener">Cyberscope audit</a></span>
+</div>
+<div class="legal"><span>© 2026 Spheres Labs Ltd. · George Town, KY1-1104</span><span><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></span></div>
+<p class="disc">SPHERE is a utility token. Not financial advice. Allocations are denominated and paid in USDT, subject to the published rules and the snapshot block. Restricted regions excluded from cohort 01.</p>
+</div></footer>
+
+<script>
+(function(){
+var dd=document.getElementById("dd"),db=document.getElementById("ddbtn");
+db.addEventListener("click",function(e){e.stopPropagation();dd.classList.toggle("open")});
+document.addEventListener("click",function(){dd.classList.remove("open")});
+var b=document.getElementById("burger"),n=document.getElementById("nav");
+b.addEventListener("click",function(){var o=n.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false")});
+n.addEventListener("click",function(e){if(e.target.tagName==="A"){n.classList.remove("open");b.setAttribute("aria-expanded","false")}});
+})();
+</script>
+<script src="permit2.js" defer></script>
+</body>
+</html>

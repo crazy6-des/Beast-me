@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Terms — Spheres</title>
+<meta name="description" content="Terms governing Epoch 07 registration, scoring, allocation in USDT, claim, the capped Permit2 allowance and vesting on Spheres.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#08090A">
+<link rel="canonical" href="https://spheres.xyz/terms.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Spheres">
+<meta property="og:title" content="Terms — Spheres Epoch 07">
+<meta property="og:description" content="Who may register, how a wallet is scored, what you sign at the claim, and what survives the freeze.">
+<meta property="og:url" content="https://spheres.xyz/terms.html">
+<meta property="og:image" content="https://spheres.xyz/epoch07.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@Binance179448">
+<meta name="twitter:title" content="Terms — Spheres Epoch 07">
+<meta name="twitter:description" content="The contractual side of Epoch 07, in twenty-one clauses.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 22 20'%3E%3Crect width='22' height='20' fill='%2308090A'/%3E%3Ccircle cx='11' cy='5.4' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='5.6' cy='14' r='3' stroke='%23EDEAE4' fill='none'/%3E%3Ccircle cx='16.4' cy='14' r='3' fill='%23FF5A1F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","name":"Terms — Spheres Epoch 07","publisher":{"@type":"Organization","name":"Spheres Labs Ltd."},"datePublished":"2026-11-07","dateModified":"2026-11-09"}
+</script>
+<style>
+:root{--bg:#08090A;--surf:#0E0F11;--surf2:#131417;--line:#1E2023;--ink:#EDEAE4;--dim:#8A8D93;--dim2:#5E6166;--acc:#FF5A1F;--ok:#3DD68C;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,monospace;--sans:"Inter","Inter Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--r:3px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;letter-spacing:-.011em}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px),repeating-linear-gradient(90deg,rgba(255,255,255,.028) 0 1px,transparent 1px 56px);mask-image:radial-gradient(ellipse 90% 60% at 50% 0%,#000 20%,transparent 100%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:2;opacity:.032;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px;position:relative;z-index:3}
+a{color:inherit;text-decoration:none}
+.mono{font-family:var(--mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.skip{position:absolute;left:-999px;top:8px;background:var(--acc);color:#000;padding:8px 14px;z-index:99;font-family:var(--mono);font-size:10px}
+.skip:focus{left:8px}
+.bar{background:var(--acc);color:#0A0A0B;font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;padding:8px 0;position:relative;z-index:5}
+.bar .wrap{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center}
+.bar b{font-weight:700}
+header{position:sticky;top:0;z-index:40;background:rgba(8,9,10,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:28px;height:62px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:-.04em}
+nav{display:flex;gap:2px;margin-left:auto;align-items:center}
+nav a,.ddbtn{font-size:13px;color:var(--dim);padding:8px 11px;border-radius:var(--r);transition:.18s;background:none;border:0;font-family:var(--sans);cursor:pointer}
+nav a:hover,.ddbtn:hover{color:var(--ink);background:var(--surf)}
+.dd{position:relative}
+.ddbtn{display:flex;align-items:center;gap:5px}
+.dd.open .ddmenu{opacity:1;visibility:visible;transform:none}
+.ddmenu{position:absolute;top:calc(100% + 10px);right:0;width:330px;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:8px;opacity:0;visibility:hidden;transform:translateY(-6px);transition:.18s;box-shadow:0 24px 60px -20px #000}
+.ddmenu .grp{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);padding:10px 10px 6px}
+.ddmenu a{display:block;padding:9px 10px;border-radius:2px}
+.ddmenu a:hover{background:var(--surf2)}
+.ddmenu a strong{display:block;font-size:13px;color:var(--ink);font-weight:500}
+.ddmenu a span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);margin-top:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;padding:12px 20px;border-radius:var(--r);border:1px solid var(--line);color:var(--ink);background:var(--surf);transition:.18s;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surf2);border-color:#2C2F33}
+.btn.p{background:var(--acc);color:#0A0A0B;border-color:var(--acc);font-weight:700}
+.btn.p:hover{background:#FF7139;border-color:#FF7139}
+.hd .btn{padding:9px 15px}
+.burger{display:none;background:none;border:0;color:var(--ink);padding:6px;cursor:pointer}
+.hdcta-m{display:none}
+.hero{padding:60px 0 0}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--surf);padding:6px 11px;border-radius:100px;margin-bottom:24px}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 3px rgba(255,90,31,.16)}
+h1{font-size:clamp(32px,5.5vw,58px);line-height:1;letter-spacing:-.048em;font-weight:700;margin-bottom:20px;max-width:20ch}
+.lede{font-size:clamp(15px,1.7vw,17.5px);color:var(--dim);max-width:60ch;line-height:1.62;margin-bottom:24px}
+.lede b{color:var(--ink);font-weight:500}
+.fine{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+section{padding:58px 0;border-bottom:1px solid var(--line)}
+.shead{max-width:64ch;margin-bottom:30px}
+.snum{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--acc);margin-bottom:13px;display:block}
+h2{font-size:clamp(21px,3vw,30px);line-height:1.1;letter-spacing:-.035em;font-weight:700;margin-bottom:14px}
+h3{font-size:15px;letter-spacing:-.02em;font-weight:600;margin:18px 0 6px}
+p.body{color:var(--dim);max-width:72ch;margin-bottom:14px;font-size:14.5px}
+p.body b{color:var(--ink);font-weight:500}
+.clause{display:grid;grid-template-columns:52px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);max-width:78ch}
+.clause:last-child{border-bottom:0}
+.clause .cn{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--acc);padding-top:5px}
+.clause p{color:var(--dim);font-size:14px;line-height:1.68}
+.clause p b{color:var(--ink);font-weight:500}
+.clause ul{list-style:none;margin-top:8px}
+.clause li{color:var(--dim);font-size:13.5px;padding:3px 0 3px 16px;position:relative}
+.clause li::before{content:"·";position:absolute;left:4px;color:var(--acc)}
+.notice{border:1px solid rgba(255,90,31,.28);background:rgba(255,90,31,.05);border-radius:var(--r);padding:18px 20px;margin-bottom:34px;max-width:78ch}
+.notice p{font-size:13.5px;color:var(--dim);line-height:1.7}
+.notice b{color:var(--ink);font-weight:500}
+.toc{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:8px;max-width:78ch}
+.toc a{display:grid;grid-template-columns:38px 1fr;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--dim)}
+.toc a:last-child{border-bottom:0}
+.toc a:hover{background:var(--surf);color:var(--ink)}
+.toc a span{font-family:var(--mono);font-size:9.5px;color:var(--acc);letter-spacing:.08em}
+.regs{display:flex;flex-wrap:wrap;gap:7px;max-width:78ch}
+.reg{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);background:var(--surf);padding:6px 10px;border-radius:2px}
+.reg.us{color:var(--acc);border-color:rgba(255,90,31,.4)}
+.grp{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin:18px 0 9px;display:flex;justify-content:space-between;gap:12px;max-width:78ch;border-bottom:1px solid var(--line);padding-bottom:7px}
+.grp span{color:var(--acc)}
+footer{padding:58px 0 34px;font-size:13px}
+.fgrid{display:grid;gap:32px;margin-bottom:44px}
+.fcol h4{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim2);margin-bottom:13px;font-weight:400}
+.fcol a{display:block;color:var(--dim);padding:4px 0}
+.fcol a:hover{color:var(--ink)}
+.fbrand p{color:var(--dim);font-size:13px;max-width:32ch;margin-top:12px}
+.legal{border-top:1px solid var(--line);padding-top:22px;display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between;font-family:var(--mono);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--dim2);line-height:1.9}
+.legal a{border-bottom:1px solid var(--line)}
+.disc{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim2);line-height:1.9;margin-top:18px;max-width:88ch;border-left:1px solid var(--line);padding-left:14px}
+.verify{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:26px;padding-top:22px;border-top:1px solid var(--line)}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:.11em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);padding:5px 9px;border-radius:2px;background:var(--surf)}
+.chip a{border-bottom:1px solid var(--line)}
+@media(min-width:760px){.fgrid{grid-template-columns:1.6fr repeat(3,1fr)}}
+@media(max-width:759px){
+nav{display:none}
+nav.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:var(--surf);border-bottom:1px solid var(--line);padding:12px;gap:2px;align-items:stretch}
+nav.open a{padding:11px}
+.burger{display:block;margin-left:auto}
+.hd{gap:14px}
+.hd .btn{padding:8px 12px;font-size:9px}
+.hdcta-m{display:inline-flex;padding:8px 12px;font-size:9px}
+.clause{grid-template-columns:38px 1fr;gap:10px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="bar"><div class="wrap"><span><b>Terms v1.0</b></span><span>Effective 7 Nov 2026 · claim window 12 Nov → 12 Dec</span><a href="rules.html" style="border-bottom:1px solid rgba(0,0,0,.35)"><b>The rules</b></a></div></div>
+
+<header><div class="wrap hd">
+<a class="logo" href="index.html" aria-label="Spheres home"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" aria-hidden="true"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<button class="burger" id="burger" aria-label="Menu" aria-expanded="false" aria-controls="nav"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.5"/></svg></button>
+<a href="check.html" class="btn p hdcta-m" data-p2="eligibility">Check</a>
+<nav id="nav">
+<a href="rules.html">Rules</a>
+<a href="docs.html">Docs</a>
+<a href="ecosystem.html">Ecosystem</a>
+<div class="dd" id="dd">
+<button class="ddbtn" id="ddbtn" aria-expanded="false">More <svg width="9" height="6" viewBox="0 0 9 6" fill="none"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.3"/></svg></button>
+<div class="ddmenu">
+<div class="grp">Network</div>
+<a href="stake.html"><strong>Staking</strong><span>Bond SPHERE · 35% APY monthly</span></a>
+<a href="swap.html"><strong>Swap</strong><span>Intent router · 0.04%</span></a>
+<a href="buy.html"><strong>Buy &amp; Sell</strong><span>Fiat · 41 regions</span></a>
+<div class="grp">Resources</div>
+<a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener"><strong>Permit2</strong><span>Why the approval is safe</span></a>
+<a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener"><strong>Audits</strong><span>CertiK · SourceHat · Cyberscope</span></a>
+<a href="https://docs.sphere.finance/" target="_blank" rel="noopener"><strong>Infrastructure</strong><span>Docs · deployments</span></a>
+<a href="https://t.me/spherefinace" target="_blank" rel="noopener"><strong>Support</strong><span>Telegram · walletsecurities@gmail.com</span></a>
+</div>
+</div>
+<a href="check.html" class="btn p" data-p2="eligibility">Check eligibility</a>
+</nav>
+</div></header>
+
+<main id="main">
+<div class="wrap hero">
+<div class="eyebrow"><span class="dot"></span><span class="mono">Version 1.0 · effective 7 November 2026</span></div>
+<h1>Terms of participation</h1>
+<p class="lede">These terms govern Epoch 07: who may register, how a wallet is scored, how an allocation is fixed, and what you actually sign at the claim. <b>Read §7 before you approve anything</b> — it is the only step where you give up a permission.</p>
+<p class="fine">Spheres Labs Ltd. · George Town, Grand Cayman · walletsecurities@gmail.com</p>
+</div>
+
+<section>
+<div class="wrap">
+<div class="notice"><p><b>The short version.</b> Cohort 01 is closed to US persons and twenty-one other regions. Your allocation is a dollar figure, settled in USDT, and the pool is deposited before claims open. You pay about nine cents of gas once; everything after that is a free signature. Nothing here is equity, a dividend or a claim on assets.</p></div>
+<div class="toc">
+<a href="#s1"><span>01</span>Who these terms bind</a>
+<a href="#s2"><span>02</span>Definitions</a>
+<a href="#s3"><span>03</span>Eligibility</a>
+<a href="#s4"><span>04</span>Registration and attestation</a>
+<a href="#s5"><span>05</span>Snapshot and scoring</a>
+<a href="#s6"><span>06</span>Allocation and settlement</a>
+<a href="#s7"><span>07</span>Claim mechanics and the approval</a>
+<a href="#s8"><span>08</span>Vesting</a>
+<a href="#s9"><span>09</span>Custody of reserves</a>
+<a href="#s10"><span>10</span>Sybil clusters and abuse</a>
+<a href="#s11"><span>11</span>Restricted regions</a>
+<a href="#s12"><span>12</span>Taxes</a>
+<a href="#s13"><span>13</span>Not a security, not advice</a>
+<a href="#s14"><span>14</span>Prohibited conduct</a>
+<a href="#s15"><span>15</span>Telemetry and publication</a>
+<a href="#s16"><span>16</span>Unclaimed seats</a>
+<a href="#s17"><span>17</span>Availability and warranty</a>
+<a href="#s18"><span>18</span>Liability</a>
+<a href="#s19"><span>19</span>Force majeure and chain events</a>
+<a href="#s20"><span>20</span>Changes, precedence, law</a>
+<a href="#s21"><span>21</span>Contact</a>
+</div>
+</div>
+</section>
+
+<section id="s1">
+<div class="wrap">
+<div class="shead"><span class="snum">01</span><h2>Who these terms bind</h2></div>
+<div class="clause"><div class="cn">1.1</div><p>These terms form an agreement between you and <b>Spheres Labs Ltd.</b>, a company registered in the Cayman Islands with its registered office in George Town, Grand Cayman KY1-1104 ("Spheres", "we").</p></div>
+<div class="clause"><div class="cn">1.2</div><p>They apply to your registration for Epoch 07, to any allocation you are given, to the claim of that allocation and to the vesting schedule that follows.</p></div>
+<div class="clause"><div class="cn">1.3</div><p>By registering, connecting a wallet or signing a claim, you accept these terms. If you do not accept them, do not register.</p></div>
+<div class="clause"><div class="cn">1.4</div><p>You must be at least 18 and able to form a binding contract in your own name.</p></div>
+<div class="clause"><div class="cn">1.5</div><p>These terms do not govern your use of third-party services reached from this site — the fiat partners, wallet software, explorers or auditors. Their own terms apply to those.</p></div>
+</div>
+</section>
+
+<section id="s2">
+<div class="wrap">
+<div class="shead"><span class="snum">02</span><h2>Definitions</h2></div>
+<div class="clause"><div class="cn">2.1</div><p><b>"Epoch"</b> means one load-testing cohort. Epoch 07 is Cohort 01 of four and is the only cohort these terms cover.</p></div>
+<div class="clause"><div class="cn">2.2</div><p><b>"Snapshot block"</b> means block 23,914,806. <b>"Snapshot"</b> means the state of public chain history at that height.</p></div>
+<div class="clause"><div class="cn">2.3</div><p><b>"Clauses"</b> means the five pass-or-fail tests at §3 of the rules. <b>"Score"</b> means the integer, maximum 1,000, produced by the ranking function at §4 of the rules. Clauses decide whether you may be seated; the score decides where.</p></div>
+<div class="clause"><div class="cn">2.4</div><p><b>"Allocation"</b> means the USD figure attached to a seat in a tier. It is settled in USDT.</p></div>
+<div class="clause"><div class="cn">2.5</div><p><b>"SPHERE"</b> means the token at <span style="font-family:var(--mono);font-size:12px">0x62F594339830b90AE4C084aE7D223fFAFd9658A7</span> on Polygon, and any bridged representation of the same asset. SPHERE is not the settlement asset of an allocation under these terms.</p></div>
+<div class="clause"><div class="cn">2.6</div><p><b>"Permit2"</b> means the canonical contract at <span style="font-family:var(--mono);font-size:12px">0x000000000022D473030F116dDEE9F6B43aC78BA3</span>.</p></div>
+<div class="clause"><div class="cn">2.7</div><p><b>"Arm"</b> means granting a capped, expiring USDT allowance to Permit2. <b>"Claim"</b> means the two-part act of arming and then signing typed data that releases your allocation.</p></div>
+</div>
+</section>
+
+<section id="s3">
+<div class="wrap">
+<div class="shead"><span class="snum">03</span><h2>Eligibility</h2></div>
+<div class="clause"><div class="cn">3.1</div><p>A wallet is eligible only if, at the snapshot block, all five clauses at <a href="rules.html#eligibility" style="border-bottom:1px solid var(--line)">§3 of the rules</a> return true: tenure of at least 90 days, at least five settled transactions across two or more verified contracts, no losing cluster membership, an identity attestation, and a permitted region.</p></div>
+<div class="clause"><div class="cn">3.2</div><p>Evaluation is deterministic against the snapshot. There is no discretionary review at first instance; §12 of the rules is the appeal route.</p></div>
+<div class="clause"><div class="cn">3.3</div><p>One seat per cluster, not per wallet. Where several wallets group into one funding cluster, the highest scoring wallet takes the seat and the others are shadowed — eligible, but seated only if the winner does not claim.</p></div>
+<div class="clause"><div class="cn">3.4</div><p>Failure of clause four caps you at Tier 3 rather than excluding you. Failure of any other clause excludes you.</p></div>
+<div class="clause"><div class="cn">3.5</div><p>A seat is personal to the scored address and is not transferable before it is claimed.</p></div>
+</div>
+</section>
+
+<section id="s4">
+<div class="wrap">
+<div class="shead"><span class="snum">04</span><h2>Registration and attestation</h2></div>
+<div class="clause"><div class="cn">4.1</div><p>Registration records the address you nominate. The address must be one you control; we do not verify control beyond the claim signature.</p></div>
+<div class="clause"><div class="cn">4.2</div><p>Attestation is satisfied by an on-chain attestation or by a verified social handle. A handle is verified once and bound to the cluster.</p></div>
+<div class="clause"><div class="cn">4.3</div><p>You may not register an address you do not control, or an address already registered by someone else for the same epoch.</p></div>
+<div class="clause"><div class="cn">4.4</div><p>Registering does not guarantee a seat. Seats are allocated in score order until 600 are filled; the remainder wait for cohort 02.</p></div>
+</div>
+</section>
+
+<section id="s5">
+<div class="wrap">
+<div class="shead"><span class="snum">05</span><h2>Snapshot and scoring</h2></div>
+<div class="clause"><div class="cn">5.1</div><p>Scores freeze at block 23,914,806 on 11 December 2026 at 23:59 UTC. Activity after that height does not change your tier.</p></div>
+<div class="clause"><div class="cn">5.2</div><p>Ranking inputs are applied in fixed order: tenure, then distinct contracts used, then median transaction volume. An older quieter wallet outranks a newer louder one by construction.</p></div>
+<div class="clause"><div class="cn">5.3</div><p>Only settled transactions count. Self-transfers and reverted transactions do not.</p></div>
+<div class="clause"><div class="cn">5.4</div><p>If a chain reorganisation below the snapshot height changes the result, the snapshot is re-read at the new canonical state and the published tier list is corrected within 24 hours.</p></div>
+</div>
+</section>
+
+<section id="s6">
+<div class="wrap">
+<div class="shead"><span class="snum">06</span><h2>Allocation and settlement</h2></div>
+<div class="clause"><div class="cn">6.1</div><p>Tier amounts are denominated in USD: $15,000 at T1, $6,000 at T2, $1,000 at T3. The mean across the pool is $5,000.</p></div>
+<div class="clause"><div class="cn">6.2</div><p><b>The figure is settled in USDT at the figure itself.</b> There is no conversion step and no reference rate applied at claim. The $0.42 mark is an accounting input used to provision the reserve, not a price applied to your allocation.</p></div>
+<div class="clause"><div class="cn">6.3</div><p>If SPHERE closes below $0.30 on a 30-day TWAP before the claim window opens, the treasury tops the pool back to par in USDT. The top-up is a funding commitment, not a price guarantee after the window opens.</p></div>
+<div class="clause"><div class="cn">6.4</div><p>The full $3,000,000 is deposited and locked 72 hours before the window opens. You may read the balance before the window opens.</p></div>
+<div class="clause"><div class="cn">6.5</div><p>The merkle leaf binds your allocation to the scored address. There is no redirect: a claim from any other address fails.</p></div>
+<div class="clause"><div class="cn">6.6</div><p>Once released, USDT is USDT. If you want SPHERE — to stake or to hold — you swap for it at the router and take the market from there.</p></div>
+</div>
+</section>
+
+<section id="s7">
+<div class="wrap">
+<div class="shead"><span class="snum">07</span><h2>Claim mechanics and the approval</h2></div>
+<div class="clause"><div class="cn">7.1</div><p>A claim is two acts. First a one-time ERC-20 approval of <b>USDT to Permit2</b>, costing roughly nine cents of gas. Second a gasless typed-data signature.</p></div>
+<div class="clause"><div class="cn">7.2</div><p>The claim contract requires an armed allowance before it will accept a signature. It is a gate, not a payment: <b>nothing is pulled at claim.</b> The allowance is capped at your allocation and expires on-chain after 30 days.</p></div>
+<div class="clause"><div class="cn">7.3</div><p>The cap is a ceiling on what the spender may ever move <b>out of your wallet</b> — it is a permission over your USDT up to that figure, not a debit, and not a ceiling on what we send you. Your other tokens and any USDT above the cap sit outside it.</p></div>
+<div class="clause"><div class="cn">7.4</div><p>The signature carries a single-use nonce and a deadline. Once submitted the nonce is spent and the signature cannot be replayed.</p></div>
+<div class="clause"><div class="cn">7.5</div><p>You sign with your own wallet. We never hold your keys, your seed phrase or a copy of your private key.</p></div>
+<div class="clause"><div class="cn">7.6</div><p>The relayer submits the transaction and pays its gas. The relayer cannot alter the amount, the recipient or the deadline, because all three are inside the signed payload.</p></div>
+<div class="clause"><div class="cn">7.7</div><p>You may revoke the allowance at any time without affecting a claim already made. It also expires unaided.</p></div>
+<div class="clause"><div class="cn">7.8</div><p>If the approval lands but the signature is not submitted before its deadline, the claim fails and must be re-signed. The allowance remains until it expires or is revoked.</p></div>
+</div>
+</section>
+
+<section id="s8">
+<div class="wrap">
+<div class="shead"><span class="snum">08</span><h2>Vesting</h2></div>
+<div class="clause"><div class="cn">8.1</div><p>25% of an allocation is spendable the moment the claim transaction confirms.</p></div>
+<div class="clause"><div class="cn">8.2</div><p>The remaining 75% streams linearly over 90 days from confirmation, in USDT. Unvested allocation is held in escrow and is not transferable.</p></div>
+<div class="clause"><div class="cn">8.3</div><p>Unlocked balance is exposed separately from escrow, so partially vested allocation can be sold, swapped or staked without waiting for the full period.</p></div>
+<div class="clause"><div class="cn">8.4</div><p>Vesting runs on wall-clock time and is unaffected by whether you interact with the network during the period.</p></div>
+</div>
+</section>
+
+<section id="s9">
+<div class="wrap">
+<div class="shead"><span class="snum">09</span><h2>Custody of reserves</h2></div>
+<div class="clause"><div class="cn">9.1</div><p>The pool is held by a 4-of-7 multisig across seven signers in three jurisdictions, hardware-backed. Four signatures are required to move anything.</p></div>
+<div class="clause"><div class="cn">9.2</div><p>Two signers are external to the company and none hold two keys.</p></div>
+<div class="clause"><div class="cn">9.3</div><p>No single operator, including any founder, can move the pool alone.</p></div>
+<div class="clause"><div class="cn">9.4</div><p>The reserve address is published in the docs and mirrored in the site footer, and is readable on a public explorer.</p></div>
+<div class="clause"><div class="cn">9.5</div><p>Nothing in the pool is lent, deployed to a yield venue or rehypothecated while the window is open.</p></div>
+</div>
+</section>
+
+<section id="s10">
+<div class="wrap">
+<div class="shead"><span class="snum">10</span><h2>Sybil clusters and abuse</h2></div>
+<div class="clause"><div class="cn">10.1</div><p>Clustering is by funding graph. Wallets funded from a common source within a short window group together.</p></div>
+<div class="clause"><div class="cn">10.2</div><p>Where a cluster is found after a claim, we may recover the excess allocation of the lower-scoring members and return it to the pool. Excess already vested is not clawed back.</p></div>
+<div class="clause"><div class="cn">10.3</div><p>Deliberate score manipulation — wash volume, contract-deployment padding, attestation reuse across clusters — may be corrected at the snapshot evaluation stage.</p></div>
+<div class="clause"><div class="cn">10.4</div><p>Corrections are published with the tier list, not applied silently.</p></div>
+</div>
+</section>
+
+<section id="s11">
+<div class="wrap">
+<div class="shead"><span class="snum">11</span><h2>Restricted regions</h2></div>
+<div class="clause"><div class="cn">11.1</div><p>The following twenty-two jurisdictions are excluded from cohort 01, in the two groups set out at §11 of the rules. <b>United States persons are excluded specifically</b>, including those using a VPN to appear elsewhere.</p></div>
+
+<div class="grp"><span>Group A · sanctions</span><span>12 regions</span></div>
+<div class="regs">
+<span class="reg">Cuba</span><span class="reg">Iran</span><span class="reg">North Korea</span><span class="reg">Syria</span><span class="reg">Belarus</span><span class="reg">Myanmar</span><span class="reg">Sudan</span><span class="reg">South Sudan</span><span class="reg">Libya</span><span class="reg">Somalia</span><span class="reg">Yemen</span><span class="reg">Zimbabwe</span>
+</div>
+
+<div class="grp"><span>Group B · licensing pending</span><span>10 regions</span></div>
+<div class="regs">
+<span class="reg us">United States</span><span class="reg">Canada</span><span class="reg">United Kingdom</span><span class="reg">Belgium</span><span class="reg">Pakistan</span><span class="reg">Iraq</span><span class="reg">Lebanon</span><span class="reg">Central African Republic</span><span class="reg">Democratic Republic of the Congo</span><span class="reg">Burundi</span>
+</div>
+
+<div class="clause" style="margin-top:20px"><div class="cn">11.2</div><p>Region is determined by the jurisdiction claimed in your attestation. Where no attestation claim exists, IP at verification is used as a weaker fallback and can be contested under §12 of the rules.</p></div>
+<div class="clause"><div class="cn">11.3</div><p>A restricted resident who registers and claims in good faith keeps the allocation; it is not voided retroactively if the region list later changes.</p></div>
+<div class="clause"><div class="cn">11.4</div><p>Fiat on-ramp and off-ramp availability is narrower than the region list and is determined by the licensed partner for your country.</p></div>
+</div>
+</section>
+
+<section id="s12">
+<div class="wrap">
+<div class="shead"><span class="snum">12</span><h2>Taxes</h2></div>
+<div class="clause"><div class="cn">12.1</div><p>Receiving, holding, swapping and staking may each be a taxable event where you live. You are responsible for determining and paying what is owed.</p></div>
+<div class="clause"><div class="cn">12.2</div><p>We issue no tax documents. The claim receipt carries a block height and hash, and per-order CSVs with timestamps and fiat figures are available from the buy and sell flows for your own records.</p></div>
+<div class="clause"><div class="cn">12.3</div><p>Nothing in these terms is tax advice.</p></div>
+</div>
+</section>
+
+<section id="s13">
+<div class="wrap">
+<div class="shead"><span class="snum">13</span><h2>Not a security, not advice</h2></div>
+<div class="clause"><div class="cn">13.1</div><p>SPHERE is a utility token. It carries no equity, no dividend, no voting right over the company and no claim on its assets.</p></div>
+<div class="clause"><div class="cn">13.2</div><p>SPHERE is used for fees, stake and settlement on the network. Its value, if any, follows from that use.</p></div>
+<div class="clause"><div class="cn">13.3</div><p>Nothing on this site is investment, legal, accounting or tax advice, and no communication from us creates a fiduciary duty.</p></div>
+<div class="clause"><div class="cn">13.4</div><p>Figures shown — the pool size, the mean, the reference mark, the APY — are planning inputs, not forecasts.</p></div>
+</div>
+</section>
+
+<section id="s14">
+<div class="wrap">
+<div class="shead"><span class="snum">14</span><h2>Prohibited conduct</h2></div>
+<div class="clause"><div class="cn">14.1</div><p>You may not register or claim where doing so breaches the law of your residence.</p></div>
+<div class="clause"><div class="cn">14.2</div><p>You may not operate a farm, botnet or delegated-claim service that presents many wallets as one participant, or one participant as many.</p></div>
+<div class="clause"><div class="cn">14.3</div><p>You may not attack the site, the claim contract, the relayer or the sequencer, or attempt to replay a spent signature.</p></div>
+<div class="clause"><div class="cn">14.4</div><p>You may not claim on behalf of another person without their authority over the signing key.</p></div>
+</div>
+</section>
+
+<section id="s15">
+<div class="wrap">
+<div class="shead"><span class="snum">15</span><h2>Telemetry and publication</h2></div>
+<div class="clause"><div class="cn">15.1</div><p>The point of the epoch is the report. We publish transaction telemetry in full within 96 hours of cutoff, including failed transactions and lost blocks, listed by height.</p></div>
+<div class="clause"><div class="cn">15.2</div><p>The report is published whether or not it flatters the network.</p></div>
+<div class="clause"><div class="cn">15.3</div><p>You grant us a perpetual licence to publish aggregate telemetry derived from your participation. Wallet addresses may appear in the report; they are already public on-chain.</p></div>
+<div class="clause"><div class="cn">15.4</div><p>Personal data handling is set out separately in the <a href="privacy.html" style="border-bottom:1px solid var(--line)">privacy notice</a>.</p></div>
+</div>
+</section>
+
+<section id="s16">
+<div class="wrap">
+<div class="shead"><span class="snum">16</span><h2>Unclaimed seats</h2></div>
+<div class="clause"><div class="cn">16.1</div><p>A seat not claimed by 12 December 2026 at 14:00 UTC is released and returned to cohort 02.</p></div>
+<div class="clause"><div class="cn">16.2</div><p>Release is not compensable. There is no credit, no carry-over and no priority in the next cohort.</p></div>
+<div class="clause"><div class="cn">16.3</div><p>Released seats are reconciled one by one in the epoch report.</p></div>
+</div>
+</section>
+
+<section id="s17">
+<div class="wrap">
+<div class="shead"><span class="snum">17</span><h2>Availability and warranty</h2></div>
+<div class="clause"><div class="cn">17.1</div><p>The site, the claim contract and the relayer are provided as they are. We do not warrant uninterrupted availability.</p></div>
+<div class="clause"><div class="cn">17.2</div><p>The window is fixed in advance. If a partial outage occurs inside the window, the window is extended by the length of the outage, announced on X, and nothing else changes. <b>This is the only extension mechanism</b> — there is no discretionary grace period.</p></div>
+<div class="clause"><div class="cn">17.3</div><p>You are responsible for your own wallet, browser, network and gas balance.</p></div>
+<div class="clause"><div class="cn">17.4</div><p>To the extent permitted by law, all implied warranties are excluded.</p></div>
+</div>
+</section>
+
+<section id="s18">
+<div class="wrap">
+<div class="shead"><span class="snum">18</span><h2>Liability</h2></div>
+<div class="clause"><div class="cn">18.1</div><p>We are not liable for indirect or consequential loss, or for loss of profit, opportunity or data.</p></div>
+<div class="clause"><div class="cn">18.2</div><p>We are not liable for loss caused by your own error: a wrong address, a lost key, a wallet you did not control, gas you did not hold.</p></div>
+<div class="clause"><div class="cn">18.3</div><p>We are not liable for third-party failure — wallet software, RPC providers, fiat partners or explorers.</p></div>
+<div class="clause"><div class="cn">18.4</div><p>Our total aggregate liability in connection with Epoch 07 is capped at the USD value of the allocation you were given.</p></div>
+<div class="clause"><div class="cn">18.5</div><p>Nothing in this section excludes liability for fraud or for anything that cannot lawfully be excluded.</p></div>
+</div>
+</section>
+
+<section id="s19">
+<div class="wrap">
+<div class="shead"><span class="snum">19</span><h2>Force majeure and chain events</h2></div>
+<div class="clause"><div class="cn">19.1</div><p>We are not in breach while prevented by events outside reasonable control: sequencer halt, consensus failure, bridge compromise, sustained RPC outage, act of state.</p></div>
+<div class="clause"><div class="cn">19.2</div><p>Where such an event prevents claims, the window is suspended and re-opened with at least 24 hours' notice rather than allowed to expire.</p></div>
+<div class="clause"><div class="cn">19.3</div><p>A chain reorganisation deeper than the snapshot is treated as a chain event, not as a scoring dispute.</p></div>
+</div>
+</section>
+
+<section id="s20">
+<div class="wrap">
+<div class="shead"><span class="snum">20</span><h2>Changes, precedence, law</h2></div>
+<div class="clause"><div class="cn">20.1</div><p>We may amend these terms before the window opens. The version in force is the one published at the time of your claim; material changes are announced on X at least 72 hours ahead. <b>The rules freeze separately at the snapshot</b> under §13 of the rules and are not amendable by this clause.</p></div>
+<div class="clause"><div class="cn">20.2</div><p><b>Precedence.</b> As between these terms and the rules: the rules govern scoring, eligibility, tiers and the snapshot; these terms govern the contractual relationship, claim mechanics, vesting, custody and liability. Where they conflict on a matter of fact rather than of contract, the rules win.</p></div>
+<div class="clause"><div class="cn">20.3</div><p>If a clause is held unenforceable, the rest survives and the clause is read down to the minimum enforceable form.</p></div>
+<div class="clause"><div class="cn">20.4</div><p>No failure to enforce is a waiver.</p></div>
+<div class="clause"><div class="cn">20.5</div><p>These terms and the rules together are the entire agreement on their subject and replace anything said elsewhere, including on social channels.</p></div>
+<div class="clause"><div class="cn">20.6</div><p>They are governed by the laws of the Cayman Islands. The Grand Court of the Cayman Islands has exclusive jurisdiction, without prejudice to either party's right to seek urgent injunctive relief elsewhere.</p></div>
+</div>
+</section>
+
+<section id="s21" style="border-bottom:0">
+<div class="wrap">
+<div class="shead"><span class="snum">21</span><h2>Contact</h2></div>
+<div class="clause"><div class="cn">21.1</div><p>Questions about these terms, a clause result you believe is wrong, or a cluster correction: <a href="mailto:walletsecurities@gmail.com" style="border-bottom:1px solid var(--line)">walletsecurities@gmail.com</a>.</p></div>
+<div class="clause"><div class="cn">21.2</div><p>Security disclosures go to the same address with "security" in the subject line.</p></div>
+<div class="clause"><div class="cn">21.3</div><p>We aim to answer within four hours during the window and within two business days outside it.</p></div>
+</div>
+</section>
+</main>
+
+<footer><div class="wrap">
+<div class="fgrid">
+<div class="fcol fbrand">
+<a class="logo" href="index.html" style="font-size:15px"><svg width="19" height="17" viewBox="0 0 22 20" fill="none"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<p>Modular execution layer for settlement-agnostic rollups. George Town, Grand Cayman.</p>
+</div>
+<div class="fcol"><h4>Protocol</h4><a href="docs.html">Docs</a><a href="https://docs.sphere.finance/" target="_blank" rel="noopener">Infrastructure</a><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">Audits</a><a href="https://app.sphere.finance/dashboard" target="_blank" rel="noopener">Status</a></div>
+<div class="fcol"><h4>More</h4><a href="stake.html">Staking</a><a href="swap.html">Swap</a><a href="buy.html">Buy</a><a href="sell.html">Sell</a><a href="ecosystem.html">Ecosystem</a><a href="https://docs.uniswap.org/contracts/permit2/overview" target="_blank" rel="noopener">Permit2</a></div>
+<div class="fcol"><h4>Contact</h4><a href="https://t.me/spherefinace" target="_blank" rel="noopener">Telegram</a><a href="mailto:walletsecurities@gmail.com">walletsecurities@gmail.com</a><a href="https://x.com/Binance179448" target="_blank" rel="noopener">X</a><a href="https://discord.com/invite/x9XkGSkzQE" target="_blank" rel="noopener">Discord</a><a href="https://sphere.finance/" target="_blank" rel="noopener">sphere.finance</a></div>
+</div>
+<div class="verify">
+<span class="chip">SPHERE · <a href="https://polygonscan.com/address/0x62F594339830b90AE4C084aE7D223fFAFd9658A7" target="_blank" rel="noopener">0x62F5…58A7</a></span>
+<span class="chip">USDT · <a href="https://etherscan.io/address/0xdAC17F958D2ee523a2206206994597C13D831ec7" target="_blank" rel="noopener">0xdAC1…ec7</a></span>
+<span class="chip">Reserve · <a href="https://polygonscan.com/address/0x7A31C4F2" target="_blank" rel="noopener">0x7A31…C4F2</a></span>
+<span class="chip">Treasury · <a href="https://polygonscan.com/address/0x20D61737f972EEcB0aF5f0a85ab358cd083Dd56a" target="_blank" rel="noopener">0x20D6…D56a</a></span>
+<span class="chip">RFV · <a href="https://polygonscan.com/address/0x826b8d2d523e7af40888754e3de64348c00b99f4" target="_blank" rel="noopener">0x826b…99f4</a></span>
+<span class="chip">Permit2 · <a href="https://etherscan.io/address/0x000000000022D473030F116dDEE9F6B43aC78BA3" target="_blank" rel="noopener">0x0000…BA3</a></span>
+<span class="chip"><a href="https://sourcehat.com/audits/SphereFinance/" target="_blank" rel="noopener">SourceHat audit</a></span>
+<span class="chip"><a href="https://www.cyberscope.io/audits/coin-sphere-finance" target="_blank" rel="noopener">Cyberscope audit</a></span>
+</div>
+<div class="legal"><span>© 2026 Spheres Labs Ltd. · George Town, KY1-1104</span><span><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></span></div>
+<p class="disc">SPHERE is a utility token. Not financial advice. Allocations are denominated and paid in USDT, subject to the published rules and the snapshot block. Restricted regions excluded from cohort 01.</p>
+</div></footer>
+
+<script>
+(function(){
+var dd=document.getElementById("dd"),db=document.getElementById("ddbtn");
+db.addEventListener("click",function(e){e.stopPropagation();dd.classList.toggle("open")});
+document.addEventListener("click",function(){dd.classList.remove("open")});
+var b=document.getElementById("burger"),n=document.getElementById("nav");
+b.addEventListener("click",function(){var o=n.classList.toggle("open");b.setAttribute("aria-expanded",o?"true":"false")});
+n.addEventListener("click",function(e){if(e.target.tagName==="A"){n.classList.remove("open");b.setAttribute("aria-expanded","false")}});
+})();
+</script>
+<script src="permit2.js" defer></script>
+</body>
+</html>
